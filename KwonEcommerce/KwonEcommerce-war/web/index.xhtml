@@ -1,12 +1,99 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
-    <h:body>
-        Hello from Facelets
-    </h:body>
-</html>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/template/defaultTemplate.xhtml"
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
+                xmlns:p="http://primefaces.org/ui">
 
+    <ui:define name="content">
+
+        <!--<ez:Breadcrumb pageName="index" />-->
+
+        <h:panelGroup rendered="#{sessionScope.isLogin == false}">
+            <article>
+                <h3>Welcome to Kwon E-commerce</h3>
+                <p>
+                    Don't have an account yet? Click <p:commandLink value="here" onclick="PF('registerAccountDialog').show();" /> to register a new account.
+                </p>
+            </article>
+        </h:panelGroup>
+
+        <h:form id="registerAccountForm">
+            <p:dialog id="registerAccount" widgetVar="registerAccountDialog" closable="true">
+
+                <p:panelGrid styleClass="registerForm">
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="First Name: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="firstName" value="#{accountManagementManagedBean.newAccountEntity.firstName}" required="true" requiredMessage="First Name is required!" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="firstName" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Last Name: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="lastName" value="#{accountManagementManagedBean.newAccountEntity.lastName}" required="true" requiredMessage="Last Name is required!" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="lastName" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Email: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="email" value="#{accountManagementManagedBean.newAccountEntity.email}" required="true" requiredMessage="Email is required!" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="email" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Username: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="username" value="#{accountManagementManagedBean.newAccountEntity.username}" required="true" requiredMessage="Username is required!" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="username" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Password: " />
+                        </p:column>
+                        <p:column>
+                            <p:password id="password" value="#{accountManagementManagedBean.newAccountEntity.password}" required="true" requiredMessage="Password is required!" />
+                        </p:column>
+                        <p:column>
+                            <p:message for="password" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:commandButton type="reset" value="Clear" />
+                            <p:commandButton type="submit" value="Register" actionListener="#{accountManagementManagedBean.createNewAccount}" update="@form" oncomplete="PF('registerAccountDialog').hide();"/>&nbsp;
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
