@@ -24,7 +24,7 @@ import util.exception.UpdateTagException;
 
 public class TagEntitySessionBean implements TagEntitySessionBeanLocal
 {
-    @PersistenceContext(unitName = "PointOfSaleSystemV54-ejbPU")
+    @PersistenceContext(unitName = "KwonEcommerce-ejbPU")
     private EntityManager entityManager;
     
     private final ValidatorFactory validatorFactory;

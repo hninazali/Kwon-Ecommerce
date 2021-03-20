@@ -19,6 +19,13 @@
                     <p:submenu label="Staff Operation" rendered="#{sessionScope.isLogin == true}">
                         <p:menuitem value="View All Staff" outcome="/staffManagement/viewStaffDetails.xhtml" icon="fa fa-users" />
                     </p:submenu> 
+                    
+                     <p:submenu label="System Administration" rendered="#{sessionScope.isLogin == true}">
+                        <p:menuitem value="Product Management" outcome="/systemAdministration/productManagement.xhtml" icon="pi pi-tags" />
+                        <p:menuitem value="Search Products by Name" outcome="/systemAdministration/searchProductsByName.xhtml" icon="pi pi-search" />
+                      
+                    </p:submenu>    
+                    
                 </p:menu>
 
             </h:form>

@@ -26,7 +26,7 @@ import util.exception.UpdateCategoryException;
 
 public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
 {
-    @PersistenceContext(unitName = "PointOfSaleSystemV54-ejbPU")
+    @PersistenceContext(unitName = "KwonEcommerce-ejbPU")
     private EntityManager entityManager;
     
     private final ValidatorFactory validatorFactory;

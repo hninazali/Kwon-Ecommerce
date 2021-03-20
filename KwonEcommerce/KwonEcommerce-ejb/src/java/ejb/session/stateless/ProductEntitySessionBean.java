@@ -38,7 +38,7 @@ import util.exception.UpdateProductException;
 
 public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
 {
-    @PersistenceContext(unitName = "PointOfSaleSystemV54-ejbPU")
+    @PersistenceContext(unitName = "KwonEcommerce-ejbPU")
     private EntityManager entityManager;
     
     // Added in v5.0
