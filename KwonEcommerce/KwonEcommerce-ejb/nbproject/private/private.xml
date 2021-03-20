@@ -1,4 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/InvalidAccessRightException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/entity/CategoryEntity.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/ProductEntitySessionBeanLocal.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/CreateNewProductException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/UpdateCategoryException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/TagNotFoundException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/entity/SaleTransactionLineItemEntity.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/SaleTransactionAlreadyVoidedRefundedException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/entity/ProductEntity.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/EntityInstanceExistsInCollectionException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/DeleteCategoryException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/ProductEntitySessionBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/entity/TagEntity.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/ProductSkuCodeExistException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/ProductInsufficientQuantityOnHandException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/SaleTransactionNotFoundException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/CreateNewTagException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/DeleteProductException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/TagEntitySessionBeanLocal.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/EntityInstanceMissingInCollectionException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/CategoryEntitySessionBeanLocal.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/ProductNotFoundException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/InputDataValidationException_1.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/DeleteTagException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/CategoryNotFoundException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/CategoryEntitySessionBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/UpdateTagException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/CreateNewSaleTransactionException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/UpdateProductException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/InvalidLoginCredentialException_1.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/TagEntitySessionBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/CreateNewCategoryException.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/util/exception/UnknownPersistenceException_1.java</file>
+        </group>
+    </open-files>
 </project-private>
