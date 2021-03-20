@@ -9,73 +9,58 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-
-
 @Entity
+public class BrandEntity implements Serializable {
 
-public class TagEntity implements Serializable 
-{
     private static final long serialVersionUID = 1L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tagId;
+    private Long brandId;
     @Column(nullable = false, unique = true, length = 32)
     @NotNull
     @Size(max = 32)
     private String name;
-    
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<ProductEntity> productEntities;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<BundleEntity> bundleEntities;
-
-    
-    public TagEntity() 
-    {
+    public BrandEntity() {
         productEntities = new ArrayList<>();
-        bundleEntities = new ArrayList<>();
     }
 
-    
-    
-    public TagEntity(String name) 
-    {
+    public BrandEntity(String name) {
         this();
-        
         this.name = name;
     }
     
+    @OneToMany(mappedBy = "brandEntity", fetch = FetchType.LAZY)
+    private List<ProductEntity> productEntities;
     
-    
-    public Long getTagId() {
-        return tagId;
+    public Long getBrandId() {
+        return brandId;
     }
 
-    public void setTagId(Long tagId) {
-        this.tagId = tagId;
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (tagId != null ? tagId.hashCode() : 0);
+        hash += (brandId != null ? brandId.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the tagId fields are not set
-        if (!(object instanceof TagEntity)) {
+        // TODO: Warning - this method won't work in the case the brandId fields are not set
+        if (!(object instanceof BrandEntity)) {
             return false;
         }
-        TagEntity other = (TagEntity) object;
-        if ((this.tagId == null && other.tagId != null) || (this.tagId != null && !this.tagId.equals(other.tagId))) {
+        BrandEntity other = (BrandEntity) object;
+        if ((this.brandId == null && other.brandId != null) || (this.brandId != null && !this.brandId.equals(other.brandId))) {
             return false;
         }
         return true;
@@ -83,11 +68,9 @@ public class TagEntity implements Serializable
 
     @Override
     public String toString() {
-        return "entity.TagEntity[ id=" + tagId + " ]";
-    }    
+        return "entity.BrandEntity[ id=" + brandId + " ]";
+    }
 
-    
-    
     public String getName() {
         return name;
     }
@@ -103,12 +86,5 @@ public class TagEntity implements Serializable
     public void setProductEntities(List<ProductEntity> productEntities) {
         this.productEntities = productEntities;
     }
-
-    public List<BundleEntity> getBundleEntities() {
-        return bundleEntities;
-    }
-
-    public void setBundleEntities(List<BundleEntity> bundleEntities) {
-        this.bundleEntities = bundleEntities;
-    }
+    
 }

@@ -1,8 +1,10 @@
 package ejb.session.stateless;
 
 import entity.ProductEntity;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.BrandNotFoundException;
 import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewProductException;
 import util.exception.DeleteProductException;
@@ -41,4 +43,8 @@ public interface ProductEntitySessionBeanLocal
     void debitQuantityOnHand(Long productId, Integer quantityToDebit) throws ProductNotFoundException, ProductInsufficientQuantityOnHandException;
     
     void creditQuantityOnHand(Long productId, Integer quantityToCredit) throws ProductNotFoundException;
+
+    public List<ProductEntity> filterProductsByBrand(Long brandId) throws BrandNotFoundException;
+
+    public List<ProductEntity> filterProductsByPrice(BigDecimal startPrice, BigDecimal endPrice);
 }

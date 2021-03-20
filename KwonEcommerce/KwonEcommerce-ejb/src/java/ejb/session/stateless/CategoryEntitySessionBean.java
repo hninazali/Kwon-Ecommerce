@@ -105,6 +105,7 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
             categoryEntity.getParentCategoryEntity();
             categoryEntity.getSubCategoryEntities().size();
             categoryEntity.getProductEntities().size();
+            categoryEntity.getBundleEntities().size();
         }
         
         return categoryEntities;
@@ -123,6 +124,7 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
             lazilyLoadSubCategories(rootCategoryEntity);
             
             rootCategoryEntity.getProductEntities().size();
+            rootCategoryEntity.getBundleEntities().size();
         }
         
         return rootCategoryEntities;
@@ -140,6 +142,7 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
         {
             leafCategoryEntity.getParentCategoryEntity();
             leafCategoryEntity.getProductEntities().size();
+            leafCategoryEntity.getBundleEntities().size();
         }
         
         return leafCategoryEntities;
@@ -251,6 +254,10 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
         else if(!categoryEntityToRemove.getProductEntities().isEmpty())
         {
             throw new DeleteCategoryException("Category ID " + categoryId + " is associated with existing products and cannot be deleted!");
+        } 
+        else if(!categoryEntityToRemove.getBundleEntities().isEmpty())
+        {
+            throw new DeleteCategoryException("Category ID " + categoryId + " is associated with existing bundles and cannot be deleted!");
         }
         else
         {

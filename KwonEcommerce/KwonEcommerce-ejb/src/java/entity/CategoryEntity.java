@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
@@ -42,12 +43,15 @@ public class CategoryEntity implements Serializable
     @OneToMany(mappedBy = "categoryEntity", fetch = FetchType.LAZY)
     private List<ProductEntity> productEntities;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<BundleEntity> bundleEntities;
     
     
     public CategoryEntity() 
     {
         subCategoryEntities = new ArrayList<>();
         productEntities = new ArrayList<>();
+        bundleEntities = new ArrayList<>();
     }
 
     
@@ -152,5 +156,13 @@ public class CategoryEntity implements Serializable
 
     public void setProductEntities(List<ProductEntity> productEntities) {
         this.productEntities = productEntities;
+    }
+
+    public List<BundleEntity> getBundleEntities() {
+        return bundleEntities;
+    }
+
+    public void setBundleEntities(List<BundleEntity> bundleEntities) {
+        this.bundleEntities = bundleEntities;
     }
 }

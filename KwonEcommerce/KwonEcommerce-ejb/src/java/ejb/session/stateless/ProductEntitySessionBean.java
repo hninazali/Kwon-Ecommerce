@@ -4,6 +4,8 @@ import entity.CategoryEntity;
 import entity.ProductEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.TagEntity;
+import entity.BrandEntity;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,6 +23,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.BrandNotFoundException;
 import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewProductException;
 import util.exception.DeleteProductException;
@@ -49,6 +52,9 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
     private TagEntitySessionBeanLocal tagEntitySessionBeanLocal;
 //    @EJB
 //    private SaleTransactionEntitySessionBeanLocal saleTransactionEntitySessionBeanLocal;
+    
+    @EJB
+    private BrandEntitySessionBeanLocal brandEntitySessionBeanLocal;
     
     // Added in v4.2 for bean validation
     private final ValidatorFactory validatorFactory;
@@ -275,7 +281,43 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
         }
     }
     
+    @Override
+    public List<ProductEntity> filterProductsByBrand(Long brandId) throws BrandNotFoundException
+    {
+        List<ProductEntity> productEntities = new ArrayList<>();
+        BrandEntity brandEntity = brandEntitySessionBeanLocal.retrieveBrandByBrandId(brandId);
+ 
+        productEntities = brandEntity.getProductEntities();
+        
+        for(ProductEntity productEntity:productEntities)
+        {
+            productEntity.getCategoryEntity();
+            productEntity.getBrandEntity();
+            productEntity.getTagEntities().size();
+        }
+        
+        Collections.sort(productEntities, new Comparator<ProductEntity>()
+            {
+                public int compare(ProductEntity pe1, ProductEntity pe2) {
+                    return pe1.getSkuCode().compareTo(pe2.getSkuCode());
+                }
+            });
+
+        return productEntities;
+    }
     
+    @Override
+    public List<ProductEntity> filterProductsByPrice(BigDecimal startPrice, BigDecimal endPrice)
+    {
+        List<ProductEntity> productEntities = new ArrayList<>();
+       
+        Query query = entityManager.createQuery("SELECT DISTINCT pe FROM ProductEntity pe WHERE pe.unitPrice BETWEEN :inStartPrice AND :inEndPrice ORDER BY pe.skuCode ASC");
+        query.setParameter("inStartPrice", startPrice);
+        query.setParameter("inEndPrice", endPrice);
+        productEntities = query.getResultList();
+
+        return productEntities;
+    }
     
     @Override
     public ProductEntity retrieveProductByProductId(Long productId) throws ProductNotFoundException

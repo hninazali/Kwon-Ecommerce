@@ -89,6 +89,7 @@ public class TagEntitySessionBean implements TagEntitySessionBeanLocal
         for(TagEntity tagEntity:tagEntities)
         {            
             tagEntity.getProductEntities().size();
+            tagEntity.getBundleEntities().size();
         }
         
         return tagEntities;
@@ -156,6 +157,10 @@ public class TagEntitySessionBean implements TagEntitySessionBeanLocal
         if(!tagEntityToRemove.getProductEntities().isEmpty())
         {
             throw new DeleteTagException("Tag ID " + tagId + " is associated with existing products and cannot be deleted!");
+        }   
+        else if (!tagEntityToRemove.getBundleEntities().isEmpty())
+        {
+            throw new DeleteTagException("Tag ID " + tagId + " is associated with existing bundles and cannot be deleted!");
         }
         else
         {
