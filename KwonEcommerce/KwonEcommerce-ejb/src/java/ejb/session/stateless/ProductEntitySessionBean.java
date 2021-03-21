@@ -444,6 +444,9 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
     {
         ProductEntity productEntityToRemove = retrieveProductByProductId(productId);
         
+        //to be deleted when salesTransactionLineItem is added 
+        entityManager.remove(productEntityToRemove);
+
 //        List<SaleTransactionLineItemEntity> saleTransactionLineItemEntities = saleTransactionEntitySessionBeanLocal.retrieveSaleTransactionLineItemsByProductId(productId);
         
 //        if(saleTransactionLineItemEntities.isEmpty())

@@ -69,6 +69,10 @@ public class ProductEntity implements Serializable
     
     @ManyToMany(mappedBy = "productEntities", fetch = FetchType.LAZY)
     private List<TagEntity> tagEntities;
+    
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private BrandEntity brandEntity;
 
     
     
@@ -264,5 +268,19 @@ public class ProductEntity implements Serializable
 
     public void setTagEntities(List<TagEntity> tagEntities) {
         this.tagEntities = tagEntities;
+    }
+
+    /**
+     * @return the brandEntity
+     */
+    public BrandEntity getBrandEntity() {
+        return brandEntity;
+    }
+
+    /**
+     * @param brandEntity the brandEntity to set
+     */
+    public void setBrandEntity(BrandEntity brandEntity) {
+        this.brandEntity = brandEntity;
     }
 }

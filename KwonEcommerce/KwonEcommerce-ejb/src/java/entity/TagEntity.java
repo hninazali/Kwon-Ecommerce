@@ -34,6 +34,7 @@ public class TagEntity implements Serializable
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<BundleEntity> bundleEntities;
+    
 
     
     public TagEntity() 

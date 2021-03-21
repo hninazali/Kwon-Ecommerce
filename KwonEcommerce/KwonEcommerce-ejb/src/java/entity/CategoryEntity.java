@@ -37,6 +37,7 @@ public class CategoryEntity implements Serializable
     
     @OneToMany(mappedBy = "parentCategoryEntity", fetch = FetchType.LAZY)
     private List<CategoryEntity> subCategoryEntities;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     private CategoryEntity parentCategoryEntity;
     
