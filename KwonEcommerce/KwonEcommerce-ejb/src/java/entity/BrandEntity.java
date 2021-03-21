@@ -25,6 +25,9 @@ public class BrandEntity implements Serializable {
     @NotNull
     @Size(max = 32)
     private String name;
+    
+    @OneToMany(mappedBy = "brandEntity", fetch = FetchType.LAZY)
+    private List<ProductEntity> productEntities;
 
     public BrandEntity() {
         productEntities = new ArrayList<>();
@@ -35,8 +38,7 @@ public class BrandEntity implements Serializable {
         this.name = name;
     }
     
-    @OneToMany(mappedBy = "brandEntity", fetch = FetchType.LAZY)
-    private List<ProductEntity> productEntities;
+   
     
     public Long getBrandId() {
         return brandId;

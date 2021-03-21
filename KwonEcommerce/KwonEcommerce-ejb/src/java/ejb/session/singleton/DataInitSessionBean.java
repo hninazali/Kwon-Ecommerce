@@ -6,6 +6,7 @@
 package ejb.session.singleton;
 
 import ejb.session.stateless.AccountSessionBeanLocal;
+import ejb.session.stateless.BrandEntitySessionBeanLocal;
 import ejb.session.stateless.CategoryEntitySessionBeanLocal;
 import ejb.session.stateless.ProductEntitySessionBeanLocal;
 import ejb.session.stateless.StaffEntitySessionBeanLocal;
@@ -15,6 +16,7 @@ import entity.CategoryEntity;
 import entity.ProductEntity;
 import entity.StaffEntity;
 import entity.TagEntity;
+import entity.BrandEntity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ import javax.ejb.Startup;
 import util.enumeration.AccessRightEnum;
 import util.exception.AccountNotFoundException;
 import util.exception.AccountUsernameExistException;
+import util.exception.CreateNewBrandException;
 import util.exception.CreateNewCategoryException;
 import util.exception.CreateNewProductException;
 import util.exception.CreateNewTagException;
@@ -58,6 +61,9 @@ public class DataInitSessionBean {
     private CategoryEntitySessionBeanLocal categoryEntitySessionBeanLocal;
     @EJB
     private TagEntitySessionBeanLocal tagEntitySessionBeanLocal;
+    
+    @EJB
+    private BrandEntitySessionBeanLocal brandEntitySessionBeanLocal;
     
     public DataInitSessionBean() {
     }
@@ -95,6 +101,8 @@ public class DataInitSessionBean {
             TagEntity tagEntityPopular = tagEntitySessionBeanLocal.createNewTagEntity(new TagEntity("popular"));
             TagEntity tagEntityDiscount = tagEntitySessionBeanLocal.createNewTagEntity(new TagEntity("discount"));
             TagEntity tagEntityNew = tagEntitySessionBeanLocal.createNewTagEntity(new TagEntity("new"));
+            
+            BrandEntity innisfree = brandEntitySessionBeanLocal.createNewBrandEntity(new BrandEntity("Innisfree"));
 
             // Newly added in v5.1
             List<Long> tagIdsPopular = new ArrayList<>();
@@ -121,25 +129,25 @@ public class DataInitSessionBean {
             // Updated in v5.0
             // Updated in v5.1
             
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD001", "Innisfree Primer", "Best primer ever!! Fills up n blur out the pores.", 100, 10, new BigDecimal("10.00"), 1), primer.getCategoryId(), tagIdsPopular);
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD002", "Laneige Primer", "For best whitening effect", 100, 10, new BigDecimal("25.50"), 2), primer.getCategoryId(), tagIdsDiscount);
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD003", "Etude House Foundation", "Become a princess!", 100, 10, new BigDecimal("20.00"), 1), foundation.getCategoryId(), tagIdsPopularNew);
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD004", "THEFACESHOP Foundation", "For best whitening effect", 100, 10, new BigDecimal("10.00"), 2), foundation.getCategoryId(), tagIdsPopularDiscountNew);
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD005", "Innisfree Lipstick", "Most unique color", 100, 10, new BigDecimal("35.00"), 1), lipstick.getCategoryId(), tagIdsPopular);
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD006", "COSRX Lipstick", "Boost your confidence!", 100, 10, new BigDecimal("20.05"), 2), lipstick.getCategoryId(), tagIdsEmpty);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD001", "Innisfree Primer", "Best primer ever!! Fills up n blur out the pores.", 100, 10, new BigDecimal("10.00"), 1, innisfree), primer.getCategoryId(), tagIdsPopular);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD002", "Laneige Primer", "For best whitening effect", 100, 10, new BigDecimal("25.50"), 2, innisfree), primer.getCategoryId(), tagIdsDiscount);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD003", "Etude House Foundation", "Become a princess!", 100, 10, new BigDecimal("20.00"), 1, innisfree), foundation.getCategoryId(), tagIdsPopularNew);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD004", "THEFACESHOP Foundation", "For best whitening effect", 100, 10, new BigDecimal("10.00"), 2, innisfree), foundation.getCategoryId(), tagIdsPopularDiscountNew);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD005", "Innisfree Lipstick", "Most unique color", 100, 10, new BigDecimal("35.00"), 1, innisfree), lipstick.getCategoryId(), tagIdsPopular);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD006", "COSRX Lipstick", "Boost your confidence!", 100, 10, new BigDecimal("20.05"), 2, innisfree), lipstick.getCategoryId(), tagIdsEmpty);
             
             // Added in v5.0
             // Updated in v5.1
             
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD07", "Moonshot Shampoo", "Moonshot Shampoo", 100, 10, new BigDecimal("20.00"), 3), shampoo.getCategoryId(), tagIdsEmpty);
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD08", "The Saem Shampoo", "The Saem Shampoo", 100, 10, new BigDecimal("30.50"), 4), shampoo.getCategoryId(), tagIdsEmpty);
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD09", "Skin Food Bodywash", "Skin Food Bodywash", 100, 10, new BigDecimal("50.00"), 3), bodyWash.getCategoryId(), tagIdsEmpty);
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD010", "Dr Jart+ Bodywash", "Dr Jart+ Bodywash", 100, 10, new BigDecimal("100.00"), 4), bodyWash.getCategoryId(), tagIdsEmpty);
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD011", "VT Cosmetics Lotion", "VT Cosmetics Lotion", 100, 10, new BigDecimal("95.00"), 3), lotions.getCategoryId(), tagIdsEmpty);
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD012", "CandyLab Lotion", "CandyLab Lotion", 100, 10, new BigDecimal("19.05"), 4), lotions.getCategoryId(), tagIdsEmpty);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD07", "Moonshot Shampoo", "Moonshot Shampoo", 100, 10, new BigDecimal("20.00"), 3, innisfree), shampoo.getCategoryId(), tagIdsEmpty);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD08", "The Saem Shampoo", "The Saem Shampoo", 100, 10, new BigDecimal("30.50"), 4, innisfree), shampoo.getCategoryId(), tagIdsEmpty);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD09", "Skin Food Bodywash", "Skin Food Bodywash", 100, 10, new BigDecimal("50.00"), 3, innisfree), bodyWash.getCategoryId(), tagIdsEmpty);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD010", "Dr Jart+ Bodywash", "Dr Jart+ Bodywash", 100, 10, new BigDecimal("100.00"), 4, innisfree), bodyWash.getCategoryId(), tagIdsEmpty);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD011", "VT Cosmetics Lotion", "VT Cosmetics Lotion", 100, 10, new BigDecimal("95.00"), 3, innisfree), lotions.getCategoryId(), tagIdsEmpty);
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD012", "CandyLab Lotion", "CandyLab Lotion", 100, 10, new BigDecimal("19.05"), 4, innisfree), lotions.getCategoryId(), tagIdsEmpty);
            
 
-        } catch (AccountUsernameExistException | StaffUsernameExistException | UnknownPersistenceException | InputDataValidationException| ProductSkuCodeExistException | CreateNewCategoryException | CreateNewTagException | CreateNewProductException ex) {
+        } catch (AccountUsernameExistException | StaffUsernameExistException | UnknownPersistenceException | InputDataValidationException| ProductSkuCodeExistException | CreateNewCategoryException | CreateNewTagException | CreateNewProductException| CreateNewBrandException ex) {
             ex.printStackTrace();
         }
     }
