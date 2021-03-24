@@ -6,13 +6,17 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import util.enumeration.AccessRightEnum;
@@ -52,12 +56,12 @@ public class StaffEntity implements Serializable {
     @Column(columnDefinition = "CHAR(32) NOT NULL")
     private String salt;
 
-//    @OneToMany(mappedBy = "staffEntity", fetch = FetchType.LAZY)
-//    private List<SaleTransactionEntity> saleTransactionEntities;
+    @OneToMany(mappedBy = "staffEntity", fetch = FetchType.LAZY)
+    private List<OrderTransactionEntity> orderTransactionEntities;
     public StaffEntity() {
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
 
-//        saleTransactionEntities = new ArrayList<>();
+        orderTransactionEntities = new ArrayList<>();
     }
 
     public StaffEntity(String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password) {
@@ -159,11 +163,11 @@ public class StaffEntity implements Serializable {
         this.salt = salt;
     }
 
-//    public List<SaleTransactionEntity> getSaleTransactionEntities() {
-//        return saleTransactionEntities;
-//    }
-//
-//    public void setSaleTransactionEntities(List<SaleTransactionEntity> saleTransactionEntities) {
-//        this.saleTransactionEntities = saleTransactionEntities;
-//    }
+    public List<OrderTransactionEntity> getOrderTransactionEntities() {
+        return orderTransactionEntities;
+    }
+
+    public void setOrderTransactionEntities(List<OrderTransactionEntity> orderTransactionEntities) {
+        this.orderTransactionEntities = orderTransactionEntities;
+    }
 }
