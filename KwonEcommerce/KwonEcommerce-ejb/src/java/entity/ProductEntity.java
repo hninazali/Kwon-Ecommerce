@@ -82,7 +82,7 @@ public class ProductEntity implements Serializable
 
     
         
-    public ProductEntity(String skuCode, String name, String description, Integer quantityOnHand, Integer reorderQuantity, BigDecimal unitPrice /*, String category*/ , Integer productRating, BrandEntity brand) 
+    public ProductEntity(String skuCode, String name, String description, Integer quantityOnHand, Integer reorderQuantity, BigDecimal unitPrice /*, String category*/ , Integer productRating) 
     {
         this();
         
@@ -93,7 +93,7 @@ public class ProductEntity implements Serializable
         this.reorderQuantity = reorderQuantity;
         this.unitPrice = unitPrice;
         this.productRating = productRating;
-        this.brandEntity = brand;
+     
     }
     
     

@@ -53,6 +53,10 @@
                         <h:outputText value="#{productEntity.name}" />
                     </p:column>
                     
+                    <p:column headerText="Brand" sortBy="#{productEntity.quantityOnHand}" filterBy="#{productEntity.quantityOnHand}" filterMatchMode="contains">
+                        <h:outputText value="#{productEntity.quantityOnHand}" />
+                    </p:column>
+                    
                     <p:column headerText="Description" sortBy="#{productEntity.description}" filterBy="#{productEntity.description}" filterMatchMode="contains">
                         <h:outputText value="#{productEntity.description}" />
                     </p:column>

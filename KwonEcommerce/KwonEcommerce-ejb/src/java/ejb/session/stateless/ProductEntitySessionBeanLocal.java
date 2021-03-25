@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.Local;
 import util.exception.BrandNotFoundException;
 import util.exception.CategoryNotFoundException;
+import util.exception.CreateNewBrandException;
 import util.exception.CreateNewProductException;
 import util.exception.DeleteProductException;
 import util.exception.InputDataValidationException;
@@ -22,8 +23,8 @@ import util.exception.UpdateProductException;
 
 public interface ProductEntitySessionBeanLocal
 {
-    public ProductEntity createNewProduct(ProductEntity newProductEntity, Long categoryId, List<Long> tagIds) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewProductException;
-  
+    public ProductEntity createNewProduct(ProductEntity newProductEntity, Long categoryId, List<Long> tagIds, Long brandId) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewProductException, CreateNewBrandException, BrandNotFoundException;
+
     List<ProductEntity> retrieveAllProducts();
     
     public List<ProductEntity> searchProductsByName(String searchString);
@@ -36,7 +37,7 @@ public interface ProductEntitySessionBeanLocal
 
     ProductEntity retrieveProductByProductSkuCode(String skuCode) throws ProductNotFoundException;
 
-    public void updateProduct(ProductEntity productEntity, Long categoryId, List<Long> tagIds) throws ProductNotFoundException, CategoryNotFoundException, TagNotFoundException, UpdateProductException, InputDataValidationException;
+    public void updateProduct(ProductEntity productEntity, Long categoryId, List<Long> tagIds, Long brandId) throws ProductNotFoundException, CategoryNotFoundException, TagNotFoundException, BrandNotFoundException, UpdateProductException, InputDataValidationException;
     
     void deleteProduct(Long productId) throws ProductNotFoundException, DeleteProductException;
     

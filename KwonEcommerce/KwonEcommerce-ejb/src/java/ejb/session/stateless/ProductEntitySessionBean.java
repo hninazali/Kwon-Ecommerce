@@ -25,6 +25,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.BrandNotFoundException;
 import util.exception.CategoryNotFoundException;
+import util.exception.CreateNewBrandException;
 import util.exception.CreateNewProductException;
 import util.exception.DeleteProductException;
 import util.exception.InputDataValidationException;
@@ -76,7 +77,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
     // Updated in v5.1 with category entity and tag entity processing
     
     @Override
-    public ProductEntity createNewProduct(ProductEntity newProductEntity, Long categoryId, List<Long> tagIds) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewProductException
+    public ProductEntity createNewProduct(ProductEntity newProductEntity, Long categoryId, List<Long> tagIds, Long brandId) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewProductException, CreateNewBrandException, BrandNotFoundException
     {
         Set<ConstraintViolation<ProductEntity>>constraintViolations = validator.validate(newProductEntity);
         
@@ -91,6 +92,12 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
                 
                 CategoryEntity categoryEntity = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(categoryId);
                 
+                if(brandId ==null){
+                    throw new CreateNewBrandException("Error occured with creating new brand");
+                }
+                
+                BrandEntity brandEntity = brandEntitySessionBeanLocal.retrieveBrandByBrandId(brandId);
+                
                 if(!categoryEntity.getSubCategoryEntities().isEmpty())
                 {
                     throw new CreateNewProductException("Selected category for the new product is not a leaf category");
@@ -98,6 +105,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
                 
                 entityManager.persist(newProductEntity);
                 newProductEntity.setCategoryEntity(categoryEntity);
+                newProductEntity.setBrandEntity(brandEntity);
                 
                 if(tagIds != null && (!tagIds.isEmpty()))
                 {
@@ -367,7 +375,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
     // Updated in v5.1 with category entity and tag entity processing
     
     @Override
-    public void updateProduct(ProductEntity productEntity, Long categoryId, List<Long> tagIds) throws ProductNotFoundException, CategoryNotFoundException, TagNotFoundException, UpdateProductException, InputDataValidationException
+    public void updateProduct(ProductEntity productEntity, Long categoryId, List<Long> tagIds,  Long brandId) throws ProductNotFoundException, CategoryNotFoundException, TagNotFoundException, BrandNotFoundException, UpdateProductException, InputDataValidationException
     {
         if(productEntity != null && productEntity.getProductId()!= null)
         {
@@ -392,6 +400,12 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
                         productEntityToUpdate.setCategoryEntity(categoryEntityToUpdate);
                     }
                     
+                    if(brandId != null && (!productEntityToUpdate.getBrandEntity().getBrandId().equals(brandId))){
+                        BrandEntity brandEntity = brandEntitySessionBeanLocal.retrieveBrandByBrandId(brandId);
+                        productEntityToUpdate.setBrandEntity(brandEntity);
+           
+                    }
+                    
                     // Added in v5.1
                     if(tagIds != null)
                     {
@@ -414,6 +428,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
                     productEntityToUpdate.setQuantityOnHand(productEntity.getQuantityOnHand());
                     productEntityToUpdate.setReorderQuantity(productEntity.getReorderQuantity());
                     productEntityToUpdate.setUnitPrice(productEntity.getUnitPrice());
+                
                     // Removed in v5.0
                     //productEntityToUpdate.setCategory(productEntity.getCategory());
                     // Added in v5.1

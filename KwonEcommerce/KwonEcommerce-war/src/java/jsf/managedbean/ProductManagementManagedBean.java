@@ -5,9 +5,11 @@
  */
 package jsf.managedbean;
 
+import ejb.session.stateless.BrandEntitySessionBeanLocal;
 import ejb.session.stateless.CategoryEntitySessionBeanLocal;
 import ejb.session.stateless.ProductEntitySessionBeanLocal;
 import ejb.session.stateless.TagEntitySessionBeanLocal;
+import entity.BrandEntity;
 import entity.CategoryEntity;
 import entity.ProductEntity;
 import entity.TagEntity;
@@ -23,6 +25,8 @@ import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import util.exception.BrandNotFoundException;
+import util.exception.CreateNewBrandException;
 import util.exception.CreateNewProductException;
 import util.exception.DeleteProductException;
 import util.exception.InputDataValidationException;
@@ -38,12 +42,16 @@ import util.exception.UnknownPersistenceException;
 @ViewScoped
 public class ProductManagementManagedBean implements Serializable {
 
+    @EJB
+    private BrandEntitySessionBeanLocal brandEntitySessionBeanLocal;
+
      @EJB
     private ProductEntitySessionBeanLocal productEntitySessionBeanLocal;
     @EJB
     private CategoryEntitySessionBeanLocal categoryEntitySessionBeanLocal;
     @EJB
     private TagEntitySessionBeanLocal tagEntitySessionBeanLocal;
+    
     
     @Inject
     private ViewProductManagedBean viewProductManagedBean;
@@ -54,12 +62,16 @@ public class ProductManagementManagedBean implements Serializable {
     private ProductEntity newProductEntity;
     private Long categoryIdNew;
     private List<Long> tagIdsNew;
+    private Long brandIdNew;
     private List<CategoryEntity> categoryEntities;
-    private List<TagEntity> tagEntities;    
+    private List<TagEntity> tagEntities;   
+    private List<BrandEntity> brandEntities;
     
     private ProductEntity selectedProductEntityToUpdate;
     private Long categoryIdUpdate;
     private List<Long> tagIdsUpdate;
+    private Long brandIdUpdate;
+ 
     
     
     
@@ -76,6 +88,7 @@ public class ProductManagementManagedBean implements Serializable {
         productEntities = productEntitySessionBeanLocal.retrieveAllProducts();
         categoryEntities = categoryEntitySessionBeanLocal.retrieveAllLeafCategories();
         tagEntities = tagEntitySessionBeanLocal.retrieveAllTags();
+        brandEntities = brandEntitySessionBeanLocal.retrieveAllBrands();
     }
     
     
@@ -98,7 +111,7 @@ public class ProductManagementManagedBean implements Serializable {
         
         try
         {
-            ProductEntity pe = productEntitySessionBeanLocal.createNewProduct(newProductEntity, categoryIdNew, tagIdsNew);
+            ProductEntity pe = productEntitySessionBeanLocal.createNewProduct(newProductEntity, categoryIdNew, tagIdsNew, brandIdNew);
             productEntities.add(pe);
             
             if(filteredProductEntities != null)
@@ -109,11 +122,12 @@ public class ProductManagementManagedBean implements Serializable {
             newProductEntity = new ProductEntity();
             categoryIdNew = null;
             tagIdsNew = null;
+            brandIdNew = null;
             
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New product created successfully (Product ID: " + pe.getProductId() + ")", null));
         }
-        catch(InputDataValidationException | CreateNewProductException | ProductSkuCodeExistException | UnknownPersistenceException ex)
+        catch(InputDataValidationException | CreateNewProductException | ProductSkuCodeExistException | UnknownPersistenceException | CreateNewBrandException | BrandNotFoundException ex)
         {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while creating the new product: " + ex.getMessage(), null));
         }
@@ -126,6 +140,7 @@ public class ProductManagementManagedBean implements Serializable {
         selectedProductEntityToUpdate = (ProductEntity)event.getComponent().getAttributes().get("productEntityToUpdate");
         
         categoryIdUpdate = selectedProductEntityToUpdate.getCategoryEntity().getCategoryId();
+        setBrandIdUpdate(selectedProductEntityToUpdate.getBrandEntity().getBrandId());
         tagIdsUpdate = new ArrayList<>();
 
         for(TagEntity tagEntity:selectedProductEntityToUpdate.getTagEntities())
@@ -145,7 +160,7 @@ public class ProductManagementManagedBean implements Serializable {
         
         try
         {
-            productEntitySessionBeanLocal.updateProduct(selectedProductEntityToUpdate, categoryIdUpdate, tagIdsUpdate);
+            productEntitySessionBeanLocal.updateProduct(selectedProductEntityToUpdate, categoryIdUpdate, tagIdsUpdate, brandIdUpdate);
                         
             for(CategoryEntity ce:categoryEntities)
             {
@@ -295,6 +310,34 @@ public class ProductManagementManagedBean implements Serializable {
     public void setTagIdsUpdate(List<Long> tagIdsUpdate) {
         this.tagIdsUpdate = tagIdsUpdate;
     }   
+
+    /**
+     * @return the brandIdUpdate
+     */
+    public Long getBrandIdUpdate() {
+        return brandIdUpdate;
+    }
+
+    /**
+     * @param brandIdUpdate the brandIdUpdate to set
+     */
+    public void setBrandIdUpdate(Long brandIdUpdate) {
+        this.brandIdUpdate = brandIdUpdate;
+    }
+
+    /**
+     * @return the brandEntities
+     */
+    public List<BrandEntity> getBrandEntities() {
+        return brandEntities;
+    }
+
+    /**
+     * @param brandEntities the brandEntities to set
+     */
+    public void setBrandEntities(List<BrandEntity> brandEntities) {
+        this.brandEntities = brandEntities;
+    }
     
     
 }
