@@ -9,6 +9,7 @@ import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewProductException;
 import util.exception.DeleteProductException;
 import util.exception.InputDataValidationException;
+import util.exception.OrderRequestNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
 import util.exception.ProductSkuCodeExistException;
@@ -47,4 +48,8 @@ public interface ProductEntitySessionBeanLocal
     public List<ProductEntity> filterProductsByBrand(Long brandId) throws BrandNotFoundException;
 
     public List<ProductEntity> filterProductsByPrice(BigDecimal startPrice, BigDecimal endPrice);
+
+    public void orderProduct(long productId, int quantityToOrder) throws ProductNotFoundException;
+
+    public void approveOrder(long requestId) throws OrderRequestNotFoundException, ProductNotFoundException;
 }

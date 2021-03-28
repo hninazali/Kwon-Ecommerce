@@ -26,8 +26,6 @@ public interface OrderTransactionSessionBeanLocal {
 
     public List<OrderTransactionEntity> retrieveAllOrderTransactions();
 
-    public List<OrderLineItemEntity> retrieveOrderTransactionLineItemsByProductId(Long productId);
-
     public void updateOrderTransaction(OrderTransactionEntity orderTransactionEntity);
 
     public void voidRefundOrderTransaction(Long orderTransactionId) throws OrderTransactionNotFoundException, OrderTransactionAlreadyVoidedRefundedException;
@@ -41,5 +39,7 @@ public interface OrderTransactionSessionBeanLocal {
     public void approveRefund(OrderTransactionEntity orderTransaction) throws OrderTransactionAlreadyVoidedRefundedException;
 
     public void updateShippingStatus(long orderId, ShippingStatusEnum shippingStatus) throws OrderTransactionNotFoundException;
+
+    public List<OrderLineItemEntity> retrieveOrderLineItemsByProductId(Long productId);
     
 }

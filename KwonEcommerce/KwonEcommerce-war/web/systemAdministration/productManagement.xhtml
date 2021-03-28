@@ -88,6 +88,9 @@
                             <f:attribute name="productEntityToDelete" value="#{productEntity}" />
                             <p:confirm header="Confirmation" message="Are you sure you want to delete #{productEntity.name} (SKU Code: #{productEntity.skuCode})?" icon="ui-icon-alert" />
                         </p:commandButton>
+                        <p:commandButton actionListener="#{productManagementManagedBean.doOrderProduct}" update="formOrderProduct" oncomplete="PF('dialogOrderProduct').show()" icon="ui-shopping-cart" title="Order">
+                            <f:attribute name="productEntityToOrder" value="#{productEntity}" />
+                        </p:commandButton>
                     </p:column>
 
                 </p:dataTable>
@@ -375,6 +378,38 @@
                         <p:row>
                             <p:column colspan="3">
                                 <p:commandButton value="Update Product" update="@form formAllProducts:dataTableAllProducts" actionListener="#{productManagementManagedBean.updateProduct}" oncomplete="PF('dialogUpdateProduct').show();" />
+                            </p:column>
+                        </p:row>
+
+                    </p:panelGrid>
+
+                </p:dialog>
+
+            </h:form>
+            
+            <h:form id="formOrderProduct">
+
+                <p:dialog id="dialogOrderProduct" widgetVar="dialogOrderProduct" header="Order Product" closable="true">
+
+                    <p:messages id="messagesOrderProduct" redisplay="false" />
+
+                    <p:panelGrid>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="quantityToOrder" value="Quantity On Hand " />
+                            </p:column>
+                            <p:column>
+                                <p:spinner id="quantityToOrder" value="#{productManagementManagedBean.quantityToOrder}" placeholder="100" min="0" max="1000000" required="true" requiredMessage="Quantity to order is required" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="quantityToOrder" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:commandButton value="Order Product" update="@form formAllProducts:dataTableAllProducts" actionListener="#{productManagementManagedBean.orderProduct}" oncomplete="PF('dialogUpdateProduct').show();" />
                             </p:column>
                         </p:row>
 

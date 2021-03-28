@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -60,6 +62,9 @@ public class ProductManagementManagedBean implements Serializable {
     private ProductEntity selectedProductEntityToUpdate;
     private Long categoryIdUpdate;
     private List<Long> tagIdsUpdate;
+    
+    private ProductEntity productToOrder;
+    private Integer quantityToOrder = 0;
     
     
     
@@ -205,8 +210,20 @@ public class ProductManagementManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
     }
-
     
+    public void doOrderProduct(ActionEvent event)
+    {
+        productToOrder = (ProductEntity)event.getComponent().getAttributes().get("productEntityToOrder");
+    }
+    
+    public void orderProduct(ActionEvent event) {
+         try {
+             productEntitySessionBeanLocal.orderProduct(productToOrder.getProductId(), quantityToOrder);
+         } catch (ProductNotFoundException ex) {
+             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+         }
+        
+    }
     
     public ViewProductManagedBean getViewProductManagedBean() {
         return viewProductManagedBean;
@@ -295,6 +312,22 @@ public class ProductManagementManagedBean implements Serializable {
     public void setTagIdsUpdate(List<Long> tagIdsUpdate) {
         this.tagIdsUpdate = tagIdsUpdate;
     }   
+
+    public ProductEntity getProductToOrder() {
+        return productToOrder;
+    }
+
+    public void setProductToOrder(ProductEntity productToOrder) {
+        this.productToOrder = productToOrder;
+    }
+
+    public Integer getQuantityToOrder() {
+        return quantityToOrder;
+    }
+
+    public void setQuantityToOrder(Integer quantityToOrder) {
+        this.quantityToOrder = quantityToOrder;
+    }
     
     
 }
