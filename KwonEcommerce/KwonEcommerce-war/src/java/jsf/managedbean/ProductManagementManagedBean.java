@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -72,6 +74,9 @@ public class ProductManagementManagedBean implements Serializable {
     private List<Long> tagIdsUpdate;
     private Long brandIdUpdate;
  
+    
+    private ProductEntity productToOrder;
+    private Integer quantityToOrder = 0;
     
     
     
@@ -220,8 +225,20 @@ public class ProductManagementManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
         }
     }
-
     
+    public void doOrderProduct(ActionEvent event)
+    {
+        productToOrder = (ProductEntity)event.getComponent().getAttributes().get("productEntityToOrder");
+    }
+    
+    public void orderProduct(ActionEvent event) {
+         try {
+             productEntitySessionBeanLocal.orderProduct(productToOrder.getProductId(), quantityToOrder);
+         } catch (ProductNotFoundException ex) {
+             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An unexpected error has occurred: " + ex.getMessage(), null));
+         }
+        
+    }
     
     public ViewProductManagedBean getViewProductManagedBean() {
         return viewProductManagedBean;
@@ -311,32 +328,20 @@ public class ProductManagementManagedBean implements Serializable {
         this.tagIdsUpdate = tagIdsUpdate;
     }   
 
-    /**
-     * @return the brandIdUpdate
-     */
-    public Long getBrandIdUpdate() {
-        return brandIdUpdate;
+    public ProductEntity getProductToOrder() {
+        return productToOrder;
     }
 
-    /**
-     * @param brandIdUpdate the brandIdUpdate to set
-     */
-    public void setBrandIdUpdate(Long brandIdUpdate) {
-        this.brandIdUpdate = brandIdUpdate;
+    public void setProductToOrder(ProductEntity productToOrder) {
+        this.productToOrder = productToOrder;
     }
 
-    /**
-     * @return the brandEntities
-     */
-    public List<BrandEntity> getBrandEntities() {
-        return brandEntities;
+    public Integer getQuantityToOrder() {
+        return quantityToOrder;
     }
 
-    /**
-     * @param brandEntities the brandEntities to set
-     */
-    public void setBrandEntities(List<BrandEntity> brandEntities) {
-        this.brandEntities = brandEntities;
+    public void setQuantityToOrder(Integer quantityToOrder) {
+        this.quantityToOrder = quantityToOrder;
     }
     
     

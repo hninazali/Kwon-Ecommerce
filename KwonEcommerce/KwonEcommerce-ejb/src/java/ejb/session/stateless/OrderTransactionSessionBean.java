@@ -113,7 +113,7 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
     // Added in v4.1
     
     @Override
-    public List<OrderLineItemEntity> retrieveOrderTransactionLineItemsByProductId(Long productId)
+    public List<OrderLineItemEntity> retrieveOrderLineItemsByProductId(Long productId)
     {
         Query query = entityManager.createNamedQuery("selectAllOrderTransactionLineItemsByProductId");
         query.setParameter("inProductId", productId);
