@@ -93,7 +93,7 @@ public class ProductManagementManagedBean implements Serializable {
         productEntities = productEntitySessionBeanLocal.retrieveAllProducts();
         categoryEntities = categoryEntitySessionBeanLocal.retrieveAllLeafCategories();
         tagEntities = tagEntitySessionBeanLocal.retrieveAllTags();
-        brandEntities = brandEntitySessionBeanLocal.retrieveAllBrands();
+        setBrandEntities(brandEntitySessionBeanLocal.retrieveAllBrands());
     }
     
     
@@ -165,7 +165,7 @@ public class ProductManagementManagedBean implements Serializable {
         
         try
         {
-            productEntitySessionBeanLocal.updateProduct(selectedProductEntityToUpdate, categoryIdUpdate, tagIdsUpdate, brandIdUpdate);
+            productEntitySessionBeanLocal.updateProduct(selectedProductEntityToUpdate, categoryIdUpdate, tagIdsUpdate, getBrandIdUpdate());
                         
             for(CategoryEntity ce:categoryEntities)
             {
@@ -342,6 +342,22 @@ public class ProductManagementManagedBean implements Serializable {
 
     public void setQuantityToOrder(Integer quantityToOrder) {
         this.quantityToOrder = quantityToOrder;
+    }
+
+    public Long getBrandIdUpdate() {
+        return brandIdUpdate;
+    }
+
+    public void setBrandIdUpdate(Long brandIdUpdate) {
+        this.brandIdUpdate = brandIdUpdate;
+    }
+
+    public List<BrandEntity> getBrandEntities() {
+        return brandEntities;
+    }
+
+    public void setBrandEntities(List<BrandEntity> brandEntities) {
+        this.brandEntities = brandEntities;
     }
     
     
