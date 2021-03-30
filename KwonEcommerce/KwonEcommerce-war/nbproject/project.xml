@@ -26,7 +26,10 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${libs.PrimeFaces_8.9.classpath}</file>
+                    <file>${# Space-separated list of extra javac options}</file>
+                </library>
+                <library dirs="200">
+                    <file>${libs.PrimeFaces_PepperGrind.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

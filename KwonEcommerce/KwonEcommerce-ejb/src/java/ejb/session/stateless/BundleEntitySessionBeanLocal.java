@@ -28,10 +28,10 @@ import util.exception.UpdateBundleException;
 @Local
 public interface BundleEntitySessionBeanLocal {
     
-    public BundleEntity createNewProduct(BundleEntity newBundleEntity, List<Long> tagIds) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException;
+    public BundleEntity createNewBundle(BundleEntity newBundleEntity, List<Long> tagIds) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException;
     public List<BundleEntity> retrieveAllBundles();
     public List<BundleEntity> searchBundlesByName(String searchString);
-    public List<BundleEntity> filterProductsByTags(List<Long> tagIds, String condition);
+    public List<BundleEntity> filterBundlesByTags(List<Long> tagIds, String condition);
     public List<BundleEntity> filterProductsByPrice(BigDecimal startPrice, BigDecimal endPrice);
     public BundleEntity retrieveBundleByBundleId(Long bundleId) throws BundleNotFoundException;
     public BundleEntity retrieveProductByProductSkuCode(String skuCode) throws BundleNotFoundException;

@@ -35,7 +35,7 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
 
     //@EJB(name = "CustomerEntitySessionBeanLocal")
     //private CustomerEntitySessionBeanLocal customerEntitySessionBeanLocal;
-    @PersistenceContext(unitName = "PointOfOrderSystemV54-ejbPU")
+    @PersistenceContext(unitName = "KwonEcommerce-ejbPU")
     private EntityManager entityManager;
     @Resource
     private EJBContext eJBContext;

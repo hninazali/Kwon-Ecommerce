@@ -33,10 +33,13 @@ import util.exception.DeleteProductException;
 import util.exception.CreateNewBrandException;
 import util.exception.CreateNewProductException;
 import util.exception.InputDataValidationException;
+import util.exception.OrderRequestNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
+import util.exception.ProductSkuCodeExistException;
 import util.exception.TagNotFoundException;
 import util.exception.UnknownPersistenceException;
+import util.exception.UpdateProductException;
 
 
 

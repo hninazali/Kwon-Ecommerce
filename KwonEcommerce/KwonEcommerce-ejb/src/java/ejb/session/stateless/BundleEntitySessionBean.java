@@ -71,7 +71,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
     }
     
    @Override
-    public BundleEntity createNewProduct(BundleEntity newBundleEntity, List<Long> tagIds) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException
+    public BundleEntity createNewBundle(BundleEntity newBundleEntity, List<Long> tagIds) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException
     {
         Set<ConstraintViolation<BundleEntity>>constraintViolations = validator.validate(newBundleEntity);
         
@@ -139,7 +139,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
     @Override
     public List<BundleEntity> retrieveAllBundles()
     {
-        Query query = entityManager.createQuery("SELECT b FROM BundleEntity b ORDER BY p.skuCode ASC");        
+        Query query = entityManager.createQuery("SELECT b FROM BundleEntity b ORDER BY b.skuCode ASC");        
         List<BundleEntity> bundleEntities = query.getResultList();
         
         for(BundleEntity bundleEntity:bundleEntities)
@@ -156,7 +156,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
     @Override
     public List<BundleEntity> searchBundlesByName(String searchString)
     {
-        Query query = entityManager.createQuery("SELECT p FROM BundleEntity p WHERE p.name LIKE :inSearchString ORDER BY p.skuCode ASC");
+        Query query = entityManager.createQuery("SELECT b FROM BundleEntity b WHERE b.name LIKE :inSearchString ORDER BY b.skuCode ASC");
         query.setParameter("inSearchString", "%" + searchString + "%");
         List<BundleEntity> bundleEntities = query.getResultList();
         
@@ -170,7 +170,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
     }
       
      @Override
-    public List<BundleEntity> filterProductsByTags(List<Long> tagIds, String condition)
+    public List<BundleEntity> filterBundlesByTags(List<Long> tagIds, String condition)
     {
         List<BundleEntity> bundleEntities = new ArrayList<>();
         
@@ -188,7 +188,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
             }
             else // AND
             {
-                String selectClause = "SELECT pe FROM ProductEntity pe";
+                String selectClause = "SELECT pe FROM BundleEntity pe";
                 String whereClause = "";
                 Boolean firstTag = true;
                 Integer tagCount = 1;
@@ -215,10 +215,10 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
                 bundleEntities = query.getResultList();                                
             }
             
-            for(BundleEntity productEntity:bundleEntities)
+            for(BundleEntity bundleEntity:bundleEntities)
             {
-                productEntity.getCategoryEntities();
-                productEntity.getTagEntities().size();
+                bundleEntity.getCategoryEntities();
+                bundleEntity.getTagEntities().size();
             }
             
             Collections.sort(bundleEntities, new Comparator<BundleEntity>()
@@ -353,7 +353,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
                     bundleEntityToUpdate.setDescription(bundleEntity.getDescription());
                     bundleEntityToUpdate.setUnitPrice(bundleEntity.getUnitPrice());
                     // Removed in v5.0
-                    //productEntityToUpdate.setCategory(productEntity.getCategory());
+                    //productEntityToUpdate.setCategory(bundleEntity.getCategory());
                     // Added in v5.1
 //                    bundleEntityToUpdate.setProductRating((bundleEntity.getProductRating()));
                 }
