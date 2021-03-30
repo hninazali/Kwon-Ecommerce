@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -25,6 +27,13 @@ public class BrandEntity implements Serializable {
     @NotNull
     @Size(max = 32)
     private String name;
+    
+    @OneToMany(mappedBy = "brandEntity", fetch = FetchType.LAZY)
+    private List<ProductEntity> productEntities;
+    
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true)
+    private SupplierEntity supplier;
 
     public BrandEntity() {
         productEntities = new ArrayList<>();
@@ -35,8 +44,7 @@ public class BrandEntity implements Serializable {
         this.name = name;
     }
     
-    @OneToMany(mappedBy = "brandEntity", fetch = FetchType.LAZY)
-    private List<ProductEntity> productEntities;
+   
     
     public Long getBrandId() {
         return brandId;
@@ -85,6 +93,14 @@ public class BrandEntity implements Serializable {
 
     public void setProductEntities(List<ProductEntity> productEntities) {
         this.productEntities = productEntities;
+    }
+
+    public SupplierEntity getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(SupplierEntity supplier) {
+        this.supplier = supplier;
     }
     
 }

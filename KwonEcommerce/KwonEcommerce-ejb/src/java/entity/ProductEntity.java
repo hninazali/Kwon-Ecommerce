@@ -73,8 +73,7 @@ public class ProductEntity implements Serializable
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private BrandEntity brandEntity;
-
-    
+  
     
     public ProductEntity() 
     {
@@ -94,6 +93,7 @@ public class ProductEntity implements Serializable
         this.reorderQuantity = reorderQuantity;
         this.unitPrice = unitPrice;
         this.productRating = productRating;
+     
     }
     
     
@@ -276,10 +276,10 @@ public class ProductEntity implements Serializable
     public BrandEntity getBrandEntity() {
         return brandEntity;
     }
-
-    /**
-     * @param brandEntity the brandEntity to set
-     */
+//
+//    /**
+//     * @param brandEntity the brandEntity to set
+//     */
     public void setBrandEntity(BrandEntity brandEntity) {
         this.brandEntity = brandEntity;
     }

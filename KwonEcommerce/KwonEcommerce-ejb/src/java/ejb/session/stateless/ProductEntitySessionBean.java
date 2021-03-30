@@ -5,6 +5,9 @@ import entity.ProductEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.TagEntity;
 import entity.BrandEntity;
+import entity.OrderLineItemEntity;
+import entity.OrderRequestEntity;
+import entity.SupplierEntity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,13 +30,13 @@ import util.exception.BrandNotFoundException;
 import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewProductException;
 import util.exception.DeleteProductException;
+import util.exception.CreateNewBrandException;
+import util.exception.CreateNewProductException;
 import util.exception.InputDataValidationException;
 import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
-import util.exception.ProductSkuCodeExistException;
 import util.exception.TagNotFoundException;
 import util.exception.UnknownPersistenceException;
-import util.exception.UpdateProductException;
 
 
 
@@ -52,6 +55,8 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
     private TagEntitySessionBeanLocal tagEntitySessionBeanLocal;
 //    @EJB
 //    private SaleTransactionEntitySessionBeanLocal saleTransactionEntitySessionBeanLocal;
+    @EJB
+    private OrderTransactionSessionBeanLocal orderTransactionSessionBeanLocal;
     
     @EJB
     private BrandEntitySessionBeanLocal brandEntitySessionBeanLocal;
@@ -76,7 +81,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
     // Updated in v5.1 with category entity and tag entity processing
     
     @Override
-    public ProductEntity createNewProduct(ProductEntity newProductEntity, Long categoryId, List<Long> tagIds) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewProductException
+    public ProductEntity createNewProduct(ProductEntity newProductEntity, Long categoryId, List<Long> tagIds, Long brandId) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewProductException, CreateNewBrandException, BrandNotFoundException
     {
         Set<ConstraintViolation<ProductEntity>>constraintViolations = validator.validate(newProductEntity);
         
@@ -91,6 +96,12 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
                 
                 CategoryEntity categoryEntity = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(categoryId);
                 
+                if(brandId ==null){
+                    throw new CreateNewBrandException("Error occured with creating new brand");
+                }
+                
+                BrandEntity brandEntity = brandEntitySessionBeanLocal.retrieveBrandByBrandId(brandId);
+                
                 if(!categoryEntity.getSubCategoryEntities().isEmpty())
                 {
                     throw new CreateNewProductException("Selected category for the new product is not a leaf category");
@@ -98,6 +109,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
                 
                 entityManager.persist(newProductEntity);
                 newProductEntity.setCategoryEntity(categoryEntity);
+                newProductEntity.setBrandEntity(brandEntity);
                 
                 if(tagIds != null && (!tagIds.isEmpty()))
                 {
@@ -378,7 +390,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
     // Updated in v5.1 with category entity and tag entity processing
     
     @Override
-    public void updateProduct(ProductEntity productEntity, Long categoryId, List<Long> tagIds) throws ProductNotFoundException, CategoryNotFoundException, TagNotFoundException, UpdateProductException, InputDataValidationException
+    public void updateProduct(ProductEntity productEntity, Long categoryId, List<Long> tagIds,  Long brandId) throws ProductNotFoundException, CategoryNotFoundException, TagNotFoundException, BrandNotFoundException, UpdateProductException, InputDataValidationException
     {
         if(productEntity != null && productEntity.getProductId()!= null)
         {
@@ -403,6 +415,12 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
                         productEntityToUpdate.setCategoryEntity(categoryEntityToUpdate);
                     }
                     
+                    if(brandId != null && (!productEntityToUpdate.getBrandEntity().getBrandId().equals(brandId))){
+                        BrandEntity brandEntity = brandEntitySessionBeanLocal.retrieveBrandByBrandId(brandId);
+                        productEntityToUpdate.setBrandEntity(brandEntity);
+           
+                    }
+                    
                     // Added in v5.1
                     if(tagIds != null)
                     {
@@ -425,6 +443,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
                     productEntityToUpdate.setQuantityOnHand(productEntity.getQuantityOnHand());
                     productEntityToUpdate.setReorderQuantity(productEntity.getReorderQuantity());
                     productEntityToUpdate.setUnitPrice(productEntity.getUnitPrice());
+                
                     // Removed in v5.0
                     //productEntityToUpdate.setCategory(productEntity.getCategory());
                     // Added in v5.1
@@ -468,6 +487,16 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
 //        {
 //            throw new DeleteProductException("Product ID " + productId + " is associated with existing sale transaction line item(s) and cannot be deleted!");
 //        }
+        List<OrderLineItemEntity> orderLineItemEntities = orderTransactionSessionBeanLocal.retrieveOrderLineItemsByProductId(productId);
+        
+        if(orderLineItemEntities.isEmpty())
+        {
+            entityManager.remove(productEntityToRemove);
+        }
+        else
+        {
+            throw new DeleteProductException("Product ID " + productId + " is associated with existing order line item(s) and cannot be deleted!");
+        }
     }
     
     
@@ -500,6 +529,34 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
         productEntity.setQuantityOnHand(productEntity.getQuantityOnHand() + quantityToCredit);
     }
     
+    @Override
+    public void orderProduct(long productId, int quantityToOrder) throws ProductNotFoundException {
+        ProductEntity product = this.retrieveProductByProductId(productId);
+        OrderRequestEntity orderRequest = new OrderRequestEntity(false, quantityToOrder);
+        entityManager.persist(orderRequest);
+        orderRequest.setProduct(product);
+        SupplierEntity supplier = product.getBrandEntity().getSupplier();
+        orderRequest.setSupplier(supplier);
+    }
+    
+    @Override
+    public void approveOrder(long requestId) throws OrderRequestNotFoundException, ProductNotFoundException 
+    {
+        OrderRequestEntity orderRequest = entityManager.find(OrderRequestEntity.class, requestId);
+        
+        if(orderRequest != null)
+        {
+            orderRequest.setIsApproved(true);
+            ProductEntity temp = orderRequest.getProduct();
+            ProductEntity product = this.retrieveProductByProductId(temp.getProductId());
+            int currentQtyOnHand = product.getQuantityOnHand();
+            product.setQuantityOnHand(currentQtyOnHand + orderRequest.getQuantityOrdered());
+        }
+        else
+        {
+            throw new OrderRequestNotFoundException("Order Request Id ID " + requestId + " does not exist!");
+        }
+    }
     
     
     // Newly added in v5.1
