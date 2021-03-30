@@ -153,6 +153,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
         {
             productEntity.getCategoryEntity();
             productEntity.getTagEntities().size();
+            productEntity.getBrandEntity();
         }
         
         return productEntities;
@@ -173,6 +174,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
         {
             productEntity.getCategoryEntity();
             productEntity.getTagEntities().size();
+            productEntity.getBrandEntity();
         }
         
         return productEntities;
@@ -204,6 +206,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
         {
             productEntity.getCategoryEntity();
             productEntity.getTagEntities().size();
+            productEntity.getBrandEntity();
         }
         
         Collections.sort(productEntities, new Comparator<ProductEntity>()
@@ -268,6 +271,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
             {
                 productEntity.getCategoryEntity();
                 productEntity.getTagEntities().size();
+                productEntity.getBrandEntity();
             }
             
             Collections.sort(productEntities, new Comparator<ProductEntity>()
@@ -315,6 +319,13 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
         query.setParameter("inStartPrice", startPrice);
         query.setParameter("inEndPrice", endPrice);
         productEntities = query.getResultList();
+        
+        for(ProductEntity productEntity:productEntities)
+        {
+            productEntity.getCategoryEntity();
+            productEntity.getBrandEntity();
+            productEntity.getTagEntities().size();
+        }
 
         return productEntities;
     }

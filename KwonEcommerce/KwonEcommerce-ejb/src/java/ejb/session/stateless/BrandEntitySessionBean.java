@@ -74,7 +74,7 @@ public class BrandEntitySessionBean implements BrandEntitySessionBeanLocal {
     @Override
     public List<BrandEntity> retrieveAllBrands()
     {
-        Query query = entityManager.createQuery("SELECT b FROM BrandEntity b ORDER BY b.name ASC");
+        Query query = entityManager.createQuery("SELECT b FROM BrandEntity b ORDER BY b.brandId ASC");
         List<BrandEntity> brandEntities = query.getResultList();
         
         for(BrandEntity brandEntity:brandEntities)

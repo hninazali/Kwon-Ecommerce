@@ -97,7 +97,7 @@ public class CategoryEntitySessionBean implements CategoryEntitySessionBeanLocal
     @Override
     public List<CategoryEntity> retrieveAllCategories()
     {
-        Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c ORDER BY c.name ASC");
+        Query query = entityManager.createQuery("SELECT c FROM CategoryEntity c ORDER BY c.categoryId ASC");
         List<CategoryEntity> categoryEntities = query.getResultList();
         
         for(CategoryEntity categoryEntity:categoryEntities)

@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/template/defaultTemplate.xhtml"
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+
+        <ez:Breadcrumb pageName="brandManagement" />
+
+        <div>
+            <h3>Brand Management</h3>
+
+            <h:form>
+
+                <p:menubar>
+
+                    <p:submenu label="Create New Brand" icon="ui-icon-document">
+                        <p:menuitem value="Create New Brand" onclick="PF('dialogCreateNewBrand').show()" icon="pi pi-plus" />
+                    </p:submenu>                                        
+
+                </p:menubar>
+                <br/>
+
+            </h:form>
+
+            <h:form id="formAllBrands">
+
+                <p:messages id="messages" redisplay="false" closable="true" />
+
+                <p:dataTable id="dataTableAllBrands" widgetVar="dataTableAllBrands" value="#{brandManagementManagedBean.brandEntities}" var="brandEntity" rowKey="#{brandEntity.brandId}" rowIndexVar="row"
+                             filteredValue="#{brandManagementManagedBean.filteredBrandEntities}"
+                             rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                    <f:facet name="header">
+                        <p:outputPanel style="text-align: right;">
+                            <h:outputText value="Search all fields:" />
+                            <p:inputText id="globalFilter" onkeyup="PF('dataTableAllBrands').filter()" style="width:300px" placeholder="Enter keyword"/>
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="Brand ID" sortBy="#{brandEntity.brandId}" filterBy="#{brandEntity.brandId}" filterMatchMode="contains">
+                        <h:outputText value="#{brandEntity.brandId}" />
+                    </p:column>                            
+
+                    <p:column headerText="Name" sortBy="#{brandEntity.name}" filterBy="#{brandEntity.name}" filterMatchMode="contains">
+                        <h:outputText value="#{brandEntity.name}" />
+                    </p:column>
+
+                    <p:column headerText="Action" >
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{brandManagementManagedBean.deleteBrand}" update="formAllBrands:dataTableAllBrands formAllBrands:messages">
+                            <f:attribute name="brandEntityToDelete" value="#{brandEntity}" />
+                            <p:confirm header="Confirmation" message="Are you sure you want to delete #{brandEntity.name} brand?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+
+            </h:form>
+
+            <h:form id="formCreateNewBrand">
+
+                <p:dialog id="dialogCreateNewBrand" widgetVar="dialogCreateNewBrand" header="Create New Brand" closable="true">
+
+                    <p:messages id="messagesCreateNewBrand" redisplay="false" />
+
+                    <p:panelGrid>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="name" value="Name: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="name" value="#{brandManagementManagedBean.newBrandEntity.name}" placeholder="Brand 1" required="true" requiredMessage="Name is required" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="name" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:commandButton type="reset" value="Clear" />&nbsp;
+                                <p:commandButton  value="Create New Brand" update="@form formAllBrands:dataTableAllBrands" actionListener="#{brandManagementManagedBean.createNewBrand}" oncomplete="PF('dialogCreateNewBrand').show();" />
+                            </p:column>
+                        </p:row>
+
+                    </p:panelGrid>
+
+                </p:dialog>
+
+            </h:form>
+
+            <ez:ViewProduct id="ccViewProduct" />
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>
