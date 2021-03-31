@@ -26,10 +26,6 @@ import util.exception.StaffUsernameExistException;
 import util.exception.UnknownPersistenceException;
 import util.exception.UpdateStaffException;
 
-/**
- *
- * @author winyfebriny
- */
 @Named(value = "staffManagementManagedBean")
 @ViewScoped
 public class StaffManagementManagedBean implements Serializable {

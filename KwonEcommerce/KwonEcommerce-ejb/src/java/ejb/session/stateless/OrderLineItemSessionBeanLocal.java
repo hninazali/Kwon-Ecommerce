@@ -5,7 +5,13 @@
  */
 package ejb.session.stateless;
 
+import entity.OrderLineItemEntity;
+import java.util.List;
 import javax.ejb.Local;
+import util.exception.CreateNewOrderLineItemException;
+import util.exception.CustomerNotFoundException;
+import util.exception.InputDataValidationException;
+import util.exception.OrderLineItemNotFoundException;
 
 /**
  *
@@ -13,5 +19,14 @@ import javax.ejb.Local;
  */
 @Local
 public interface OrderLineItemSessionBeanLocal {
-    
+
+    OrderLineItemEntity createNewOrderLineItem(Long customerId, OrderLineItemEntity newOrderLineItem) throws CreateNewOrderLineItemException, CustomerNotFoundException, InputDataValidationException;
+
+    List<OrderLineItemEntity> retrieveAllOrderLineItemEntities();
+
+    OrderLineItemEntity retrieveOrderLineItemById(Long orderLineItemId) throws OrderLineItemNotFoundException;
+
+    void updateOrderLineItemEntity(OrderLineItemEntity orderLineItemEntity);
+
+    void deleteOrderLineItemEntity(OrderLineItemEntity orderLineItemEntity);
 }

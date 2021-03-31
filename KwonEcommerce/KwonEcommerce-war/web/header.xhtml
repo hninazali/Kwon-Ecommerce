@@ -10,13 +10,13 @@
             <h:form id="accountLoginForm">
 
                 <p:outputLabel for="username" value="Username" />&nbsp;
-                <p:inputText id="username" value="#{accountLoginManagedBean.username}" size="16" required="true" requiredMessage="username is required" maxlength="32" />&nbsp;
+                <p:inputText id="username" value="#{staffLoginManagedBean.username}" size="16" required="true" requiredMessage="username is required" maxlength="32" />&nbsp;
                 
                 <p:outputLabel for="password" value="Password" />&nbsp;
-                <p:password id="password" value="#{accountLoginManagedBean.password}" size="16" required="true" requiredMessage="Password is required" maxlength="32"/>&nbsp;
+                <p:password id="password" value="#{staffLoginManagedBean.password}" size="16" required="true" requiredMessage="Password is required" maxlength="32"/>&nbsp;
                 
                 <p:commandButton type="reset" value="Clear" icon="pi pi-undo" />&nbsp;
-                <p:commandButton type="submit" value="Login" actionListener="#{accountLoginManagedBean.login}" icon="pi pi-sign-in" />
+                <p:commandButton type="submit" value="Login" actionListener="#{staffLoginManagedBean.login}" icon="pi pi-sign-in" />
 
                 <p:growl>
                     <p:autoUpdate />
@@ -27,8 +27,8 @@
 
         <h:panelGroup rendered="#{sessionScope.isLogin == true}">
             <h:form id="logoutForm">
-                <h:outputText value="Welcome back, #{sessionScope.accountEntity.firstName} #{sessionScope.accountEntity.lastName}" />&nbsp;
-                <p:commandButton value="Logout" actionListener="#{accountLoginManagedBean.logout}" icon="pi pi-sign-out" />
+                <h:outputText value="Welcome back, #{sessionScope.staffEntity.firstName} #{sessionScope.staffEntity.lastName}" />&nbsp;
+                <p:commandButton value="Logout" actionListener="#{staffLoginManagedBean.logout}" icon="pi pi-sign-out" />
             </h:form>
         </h:panelGroup>
         

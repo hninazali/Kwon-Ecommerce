@@ -5,8 +5,8 @@
  */
 package jsf.managedbean;
 
-import ejb.session.stateless.AccountSessionBeanLocal;
-import entity.AccountEntity;
+import ejb.session.stateless.StaffEntitySessionBeanLocal;
+import entity.StaffEntity;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.ejb.EJB;
@@ -18,22 +18,18 @@ import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpSession;
 import util.exception.InvalidLoginCredentialException;
 
-/**
- *
- * @author winyfebriny
- */
 @Named
 @RequestScoped
-public class AccountLoginManagedBean implements Serializable {
+public class StaffLoginManagedBean implements Serializable {
 
     @EJB
-    private AccountSessionBeanLocal accountSessionBeanLocal;
+    private StaffEntitySessionBeanLocal staffEntitySessionBeanLocal;
 
 
     private String username;
     private String password;
     
-    public AccountLoginManagedBean() 
+    public StaffLoginManagedBean() 
     {
     }
     
@@ -41,10 +37,10 @@ public class AccountLoginManagedBean implements Serializable {
     {
         try
         {
-            AccountEntity accountEntity = accountSessionBeanLocal.accountLogin(username, password);
+            StaffEntity staffEntity = staffEntitySessionBeanLocal.staffLogin(username, password);
             FacesContext.getCurrentInstance().getExternalContext().getSession(true);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("isLogin", true);
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("accountEntity", accountEntity);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("accountEntity", staffEntity);
             FacesContext.getCurrentInstance().getExternalContext().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/index.xhtml");
         }
         catch(InvalidLoginCredentialException ex)

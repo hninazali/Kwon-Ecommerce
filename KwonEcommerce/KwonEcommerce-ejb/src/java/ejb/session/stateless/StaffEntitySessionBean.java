@@ -28,10 +28,6 @@ import util.exception.UnknownPersistenceException;
 import util.exception.UpdateStaffException;
 import util.security.CryptographicHelper;
 
-/**
- *
- * @author winyfebriny
- */
 @Stateless
 public class StaffEntitySessionBean implements StaffEntitySessionBeanLocal {
 

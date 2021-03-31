@@ -13,11 +13,11 @@
                 <p:menu style="width:200px;">
 
                     <p:submenu label="System">
-                        <p:menuitem value="Home" outcome="/index" icon="fa fa-home" />
+                        <p:menuitem value="Home" outcome="/index" icon="pi pi-home" />
                     </p:submenu>
 
                     <p:submenu label="Staff Operation" rendered="#{sessionScope.isLogin == true}">
-                        <p:menuitem value="View All Staff" outcome="/staffManagement/viewStaffDetails.xhtml" icon="fa fa-users" />
+                        <p:menuitem value="View All Staff" outcome="/staffManagement/viewStaffDetails.xhtml" icon="pi pi-users" />
                     </p:submenu> 
 
                     <p:submenu label="System Administration" rendered="#{sessionScope.isLogin == true}">
@@ -29,6 +29,7 @@
                         <p:menuitem value="Filter Products by Tags" outcome="/systemAdministration/filterProductsByTags.xhtml" icon="pi pi-filter" />
                         <p:menuitem value="Brand Management" outcome="/systemAdministration/brandManagement.xhtml" icon="pi pi-tags" />
                         <p:menuitem value="Filter Products by Brand" outcome="/systemAdministration/filterProductsByBrand.xhtml" icon="pi pi-filter" />
+                        <p:menuitem value="Customer Managament" outcome="/systemAdministration/customerManagement.xhtml" icon="pi pi-user" />
                     </p:submenu>    
 
                 </p:menu>

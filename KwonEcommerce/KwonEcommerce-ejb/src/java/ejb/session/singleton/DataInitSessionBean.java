@@ -5,13 +5,11 @@
  */
 package ejb.session.singleton;
 
-import ejb.session.stateless.AccountSessionBeanLocal;
 import ejb.session.stateless.BrandEntitySessionBeanLocal;
 import ejb.session.stateless.CategoryEntitySessionBeanLocal;
 import ejb.session.stateless.ProductEntitySessionBeanLocal;
 import ejb.session.stateless.StaffEntitySessionBeanLocal;
 import ejb.session.stateless.TagEntitySessionBeanLocal;
-import entity.AccountEntity;
 import entity.CategoryEntity;
 import entity.ProductEntity;
 import entity.StaffEntity;
@@ -26,8 +24,6 @@ import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import util.enumeration.AccessRightEnum;
-import util.exception.AccountNotFoundException;
-import util.exception.AccountUsernameExistException;
 import util.exception.BrandNotFoundException;
 import util.exception.CreateNewBrandException;
 import util.exception.CreateNewCategoryException;
@@ -39,18 +35,11 @@ import util.exception.StaffNotFoundException;
 import util.exception.StaffUsernameExistException;
 import util.exception.UnknownPersistenceException;
 
-/**
- *
- * @author winyfebriny
- */
 @Singleton
 @LocalBean
 @Startup
 
 public class DataInitSessionBean {
-
-    @EJB
-    private AccountSessionBeanLocal accountSessionBeanLocal;
     
     @EJB
     private StaffEntitySessionBeanLocal staffEntitySessionBeanLocal;
@@ -73,19 +62,17 @@ public class DataInitSessionBean {
     @PostConstruct
     public void postConstruct() {
         try {
-            accountSessionBeanLocal.retrieveAccountByUsername("account");
-        } catch (AccountNotFoundException ex) {
+            staffEntitySessionBeanLocal.retrieveStaffByUsername("manager");
+        } catch (StaffNotFoundException ex) {
             initializeData();
         }
     }
 
     private void initializeData() {
         try {
-            accountSessionBeanLocal.createNewAccount(new AccountEntity("Default", "Account", AccessRightEnum.MANAGER, "account", "password", "account@gmail.com"));
             staffEntitySessionBeanLocal.createNewStaff(new StaffEntity("Default", "Account", AccessRightEnum.MANAGER, "manager", "password"));
             staffEntitySessionBeanLocal.createNewStaff(new StaffEntity("Default", "Staff One", AccessRightEnum.WAREHOUSESTAFF, "staff1", "password"));
             staffEntitySessionBeanLocal.createNewStaff(new StaffEntity("Default", "Staff Two", AccessRightEnum.WAREHOUSESTAFF, "staff2", "password"));
-            
               
             // Added in v5.0
             // Updated in v5.1
@@ -103,35 +90,36 @@ public class DataInitSessionBean {
             TagEntity tagEntityPopular = tagEntitySessionBeanLocal.createNewTagEntity(new TagEntity("popular"));
             TagEntity tagEntityDiscount = tagEntitySessionBeanLocal.createNewTagEntity(new TagEntity("discount"));
             TagEntity tagEntityNew = tagEntitySessionBeanLocal.createNewTagEntity(new TagEntity("new"));
-            
+     
             BrandEntity innisfree = brandEntitySessionBeanLocal.createNewBrandEntity(new BrandEntity("Innisfree"));
 
             // Newly added in v5.1
             List<Long> tagIdsPopular = new ArrayList<>();
             tagIdsPopular.add(tagEntityPopular.getTagId());
-            
+
             List<Long> tagIdsDiscount = new ArrayList<>();
             tagIdsDiscount.add(tagEntityDiscount.getTagId());
-            
+
             List<Long> tagIdsPopularDiscount = new ArrayList<>();
             tagIdsPopularDiscount.add(tagEntityPopular.getTagId());
             tagIdsPopularDiscount.add(tagEntityDiscount.getTagId());
-            
+
             List<Long> tagIdsPopularNew = new ArrayList<>();
             tagIdsPopularNew.add(tagEntityPopular.getTagId());
             tagIdsPopularNew.add(tagEntityNew.getTagId());
-            
+
             List<Long> tagIdsPopularDiscountNew = new ArrayList<>();
             tagIdsPopularDiscountNew.add(tagEntityPopular.getTagId());
             tagIdsPopularDiscountNew.add(tagEntityDiscount.getTagId());
             tagIdsPopularDiscountNew.add(tagEntityNew.getTagId());
-            
+
             List<Long> tagIdsEmpty = new ArrayList<>();
 
             // Updated in v5.0
             // Updated in v5.1
             
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD001", "Innisfree Primer", "Best primer ever!! Fills up n blur out the pores.", 100, 10, new BigDecimal("10.00"), 1), primer.getCategoryId(), tagIdsPopular, innisfree.getBrandId());
+            System.out.println("create product");
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD002", "Laneige Primer", "For best whitening effect", 100, 10, new BigDecimal("25.50"), 2), primer.getCategoryId(), tagIdsDiscount, innisfree.getBrandId());
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD003", "Etude House Foundation", "Become a princess!", 100, 10, new BigDecimal("20.00"), 1), foundation.getCategoryId(), tagIdsPopularNew, innisfree.getBrandId());
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD004", "THEFACESHOP Foundation", "For best whitening effect", 100, 10, new BigDecimal("10.00"), 2), foundation.getCategoryId(), tagIdsPopularDiscountNew, innisfree.getBrandId());
@@ -149,7 +137,7 @@ public class DataInitSessionBean {
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD012", "CandyLab Lotion", "CandyLab Lotion", 100, 10, new BigDecimal("19.05"), 4), lotions.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
            
 
-        } catch (AccountUsernameExistException | StaffUsernameExistException | UnknownPersistenceException | InputDataValidationException| ProductSkuCodeExistException | CreateNewCategoryException | CreateNewTagException | CreateNewProductException| CreateNewBrandException | BrandNotFoundException ex) {
+        } catch (StaffUsernameExistException | UnknownPersistenceException | InputDataValidationException| ProductSkuCodeExistException | CreateNewCategoryException | CreateNewTagException | CreateNewProductException| CreateNewBrandException | BrandNotFoundException ex) {
             ex.printStackTrace();
         }
     }

@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -66,9 +67,9 @@ public class OrderTransactionEntity implements Serializable
     @JoinColumn(nullable = true)
     private StaffEntity staffEntity;
     
-    //@ManyToOne(optional = true, fetch = FetchType.LAZY)
-    //@JoinColumn(nullable = true)
-    //private CustomerEntity customerEntity;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true)
+    private List<CustomerEntity> customerEntities;
 
     
     
@@ -77,6 +78,7 @@ public class OrderTransactionEntity implements Serializable
         orderLineItemEntities = new ArrayList<>();
         voidRefund = false;
         this.shippingStatus = ShippingStatusEnum.NOT_SHIPPED;
+        customerEntities = new ArrayList<>();
     }
     
     
@@ -265,29 +267,18 @@ public class OrderTransactionEntity implements Serializable
     }
     
     
-    /*
-    public CustomerEntity getCustomerEntity() {
-        return customerEntity;
+    
+    public List<CustomerEntity> getCustomerEntities() {
+        return customerEntities;
     }
 
-    public void setCustomerEntity(CustomerEntity customerEntity) 
+    public void setCustomerEntity(List<CustomerEntity> customerEntities) 
     {
-        if(this.customerEntity != null)
+        for(CustomerEntity ce: customerEntities)
         {
-            this.customerEntity.getOrderTransactionEntities().remove(this);
-        }
-        
-        this.customerEntity = customerEntity;
-        
-        if(this.customerEntity != null)
-        {
-            if(!this.customerEntity.getOrderTransactionEntities().contains(this))
-            {
-                this.customerEntity.getOrderTransactionEntities().add(this);
-            }
+            customerEntities.add(ce);
         }
     }
-    */
 
     public ShippingStatusEnum getShippingStatus() {
         return shippingStatus;

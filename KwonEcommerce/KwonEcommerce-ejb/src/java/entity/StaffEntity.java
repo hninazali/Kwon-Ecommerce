@@ -22,10 +22,6 @@ import javax.validation.constraints.Size;
 import util.enumeration.AccessRightEnum;
 import util.security.CryptographicHelper;
 
-/**
- *
- * @author winyfebriny
- */
 @Entity
 public class StaffEntity implements Serializable {
 
@@ -42,6 +38,10 @@ public class StaffEntity implements Serializable {
     @NotNull
     @Size(max = 32)
     private String lastName;
+    @Column(nullable = false, unique = true, length = 32)
+    @NotNull
+    @Size(max = 32)
+    private String fullName;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @NotNull
@@ -71,6 +71,7 @@ public class StaffEntity implements Serializable {
         this.lastName = lastName;
         this.accessRightEnum = accessRightEnum;
         this.username = username;
+        this.fullName = firstName + " " + lastName;
 
         setPassword(password);
     }

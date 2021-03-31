@@ -17,18 +17,16 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-
-
 @Entity
 
 @NamedQueries({
     @NamedQuery(name = "selectAllOrderLineItemsByProductId", query = "SELECT stli FROM OrderLineItemEntity stli WHERE stli.productEntity.productId = :inProductId")
 })
 
-public class OrderLineItemEntity implements Serializable
-{
+public class OrderLineItemEntity implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderLineItemId;
@@ -54,64 +52,49 @@ public class OrderLineItemEntity implements Serializable
     @Digits(integer = 9, fraction = 2) // 11 - 2 digits to the left of the decimal point
     private BigDecimal subTotal;
 
-    
-    
-    public OrderLineItemEntity()
-    {
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private CustomerEntity customerEntity;
+
+    public OrderLineItemEntity() {
     }
-    
-    
-    
-    public OrderLineItemEntity(Integer serialNumber, ProductEntity productEntity, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal)
-    {
+
+    public OrderLineItemEntity(Integer serialNumber, ProductEntity productEntity, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal) {
         this.serialNumber = serialNumber;
         this.productEntity = productEntity;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.subTotal = subTotal;
     }
-    
-    
-    
+
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = 0;
         hash += (this.orderLineItemId != null ? this.orderLineItemId.hashCode() : 0);
-        
+
         return hash;
     }
 
-    
-    
     @Override
-    public boolean equals(Object object)
-    {
-        if (!(object instanceof OrderLineItemEntity)) 
-        {
+    public boolean equals(Object object) {
+        if (!(object instanceof OrderLineItemEntity)) {
             return false;
         }
-        
+
         OrderLineItemEntity other = (OrderLineItemEntity) object;
-        
-        if ((this.orderLineItemId == null && other.orderLineItemId != null) || (this.orderLineItemId != null && !this.orderLineItemId.equals(other.orderLineItemId))) 
-        {
+
+        if ((this.orderLineItemId == null && other.orderLineItemId != null) || (this.orderLineItemId != null && !this.orderLineItemId.equals(other.orderLineItemId))) {
             return false;
         }
-        
+
         return true;
     }
 
-    
-    
     @Override
-    public String toString() 
-    {
+    public String toString() {
         return "entity.OrderLineItemEntity[ orderLineItemId=" + this.orderLineItemId + " ]";
     }
 
-    
-    
     public Long getOrderLineItemId() {
         return orderLineItemId;
     }
@@ -158,5 +141,13 @@ public class OrderLineItemEntity implements Serializable
 
     public void setSubTotal(BigDecimal subTotal) {
         this.subTotal = subTotal;
-    }   
+    }
+
+    public CustomerEntity getCustomerEntity() {
+        return customerEntity;
+    }
+
+    public void setCustomerEntity(CustomerEntity customerEntity) {
+        this.customerEntity = customerEntity;
+    }
 }

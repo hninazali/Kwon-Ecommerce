@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
+                template="./../template/defaultTemplate.xhtml">
+
+    <ui:define name="content">
+
+        <div style="text-align: center">
+
+
+            <h3>Customer Database</h3>
+
+
+            <h:form id="customerListForm">
+                <p:messages>
+                    <p:autoUpdate />
+                </p:messages>
+                <p:dataTable id="customerDataTable" widgetVar ="customerDataTableWidget" value="#{customerManagementManagedBean.customerEntities}" var="customerEntity" rowKey="#{customerEntity.customerId}" rowIndexVar="row"
+                             filteredValue="#{customerManagementManagedBean.filteredCustomerEntities}"
+                             rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                    <f:facet name="header">
+                        <p:outputPanel style="text-align: right;">
+                            <h:outputText value="Search all fields:" />
+                            <p:inputText id="globalFilter" onkeyup="PF('customerDataTableWidget').filter()" style="width:300px" placeholder="Enter keyword.. "/>
+                        </p:outputPanel>
+                    </f:facet>
+
+                    <p:column headerText="Customer ID" sortBy="#{customerEntity.customerId}" filterBy="#{customerEntity.customerId}" style="text-align: center">
+                        <h:outputText value="#{customerEntity.customerId}"/>
+                    </p:column>                       
+
+                    <p:column headerText="First Name" sortBy="#{customerEntity.firstName}" filterBy="#{customerEntity.firstName}" style="text-align: center">
+                        <h:outputText value="#{customerEntity.firstName}" />
+                    </p:column>
+
+                    <p:column headerText="Last Name" sortBy="#{customerEntity.lastName}" filterBy="#{customerEntity.lastName}" style="text-align: center">
+                        <h:outputText value="#{customerEntity.lastName}" />
+                    </p:column>
+
+                    <p:column headerText="Email" sortBy="#{customerEntity.email}" filterBy="#{customerEntity.email}" style="text-align: center">
+                        <h:outputText value="#{customerEntity.email}" />
+                    </p:column>
+                    
+                    <p:column headerText="Ban Status" sortBy="#{customerEntity.banned}" filterBy="#{customerEntity.banned}" style="text-align: center">
+                        <h:outputText value="#{customerEntity.banned.toString}" />
+                    </p:column>
+
+                    <p:column headerText="Action" style="text-align: center">
+                        <p:commandButton icon="pi pi-ban" actionListener="#{customerManagementManagedBean.banCustomer}" update="customerListForm:customerDataTable">
+                            <f:attribute name="customerEntityToBan" value="#{customerEntity}" />
+                            <p:confirm header="Confirmation" message="Are you sure you want to ban #{customerEntity.firstName}  #{customerEntity.lastName}?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+
+            </h:form>     
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+
