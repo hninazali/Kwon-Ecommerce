@@ -3,9 +3,21 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/web/systemAdministration/productManagement.xhtml</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/web/systemAdministration/bundleManagement.xhtml</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/src/java/jsf/managedbean/BrandManagementManagedBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/web/resources/ezcomp/ViewProduct.xhtml</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/nbproject/project.xml</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/src/java/jsf/managedbean/CustomerManagedBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/src/java/jsf/managedbean/BundleManagementManagedBean.java</file>
             <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/src/java/jsf/managedbean/ProductManagementManagedBean.java</file>
-            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/web/WEB-INF/web.xml</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/src/java/jsf/managedbean/CategoryManagementManagedBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/web/systemAdministration/productManagement.xhtml</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/web/systemAdministration/filterProductsByTags.xhtml</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/web/resources/ezcomp/ViewBundle.xhtml</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/nbproject/private/private.properties</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/src/java/jsf/managedbean/FilterProductsByBrandManagedBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/nbproject/project.properties</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-war/web/systemAdministration/filterProductsByBrand.xhtml</file>
         </group>
     </open-files>
 </project-private>

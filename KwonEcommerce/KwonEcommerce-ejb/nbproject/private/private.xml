@@ -3,12 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/nbproject/private/private.properties</file>
-            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/OrderLineItemSessionBean.java</file>
-            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/entity/ProductEntity.java</file>
-            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/BrandEntitySessionBean.java</file>
-            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/entity/BundleEntity.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/entity/CustomerEntity.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/BundleEntitySessionBeanLocal.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/ProductEntitySessionBean.java</file>
             <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/singleton/DataInitSessionBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/entity/BundleEntity.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/entity/ProductEntity.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/SupplierSessionBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/CustomerSessionBeanLocal.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/CategoryEntitySessionBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/CustomerSessionBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/nbproject/private/private.xml</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/nbproject/private/private.properties</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/BundleEntitySessionBean.java</file>
+            <file>file:/Users/hninazali/Desktop/NUS/3106Labs/3106Project/Kwon-Ecommerce/KwonEcommerce/KwonEcommerce-ejb/src/java/ejb/session/stateless/OrderLineItemSessionBean.java</file>
         </group>
     </open-files>
 </project-private>

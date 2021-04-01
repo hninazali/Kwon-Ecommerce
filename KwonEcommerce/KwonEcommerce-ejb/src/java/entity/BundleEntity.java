@@ -14,13 +14,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 /**
@@ -30,6 +30,20 @@ import javax.validation.constraints.Size;
 @Entity
 public class BundleEntity implements Serializable {
 
+    /**
+     * @return the bundleRating
+     */
+    public Integer getBundleRating() {
+        return bundleRating;
+    }
+
+    /**
+     * @param bundleRating the bundleRating to set
+     */
+    public void setBundleRating(Integer bundleRating) {
+        this.bundleRating = bundleRating;
+    }
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +51,7 @@ public class BundleEntity implements Serializable {
     
     @NotNull
     @Size(min = 7, max = 7)
-    private String bundleSkuCode;
+    private String skuCode;
     
     @Column(nullable = false, length = 64)
     @NotNull
@@ -48,14 +62,25 @@ public class BundleEntity implements Serializable {
     @Size(max = 128)
     private String description;
     
+    @Column(nullable = false)
+    @NotNull
+    @Min(0)
+    private Integer quantityOnHand;
+    
     @Column(nullable = false, precision = 11, scale = 2)
     @NotNull
     @DecimalMin("0.00")
     @Digits(integer = 9, fraction = 2) // 11 - 2 digits to the left of the decimal point
     private BigDecimal unitPrice;  
+    
+     @Column(nullable = false)
+    @NotNull
+    @Positive
+    @Min(1)
+    @Max(5)
+    private Integer bundleRating;
   
-    @OneToMany
-    @JoinColumn(name="productId")
+    @ManyToMany    
     private List<ProductEntity> productEntities;
     
     @ManyToMany(mappedBy="bundleEntities", fetch = FetchType.LAZY)
@@ -70,7 +95,7 @@ public class BundleEntity implements Serializable {
     
     
     public BundleEntity(String bundleSkuCode, String name, String description, BigDecimal unitPrice, List<ProductEntity> productEntities) {
-        this.bundleSkuCode = bundleSkuCode;
+        this.skuCode = bundleSkuCode;
         this.name = name;
         this.description = description;
         this.unitPrice = unitPrice;
@@ -186,17 +211,17 @@ public class BundleEntity implements Serializable {
     }
 
     /**
-     * @return the bundleSkuCode
+     * @return the skuCode
      */
-    public String getBundleSkuCode() {
-        return bundleSkuCode;
+    public String getSkuCode() {
+        return skuCode;
     }
 
     /**
-     * @param bundleSkuCode the bundleSkuCode to set
+     * @param skuCode the skuCode to set
      */
-    public void setBundleSkuCode(String bundleSkuCode) {
-        this.bundleSkuCode = bundleSkuCode;
+    public void setSkuCode(String skuCode) {
+        this.skuCode = skuCode;
     }
 
     /**
@@ -274,6 +299,20 @@ public class BundleEntity implements Serializable {
      */
     public void setTagEntities(List<TagEntity> tagEntities) {
         this.tagEntities = tagEntities;
+    }
+
+    /**
+     * @return the quantityOnHand
+     */
+    public Integer getQuantityOnHand() {
+        return quantityOnHand;
+    }
+
+    /**
+     * @param quantityOnHand the quantityOnHand to set
+     */
+    public void setQuantityOnHand(Integer quantityOnHand) {
+        this.quantityOnHand = quantityOnHand;
     }
 
   

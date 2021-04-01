@@ -29,6 +29,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.BundleNotFoundException;
+import util.exception.BundleSkuCodeExistException;
 import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewBrandException;
 import util.exception.CreateNewBundleException;
@@ -71,7 +72,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
     }
     
    @Override
-    public BundleEntity createNewBundle(BundleEntity newBundleEntity, List<Long> tagIds) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException
+    public BundleEntity createNewBundle(BundleEntity newBundleEntity, List<Long> tagIds) throws BundleSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException
     {
         Set<ConstraintViolation<BundleEntity>>constraintViolations = validator.validate(newBundleEntity);
         
@@ -99,7 +100,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
                 {
                     if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException"))
                     {
-                        throw new ProductSkuCodeExistException();
+                        throw new BundleSkuCodeExistException();
                     }
                     else
                     {
@@ -224,7 +225,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
             Collections.sort(bundleEntities, new Comparator<BundleEntity>()
             {
                 public int compare(BundleEntity pe1, BundleEntity pe2) {
-                    return pe1.getBundleSkuCode().compareTo(pe2.getBundleSkuCode());
+                    return pe1.getSkuCode().compareTo(pe2.getSkuCode());
                 }
             });
             
@@ -233,7 +234,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
     }
     
     @Override
-    public List<BundleEntity> filterProductsByPrice(BigDecimal startPrice, BigDecimal endPrice)
+    public List<BundleEntity> filterBundlesByPrice(BigDecimal startPrice, BigDecimal endPrice)
     {
         List<BundleEntity> bundleEntities = new ArrayList<>();
        
@@ -266,7 +267,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
     
     
     @Override
-    public BundleEntity retrieveProductByProductSkuCode(String skuCode) throws BundleNotFoundException
+    public BundleEntity retrieveBundleByBundleSkuCode(String skuCode) throws BundleNotFoundException
     {
         Query query = entityManager.createQuery("SELECT p FROM BundleEntity p WHERE p.skuCode = :inSkuCode");
         query.setParameter("inSkuCode", skuCode);
@@ -291,7 +292,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
     // Updated in v5.1 with category entity and tag entity processing
     
     @Override
-    public void updateBundle(BundleEntity bundleEntity, List<Long> productIds, Long categoryId, List<Long> tagIds) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException
+    public void updateBundle(BundleEntity bundleEntity, List<Long> productIds, List<Long> tagIds) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException
     {
         if(bundleEntity != null && bundleEntity.getBundleId()!= null)
         {
@@ -301,7 +302,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
             {
                 BundleEntity bundleEntityToUpdate = retrieveBundleByBundleId(bundleEntity.getBundleId());
 
-                if(bundleEntityToUpdate.getBundleSkuCode().equals(bundleEntity.getBundleSkuCode()))
+                if(bundleEntityToUpdate.getSkuCode().equals(bundleEntity.getSkuCode()))
                 {
 //                    // Added in v5.1
 //                    if(categoryId != null && (!productEntityToUpdate.getCategoryEntity().getCategoryId().equals(categoryId)))
@@ -355,7 +356,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
                     // Removed in v5.0
                     //productEntityToUpdate.setCategory(bundleEntity.getCategory());
                     // Added in v5.1
-//                    bundleEntityToUpdate.setProductRating((bundleEntity.getProductRating()));
+                    bundleEntityToUpdate.setBundleRating((bundleEntity.getBundleRating()));
                 }
                 else
                 {

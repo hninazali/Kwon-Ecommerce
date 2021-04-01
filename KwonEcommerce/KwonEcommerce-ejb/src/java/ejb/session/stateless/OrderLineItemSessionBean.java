@@ -55,8 +55,8 @@ public class OrderLineItemSessionBean implements OrderLineItemSessionBeanLocal {
         if (newOrderLineItem != null) {
             try {
                 CustomerEntity customerEntity = customerSessionBeanLocal.retrieveCustomerById(customerId);
-                newOrderLineItem.setCustomerEntity(customerEntity);
-                customerEntity.getOrderLineItemEntities().add(newOrderLineItem);
+//                newOrderLineItem.setCustomerEntity(customerEntity);
+//                customerEntity.getOrderLineItemEntities().add(newOrderLineItem);
                 entityManager.persist(newOrderLineItem);
                 entityManager.flush();
 

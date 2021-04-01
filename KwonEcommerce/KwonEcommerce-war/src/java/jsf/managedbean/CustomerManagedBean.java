@@ -5,6 +5,7 @@
  */
 package jsf.managedbean;
 
+
 import ejb.session.stateless.CustomerSessionBeanLocal;
 import entity.CustomerEntity;
 import java.io.IOException;
@@ -23,11 +24,11 @@ import util.exception.InputDataValidationException;
 import util.exception.StaffNotFoundException;
 import util.exception.UpdateStaffException;
 
-@Named(value = "customerManagedBean")
+@Named
 @ViewScoped
 public class CustomerManagedBean implements Serializable {
 
-    @EJB(name = "CustomerSessionBeanLocal")
+    @EJB
     private CustomerSessionBeanLocal customerSessionBeanLocal;
 
     private List<CustomerEntity> customerEntities;

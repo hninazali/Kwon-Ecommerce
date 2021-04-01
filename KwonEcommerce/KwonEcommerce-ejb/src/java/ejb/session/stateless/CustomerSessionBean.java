@@ -80,7 +80,7 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
         {
             c.getCreditCardEntities().size();
             c.getGroupCartEntities().size();
-            c.getOrderLineItemEntities().size();
+            //c.getOrderLineItemEntities().size();
             c.getOrderTransactionEntities().size();
         }
         
@@ -119,7 +119,7 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
             if (customerEntity.getPassword().equals(passwordHash)) {
                 customerEntity.getCreditCardEntities();
                 customerEntity.getGroupCartEntities();
-                customerEntity.getOrderLineItemEntities();
+                //customerEntity.getOrderLineItemEntities();
                 customerEntity.getOrderTransactionEntities();
                 return customerEntity;
             } else {

@@ -52,9 +52,9 @@ public class OrderLineItemEntity implements Serializable {
     @Digits(integer = 9, fraction = 2) // 11 - 2 digits to the left of the decimal point
     private BigDecimal subTotal;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private CustomerEntity customerEntity;
+//    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+//    @JoinColumn(nullable = false)
+//    private CustomerEntity customerEntity;
 
     public OrderLineItemEntity() {
     }
@@ -143,11 +143,11 @@ public class OrderLineItemEntity implements Serializable {
         this.subTotal = subTotal;
     }
 
-    public CustomerEntity getCustomerEntity() {
-        return customerEntity;
-    }
-
-    public void setCustomerEntity(CustomerEntity customerEntity) {
-        this.customerEntity = customerEntity;
-    }
+//    public CustomerEntity getCustomerEntity() {
+//        return customerEntity;
+//    }
+//
+//    public void setCustomerEntity(CustomerEntity customerEntity) {
+//        this.customerEntity = customerEntity;
+//    }
 }

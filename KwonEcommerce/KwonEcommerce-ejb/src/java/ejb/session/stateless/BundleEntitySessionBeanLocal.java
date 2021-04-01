@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.ejb.Local;
 import javax.validation.ConstraintViolation;
 import util.exception.BundleNotFoundException;
+import util.exception.BundleSkuCodeExistException;
 import util.exception.CreateNewBundleException;
 import util.exception.DeleteBundleException;
 import util.exception.InputDataValidationException;
@@ -28,14 +29,14 @@ import util.exception.UpdateBundleException;
 @Local
 public interface BundleEntitySessionBeanLocal {
     
-    public BundleEntity createNewBundle(BundleEntity newBundleEntity, List<Long> tagIds) throws ProductSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException;
+    public BundleEntity createNewBundle(BundleEntity newBundleEntity, List<Long> tagIds) throws BundleSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException;
     public List<BundleEntity> retrieveAllBundles();
     public List<BundleEntity> searchBundlesByName(String searchString);
     public List<BundleEntity> filterBundlesByTags(List<Long> tagIds, String condition);
-    public List<BundleEntity> filterProductsByPrice(BigDecimal startPrice, BigDecimal endPrice);
+    public List<BundleEntity> filterBundlesByPrice(BigDecimal startPrice, BigDecimal endPrice);
     public BundleEntity retrieveBundleByBundleId(Long bundleId) throws BundleNotFoundException;
-    public BundleEntity retrieveProductByProductSkuCode(String skuCode) throws BundleNotFoundException;
-    public void updateBundle(BundleEntity bundleEntity, List<Long> productIds, Long categoryId, List<Long> tagIds) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException;
+    public BundleEntity retrieveBundleByBundleSkuCode(String skuCode) throws BundleNotFoundException;
+    public void updateBundle(BundleEntity bundleEntity, List<Long> productIds, List<Long> tagIds) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException;
     public void deleteBundle(Long bundleId) throws BundleNotFoundException, DeleteBundleException;
 
 
