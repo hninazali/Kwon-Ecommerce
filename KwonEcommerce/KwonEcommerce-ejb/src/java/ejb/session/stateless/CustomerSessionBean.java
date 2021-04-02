@@ -53,7 +53,7 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
             try {
                 entityManager.persist(newCustomerEntity);
                 entityManager.flush();
-
+                System.out.println("Customer created");
                 return newCustomerEntity.getCustomerId();
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
@@ -80,7 +80,7 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
         {
             c.getCreditCardEntities().size();
             c.getGroupCartEntities().size();
-            //c.getOrderLineItemEntities().size();
+            c.getOrderLineItemEntities().size();
             c.getOrderTransactionEntities().size();
         }
         

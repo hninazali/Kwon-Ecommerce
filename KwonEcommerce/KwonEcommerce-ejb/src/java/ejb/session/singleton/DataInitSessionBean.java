@@ -7,6 +7,8 @@ package ejb.session.singleton;
 
 import ejb.session.stateless.BrandEntitySessionBeanLocal;
 import ejb.session.stateless.CategoryEntitySessionBeanLocal;
+import ejb.session.stateless.CustomerSessionBeanLocal;
+import ejb.session.stateless.PersonalCartSessionBeanLocal;
 import ejb.session.stateless.ProductEntitySessionBeanLocal;
 import ejb.session.stateless.StaffEntitySessionBeanLocal;
 import ejb.session.stateless.TagEntitySessionBeanLocal;
@@ -15,6 +17,8 @@ import entity.ProductEntity;
 import entity.StaffEntity;
 import entity.TagEntity;
 import entity.BrandEntity;
+import entity.CustomerEntity;
+import entity.PersonalCartEntity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +31,10 @@ import util.enumeration.AccessRightEnum;
 import util.exception.BrandNotFoundException;
 import util.exception.CreateNewBrandException;
 import util.exception.CreateNewCategoryException;
+import util.exception.CreateNewPersonalCartException;
 import util.exception.CreateNewProductException;
 import util.exception.CreateNewTagException;
+import util.exception.CustomerUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.ProductSkuCodeExistException;
 import util.exception.StaffNotFoundException;
@@ -40,6 +46,12 @@ import util.exception.UnknownPersistenceException;
 @Startup
 
 public class DataInitSessionBean {
+
+    @EJB(name = "PersonalCartSessionBeanLocal")
+    private PersonalCartSessionBeanLocal personalCartSessionBeanLocal;
+
+    @EJB(name = "CustomerSessionBeanLocal")
+    private CustomerSessionBeanLocal customerSessionBeanLocal;
     
     @EJB
     private StaffEntitySessionBeanLocal staffEntitySessionBeanLocal;
@@ -119,7 +131,6 @@ public class DataInitSessionBean {
             // Updated in v5.1
             
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD001", "Innisfree Primer", "Best primer ever!! Fills up n blur out the pores.", 100, 10, new BigDecimal("10.00"), 1), primer.getCategoryId(), tagIdsPopular, innisfree.getBrandId());
-            System.out.println("create product");
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD002", "Laneige Primer", "For best whitening effect", 100, 10, new BigDecimal("25.50"), 2), primer.getCategoryId(), tagIdsDiscount, innisfree.getBrandId());
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD003", "Etude House Foundation", "Become a princess!", 100, 10, new BigDecimal("20.00"), 1), foundation.getCategoryId(), tagIdsPopularNew, innisfree.getBrandId());
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD004", "THEFACESHOP Foundation", "For best whitening effect", 100, 10, new BigDecimal("10.00"), 2), foundation.getCategoryId(), tagIdsPopularDiscountNew, innisfree.getBrandId());
@@ -129,15 +140,22 @@ public class DataInitSessionBean {
             // Added in v5.0
             // Updated in v5.1
             
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD07", "Moonshot Shampoo", "Moonshot Shampoo", 100, 10, new BigDecimal("20.00"), 3), shampoo.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD08", "The Saem Shampoo", "The Saem Shampoo", 100, 10, new BigDecimal("30.50"), 4), shampoo.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD09", "Skin Food Bodywash", "Skin Food Bodywash", 100, 10, new BigDecimal("50.00"), 3), bodyWash.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD007", "Moonshot Shampoo", "Moonshot Shampoo", 100, 10, new BigDecimal("20.00"), 3), shampoo.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD008", "The Saem Shampoo", "The Saem Shampoo", 100, 10, new BigDecimal("30.50"), 4), shampoo.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
+            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD009", "Skin Food Bodywash", "Skin Food Bodywash", 100, 10, new BigDecimal("50.00"), 3), bodyWash.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD010", "Dr Jart+ Bodywash", "Dr Jart+ Bodywash", 100, 10, new BigDecimal("100.00"), 4), bodyWash.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD011", "VT Cosmetics Lotion", "VT Cosmetics Lotion", 100, 10, new BigDecimal("95.00"), 3), lotions.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD012", "CandyLab Lotion", "CandyLab Lotion", 100, 10, new BigDecimal("19.05"), 4), lotions.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
-           
+            
+            PersonalCartEntity pc1 = personalCartSessionBeanLocal.createPersonalCartEntity(new PersonalCartEntity());
+            PersonalCartEntity pc2 = personalCartSessionBeanLocal.createPersonalCartEntity(new PersonalCartEntity());
+            PersonalCartEntity pc3 = personalCartSessionBeanLocal.createPersonalCartEntity(new PersonalCartEntity());
+            
+            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "One", "customerone@gmail.com", "password", pc1, false));
+            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Two", "customertwo@gmail.com", "password", pc2, false));
+            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Three", "customerthree@gmail.com", "password", pc3, false));
 
-        } catch (StaffUsernameExistException | UnknownPersistenceException | InputDataValidationException| ProductSkuCodeExistException | CreateNewCategoryException | CreateNewTagException | CreateNewProductException| CreateNewBrandException | BrandNotFoundException ex) {
+        } catch (StaffUsernameExistException | UnknownPersistenceException | InputDataValidationException| ProductSkuCodeExistException | CreateNewCategoryException | CreateNewTagException | CreateNewProductException| CreateNewBrandException | BrandNotFoundException | CustomerUsernameExistException | CreateNewPersonalCartException ex) {
             ex.printStackTrace();
         }
     }

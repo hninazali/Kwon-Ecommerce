@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.CustomerEntity;
 import entity.GroupCartEntity;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
@@ -25,6 +26,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.CreateNewPersonalCartException;
+import util.exception.CustomerNotFoundException;
 import util.exception.GroupCartNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.PersonalCartNotFoundException;
@@ -39,6 +41,9 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
 
     @EJB
     private OrderTransactionSessionBeanLocal orderTransactionSessionBeanLocal;
+    
+    @EJB
+    private CustomerSessionBeanLocal customerSessionBeanLocal;
 
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
@@ -48,9 +53,8 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
         validator = validatorFactory.getValidator();
     }
 
-    /*
     @Override
-    public PersonalCartEntity createPersonalCartCard(PersonalCartEntity newPersonalCartEntity) throws InputDataValidationException, CreateNewPersonalCartException {
+    public PersonalCartEntity createPersonalCartEntity(PersonalCartEntity newPersonalCartEntity) throws InputDataValidationException, CreateNewPersonalCartException {
         Set<ConstraintViolation<PersonalCartEntity>> constraintViolations = validator.validate(newPersonalCartEntity);
 
         if (constraintViolations.isEmpty()) {
@@ -58,7 +62,7 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
 
                 entityManager.persist(newPersonalCartEntity);
                 entityManager.flush();
-
+                System.out.println("create personal cart");
                 return newPersonalCartEntity;
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null
@@ -75,7 +79,7 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
     }
-     */
+    
     @Override
     public List<PersonalCartEntity> retrieveAllPersonalCartEntities() {
         Query query = entityManager.createQuery("SELECT pc FROM PersonalCartEntity pc");
@@ -106,8 +110,9 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
     }
 
     @Override
-    public void checkOutCart(Long personalCartId) throws PersonalCartNotFoundException {
+    public void checkOutCart(Long customerId, Long personalCartId) throws PersonalCartNotFoundException, CustomerNotFoundException {
         PersonalCartEntity personalCartEntity = retrievePersonalCartById(personalCartId);
+        CustomerEntity customerEntity = customerSessionBeanLocal.retrieveCustomerById(customerId);
         Integer totalQty = 0;
         BigDecimal totalAmount = BigDecimal.ZERO;
         Integer totalLineItem = personalCartEntity.getOrderLineItemEntities().size();
@@ -119,7 +124,7 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
         }
 
         OrderTransactionEntity orderTransactionEntity = new OrderTransactionEntity(totalLineItem, totalQty, totalAmount, new Date(), false);
-        orderTransactionEntity.getCustomerEntities().add(personalCartEntity.getCustomerEntity());
+        orderTransactionEntity.getCustomerEntities().add(customerEntity);
         clearPersonalCart(personalCartEntity);
     }
 

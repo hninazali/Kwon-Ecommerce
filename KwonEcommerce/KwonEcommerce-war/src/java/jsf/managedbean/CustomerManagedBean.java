@@ -50,7 +50,7 @@ public class CustomerManagedBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().redirect("viewCustomerDetails.xhtml");
     }
     
-    public void banStaff(ActionEvent actionEvent) {
+    public void banCustomer(ActionEvent actionEvent) {
         customerEntityToBan = (CustomerEntity) actionEvent.getComponent().getAttributes().get("customerEntityToBan");
         try {
             customerSessionBeanLocal.banCustomer(customerEntityToBan.getCustomerId());

@@ -21,12 +21,12 @@ public class PersonalCartEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long personalCartId;
 
-    @OneToOne(mappedBy = "personalCartEntity")
-    @JoinColumn(nullable = false)
-    private CustomerEntity customerEntity;
+//    @OneToOne(mappedBy = "personalCartEntity")
+//    @JoinColumn(nullable = false)
+//    private CustomerEntity customerEntity;
 
     @OneToMany
     private List<OrderLineItemEntity> orderLineItemEntities;
@@ -35,9 +35,9 @@ public class PersonalCartEntity implements Serializable {
         orderLineItemEntities = new ArrayList<>();
     }
 
-    public PersonalCartEntity(CustomerEntity customerEntity) {
-        this.customerEntity = customerEntity;
-    }
+//    public PersonalCartEntity(CustomerEntity customerEntity) {
+//        this.customerEntity = customerEntity;
+//    }
     
     public Long getPersonalCartId() {
         return personalCartId;
@@ -72,13 +72,13 @@ public class PersonalCartEntity implements Serializable {
         return "entity.PersonalCartEntity[ id=" + personalCartId + " ]";
     }
 
-    public CustomerEntity getCustomerEntity() {
-        return customerEntity;
-    }
-
-    public void setCustomerEntity(CustomerEntity customerEntity) {
-        this.customerEntity = customerEntity;
-    }
+//    public CustomerEntity getCustomerEntity() {
+//        return customerEntity;
+//    }
+//
+//    public void setCustomerEntity(CustomerEntity customerEntity) {
+//        this.customerEntity = customerEntity;
+//    }
 
     public List<OrderLineItemEntity> getOrderLineItemEntities() {
         return orderLineItemEntities;

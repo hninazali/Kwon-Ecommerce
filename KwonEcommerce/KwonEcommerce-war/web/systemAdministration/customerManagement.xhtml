@@ -19,8 +19,8 @@
                 <p:messages>
                     <p:autoUpdate />
                 </p:messages>
-                <p:dataTable id="customerDataTable" widgetVar ="customerDataTableWidget" value="#{customerManagementManagedBean.customerEntities}" var="customerEntity" rowKey="#{customerEntity.customerId}" rowIndexVar="row"
-                             filteredValue="#{customerManagementManagedBean.filteredCustomerEntities}"
+                <p:dataTable id="customerDataTable" widgetVar ="customerDataTableWidget" value="#{customerManagedBean.customerEntities}" var="customerEntity" rowKey="#{customerEntity.customerId}" rowIndexVar="row"
+                             filteredValue="#{customerManagedBean.filteredCustomerEntities}"
                              rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
 
                     <f:facet name="header">
@@ -47,11 +47,11 @@
                     </p:column>
                     
                     <p:column headerText="Ban Status" sortBy="#{customerEntity.banned}" filterBy="#{customerEntity.banned}" style="text-align: center">
-                        <h:outputText value="#{customerEntity.banned.toString}" />
+                        <h:outputText value="#{customerEntity.banned}" />
                     </p:column>
 
                     <p:column headerText="Action" style="text-align: center">
-                        <p:commandButton icon="pi pi-ban" actionListener="#{customerManagementManagedBean.banCustomer}" update="customerListForm:customerDataTable">
+                        <p:commandButton icon="pi pi-ban" update="@form customerListForm:customerDataTable" actionListener="#{customerManagedBean.banCustomer}" >
                             <f:attribute name="customerEntityToBan" value="#{customerEntity}" />
                             <p:confirm header="Confirmation" message="Are you sure you want to ban #{customerEntity.firstName}  #{customerEntity.lastName}?" icon="ui-icon-alert" />
                         </p:commandButton>

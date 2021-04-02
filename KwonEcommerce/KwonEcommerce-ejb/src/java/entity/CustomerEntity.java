@@ -14,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -52,12 +53,12 @@ public class CustomerEntity implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Boolean banned;
-
     @OneToOne
+    @JoinColumn(nullable = false)
     private PersonalCartEntity personalCartEntity;
 
-//    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY)
-//    private List<OrderLineItemEntity> orderLineItemEntities;
+    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY)
+    private List<OrderLineItemEntity> orderLineItemEntities;
 
     @ManyToMany(mappedBy = "customerEntities", fetch = FetchType.LAZY)
     private List<GroupCartEntity> groupCartEntities;
@@ -70,8 +71,8 @@ public class CustomerEntity implements Serializable {
 
     public CustomerEntity() {
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
-        personalCartEntity = new PersonalCartEntity(this);
-       // orderLineItemEntities = new ArrayList<>();
+        personalCartEntity = new PersonalCartEntity();
+        orderLineItemEntities = new ArrayList<>();
         orderTransactionEntities = new ArrayList<>();
         groupCartEntities = new ArrayList<>();
         creditCardEntities = new ArrayList<>();
@@ -170,13 +171,13 @@ public class CustomerEntity implements Serializable {
         this.personalCartEntity = personalCartEntity;
     }
 
-//    public List<OrderLineItemEntity> getOrderLineItemEntities() {
-//        return orderLineItemEntities;
-//    }
-//
-//    public void setOrderLineItemEntities(List<OrderLineItemEntity> orderLineItemEntities) {
-//        this.orderLineItemEntities = orderLineItemEntities;
-//    }
+    public List<OrderLineItemEntity> getOrderLineItemEntities() {
+        return orderLineItemEntities;
+    }
+
+    public void setOrderLineItemEntities(List<OrderLineItemEntity> orderLineItemEntities) {
+        this.orderLineItemEntities = orderLineItemEntities;
+    }
 
     public List<GroupCartEntity> getGroupCartEntities() {
         return groupCartEntities;
