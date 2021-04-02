@@ -17,7 +17,7 @@
             
                 <p:menubar>
 
-                    <p:submenu label="File" icon="ui-icon-document">
+                    <p:submenu label="Create New Product" icon="ui-icon-document">
                         <p:menuitem value="Create New Product" onclick="PF('dialogCreateNewProduct').show()" icon="pi pi-plus" />
                     </p:submenu>                                        
 
@@ -53,8 +53,8 @@
                         <h:outputText value="#{productEntity.name}" />
                     </p:column>
                     
-                    <p:column headerText="Brand" sortBy="#{productEntity.brandEntity}" filterBy="#{productEntity.brandEntity}" filterMatchMode="contains">
-                        <h:outputText value="#{productEntity.brandEntity}" />
+                    <p:column headerText="Brand" sortBy="#{productEntity.brandEntity.name}" filterBy="#{productEntity.brandEntity}" filterMatchMode="contains">
+                        <h:outputText value="#{productEntity.brandEntity.name}" />
                     </p:column>
                     
                     <p:column headerText="Description" sortBy="#{productEntity.description}" filterBy="#{productEntity.description}" filterMatchMode="contains">

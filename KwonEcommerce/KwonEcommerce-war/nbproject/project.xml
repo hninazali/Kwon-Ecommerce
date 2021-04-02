@@ -29,7 +29,7 @@
                     <file>${# Space-separated list of extra javac options}</file>
                 </library>
                 <library dirs="200">
-                    <file>${libs.PrimeFaces_PepperGrind.classpath}</file>
+                    <file>${libs.PrimeFaces_PepperGrind_1.0.10.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>
