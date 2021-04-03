@@ -143,11 +143,11 @@ public class OrderLineItemEntity implements Serializable {
         this.subTotal = subTotal;
     }
 
-//    public CustomerEntity getCustomerEntity() {
-//        return customerEntity;
-//    }
-//
-//    public void setCustomerEntity(CustomerEntity customerEntity) {
-//        this.customerEntity = customerEntity;
-//    }
+    public CustomerEntity getCustomerEntity() {
+        return customerEntity;
+    }
+
+    public void setCustomerEntity(CustomerEntity customerEntity) {
+        this.customerEntity = customerEntity;
+    }
 }

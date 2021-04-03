@@ -69,7 +69,7 @@ public class BundleManagementManagedBean implements Serializable {
 //    private ViewProductManagedBean viewProductManagedBean;
     private ViewBundleManagedBean viewBundleManagedBean;
     
-//    private List<ProductEntity> productEntities;
+    //private List<ProductEntity> productEntities;
 //    private List<ProductEntity> filteredProductEntities;
     
     private List<BundleEntity> bundleEntities;
@@ -111,19 +111,19 @@ public class BundleManagementManagedBean implements Serializable {
     @PostConstruct
     public void postConstruct()
     {
-        setBundleEntities(bundleEntitySessionBeanLocal.retrieveAllBundles());
-        categoryEntities = categoryEntitySessionBeanLocal.retrieveAllLeafCategories();
-        tagEntities = tagEntitySessionBeanLocal.retrieveAllTags();
-//        setBrandEntities(brandEntitySessionBeanLocal.retrieveAllBrands());
+        setBundleEntities(getBundleEntitySessionBeanLocal().retrieveAllBundles());
+        categoryEntities = getCategoryEntitySessionBeanLocal().retrieveAllLeafCategories();
+        tagEntities = getTagEntitySessionBeanLocal().retrieveAllTags();
+//      setBrandEntities(brandEntitySessionBeanLocal.retrieveAllBrands());
     }
     
     
     
-    public void viewProductDetails(ActionEvent event) throws IOException
+    public void viewBundleDetails(ActionEvent event) throws IOException
     {
-        Long productIdToView = (Long)event.getComponent().getAttributes().get("productId");
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("productIdToView", productIdToView);
-        FacesContext.getCurrentInstance().getExternalContext().redirect("viewProductDetails.xhtml");
+        Long bundleIdToView = (Long)event.getComponent().getAttributes().get("bundleId");
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().put("bundleIdToView", bundleIdToView);
+        FacesContext.getCurrentInstance().getExternalContext().redirect("viewBundleDetails.xhtml");
     }
     
     
@@ -137,16 +137,16 @@ public class BundleManagementManagedBean implements Serializable {
         
         try
         {
-            BundleEntity be = bundleEntitySessionBeanLocal.createNewBundle(newBundleEntity, tagIdsNew);
-//            ProductEntity pe = productEntitySessionBeanLocal.createNewProduct(newProductEntity, categoryIdNew, tagIdsNew, brandIdNew);
+            BundleEntity be = getBundleEntitySessionBeanLocal().createNewBundle(getNewBundleEntity(), tagIdsNew);
+//          ProductEntity pe = productEntitySessionBeanLocal.createNewProduct(newProductEntity, categoryIdNew, tagIdsNew, brandIdNew);
             getBundleEntities().add(be);
             
-            if(filteredBundleEntities != null)
+            if(getFilteredBundleEntities() != null)
             {
-                filteredBundleEntities.add(be);
+                getFilteredBundleEntities().add(be);
             }
             
-            newBundleEntity = new BundleEntity();
+            setNewBundleEntity(new BundleEntity());
 //            categoryIdNew = null;
             tagIdsNew = null;
 //            brandIdNew = null;
@@ -164,13 +164,13 @@ public class BundleManagementManagedBean implements Serializable {
     
     public void doUpdateBundle(ActionEvent event)
     {
-        selectedBundleEntityToUpdate = (BundleEntity)event.getComponent().getAttributes().get("bundleEntityToUpdate");
+        setSelectedBundleEntityToUpdate((BundleEntity)event.getComponent().getAttributes().get("bundleEntityToUpdate"));
         
 //        categoryIdUpdate = selectedBundleEntityToUpdate.getCategoryEntity().getCategoryId();
 //        setBrandIdUpdate(selectedBundleEntityToUpdate.getBrandEntity().getBrandId());
         tagIdsUpdate = new ArrayList<>();
 
-        for(TagEntity tagEntity:selectedBundleEntityToUpdate.getTagEntities())
+        for(TagEntity tagEntity:getSelectedBundleEntityToUpdate().getTagEntities())
         {
             tagIdsUpdate.add(tagEntity.getTagId());
         }
@@ -187,7 +187,7 @@ public class BundleManagementManagedBean implements Serializable {
         
         try
         {
-            bundleEntitySessionBeanLocal.updateBundle(selectedBundleEntityToUpdate, productIdsUpdate, tagIdsUpdate);
+            getBundleEntitySessionBeanLocal().updateBundle(getSelectedBundleEntityToUpdate(), getProductIdsUpdate(), tagIdsUpdate);
                         
 //            for(CategoryEntity ce:categoryEntities)
 //            {
@@ -198,13 +198,13 @@ public class BundleManagementManagedBean implements Serializable {
 //                }                
 //            }
             
-            selectedBundleEntityToUpdate.getTagEntities().clear();
+            getSelectedBundleEntityToUpdate().getTagEntities().clear();
             
             for(TagEntity te:tagEntities)
             {
                 if(tagIdsUpdate.contains(te.getTagId()))
                 {
-                    selectedBundleEntityToUpdate.getTagEntities().add(te);
+                    getSelectedBundleEntityToUpdate().getTagEntities().add(te);
                 }                
             }
 
@@ -227,13 +227,13 @@ public class BundleManagementManagedBean implements Serializable {
         try
         {
             BundleEntity bundleEntityToDelete = (BundleEntity)event.getComponent().getAttributes().get("bundleEntityToDelete");
-            bundleEntitySessionBeanLocal.deleteBundle(bundleEntityToDelete.getBundleId());
+            getBundleEntitySessionBeanLocal().deleteBundle(bundleEntityToDelete.getBundleId());
             
             getBundleEntities().remove(bundleEntityToDelete);
             
-            if(filteredBundleEntities != null)
+            if(getFilteredBundleEntities() != null)
             {
-                filteredBundleEntities.remove(bundleEntityToDelete);
+                getFilteredBundleEntities().remove(bundleEntityToDelete);
             }
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Bundle deleted successfully", null));
@@ -422,6 +422,118 @@ public class BundleManagementManagedBean implements Serializable {
      */
     public void setBundleEntities(List<BundleEntity> bundleEntities) {
         this.bundleEntities = bundleEntities;
+    }
+
+    /**
+     * @return the newBundleEntity
+     */
+    public BundleEntity getNewBundleEntity() {
+        return newBundleEntity;
+    }
+
+    /**
+     * @param newBundleEntity the newBundleEntity to set
+     */
+    public void setNewBundleEntity(BundleEntity newBundleEntity) {
+        this.newBundleEntity = newBundleEntity;
+    }
+
+    /**
+     * @return the bundleEntitySessionBeanLocal
+     */
+    public BundleEntitySessionBeanLocal getBundleEntitySessionBeanLocal() {
+        return bundleEntitySessionBeanLocal;
+    }
+
+    /**
+     * @param bundleEntitySessionBeanLocal the bundleEntitySessionBeanLocal to set
+     */
+    public void setBundleEntitySessionBeanLocal(BundleEntitySessionBeanLocal bundleEntitySessionBeanLocal) {
+        this.bundleEntitySessionBeanLocal = bundleEntitySessionBeanLocal;
+    }
+
+    /**
+     * @return the productEntitySessionBeanLocal
+     */
+    public ProductEntitySessionBeanLocal getProductEntitySessionBeanLocal() {
+        return productEntitySessionBeanLocal;
+    }
+
+    /**
+     * @param productEntitySessionBeanLocal the productEntitySessionBeanLocal to set
+     */
+    public void setProductEntitySessionBeanLocal(ProductEntitySessionBeanLocal productEntitySessionBeanLocal) {
+        this.productEntitySessionBeanLocal = productEntitySessionBeanLocal;
+    }
+
+    /**
+     * @return the categoryEntitySessionBeanLocal
+     */
+    public CategoryEntitySessionBeanLocal getCategoryEntitySessionBeanLocal() {
+        return categoryEntitySessionBeanLocal;
+    }
+
+    /**
+     * @param categoryEntitySessionBeanLocal the categoryEntitySessionBeanLocal to set
+     */
+    public void setCategoryEntitySessionBeanLocal(CategoryEntitySessionBeanLocal categoryEntitySessionBeanLocal) {
+        this.categoryEntitySessionBeanLocal = categoryEntitySessionBeanLocal;
+    }
+
+    /**
+     * @return the tagEntitySessionBeanLocal
+     */
+    public TagEntitySessionBeanLocal getTagEntitySessionBeanLocal() {
+        return tagEntitySessionBeanLocal;
+    }
+
+    /**
+     * @param tagEntitySessionBeanLocal the tagEntitySessionBeanLocal to set
+     */
+    public void setTagEntitySessionBeanLocal(TagEntitySessionBeanLocal tagEntitySessionBeanLocal) {
+        this.tagEntitySessionBeanLocal = tagEntitySessionBeanLocal;
+    }
+
+    /**
+     * @return the filteredBundleEntities
+     */
+    public List<BundleEntity> getFilteredBundleEntities() {
+        return filteredBundleEntities;
+    }
+
+    /**
+     * @param filteredBundleEntities the filteredBundleEntities to set
+     */
+    public void setFilteredBundleEntities(List<BundleEntity> filteredBundleEntities) {
+        this.filteredBundleEntities = filteredBundleEntities;
+    }
+
+    /**
+     * @return the selectedBundleEntityToUpdate
+     */
+    public BundleEntity getSelectedBundleEntityToUpdate() {
+        return selectedBundleEntityToUpdate;
+    }
+
+    /**
+     * @param selectedBundleEntityToUpdate the selectedBundleEntityToUpdate to set
+     */
+    public void setSelectedBundleEntityToUpdate(BundleEntity selectedBundleEntityToUpdate) {
+        this.selectedBundleEntityToUpdate = selectedBundleEntityToUpdate;
+    }
+
+    /**
+     * @return the productIdsUpdate
+     */
+    public List<Long> getProductIdsUpdate() {
+        return productIdsUpdate;
+    }
+
+    /**
+     * @param productIdsUpdate the productIdsUpdate to set
+     */
+    public void setProductIdsUpdate(List<Long> productIdsUpdate) {
+        this.productIdsUpdate = productIdsUpdate;
     }
     
     

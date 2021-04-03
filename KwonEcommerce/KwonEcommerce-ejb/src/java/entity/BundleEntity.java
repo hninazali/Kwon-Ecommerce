@@ -88,6 +88,8 @@ public class BundleEntity implements Serializable {
     
     @ManyToMany(mappedBy = "bundleEntities", fetch = FetchType.LAZY)
     private List<TagEntity> tagEntities;
+    
+    
 
     public BundleEntity() {
     }
