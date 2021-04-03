@@ -40,7 +40,7 @@ public class StaffLoginManagedBean implements Serializable {
             StaffEntity staffEntity = staffEntitySessionBeanLocal.staffLogin(username, password);
             FacesContext.getCurrentInstance().getExternalContext().getSession(true);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("isLogin", true);
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("accountEntity", staffEntity);
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("staffEntity", staffEntity);
             FacesContext.getCurrentInstance().getExternalContext().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/index.xhtml");
         }
         catch(InvalidLoginCredentialException ex)

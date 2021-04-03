@@ -52,6 +52,7 @@ public class CustomerManagedBean implements Serializable {
     
     public void banCustomer(ActionEvent actionEvent) {
         customerEntityToBan = (CustomerEntity) actionEvent.getComponent().getAttributes().get("customerEntityToBan");
+        customerEntities = customerSessionBeanLocal.retrieveAllCustomers();
         try {
             customerSessionBeanLocal.banCustomer(customerEntityToBan.getCustomerId());
         } catch (BanCustomerException | CustomerNotFoundException ex) {
@@ -59,19 +60,6 @@ public class CustomerManagedBean implements Serializable {
         }
     }
 
-//    public void deleteCustomer(ActionEvent actionEvent) {
-//        customerEntityToDelete = (StaffEntity) actionEvent.getComponent().getAttributes().get("customerEntityToDelete");
-//        try {
-//            customerEntitySessionBeanLocal.deleteStaff(staffEntityToDelete.getStaffId());
-//            customerEntities.remove(staffEntityToDelete);
-//            if(filteredCustomerEntities != null) {
-//                filteredCustomerEntities.remove(customerEntityToDelete);
-//            }
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Customer " + customerEntityToDelete.getFirstName() + " " + customerEntityToDelete.getLastName() + " has successfully been deleted.", null));
-//        } catch (DeleteCustomerException | CustomerNotFoundException ex) {
-//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while deleting customer: " + ex.getMessage(), null));
-//        }
-//    }
     public List<CustomerEntity> getCustomerEntities() {
         return customerEntities;
     }
