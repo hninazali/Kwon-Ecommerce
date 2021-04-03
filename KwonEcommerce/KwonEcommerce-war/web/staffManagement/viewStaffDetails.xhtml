@@ -8,17 +8,17 @@
                 template="./../template/defaultTemplate.xhtml">
 
     <ui:define name="content">
+        <ez:Breadcrumb pageName="staffManagement" />
+        <div style="text-align: left">
 
-        <div style="text-align: center">
-            
-            
+
             <h3>Staff List</h3>
-            
+
             <h:form>
-            
+
                 <p:menubar>
 
-                    <p:submenu label="File" icon="ui-icon-document">
+                    <p:submenu label="Create New Staff" icon="ui-icon-document">
                         <p:menuitem value="Create New Staff" onclick="PF('dialogCreateNewStaff').show()" icon="pi pi-plus" />
                     </p:submenu>                                        
 
@@ -136,21 +136,6 @@
                                 <p:message for="lastName" />
                             </p:column>
                         </p:row>
-
-                        <!--                        <p:row>
-                                                    <p:column>
-                                                        <h:outputLabel for="accessRight" value="AccessRight: " />
-                                                    </p:column>
-                                                    <p:column>
-                                                        <p:selectOneMenu id="accessRight" value="#{staffManagementManagedBean.staffEntityToUpdate.accessRightEnum}">
-                                                            <f:selectItems value="#{accessRightManagedBean.accessRights}" var="accessRight" itemValue="#{staffEntity.accessRightEnum}" itemLabel="#{accessRight}"/>
-                                                        </p:selectOneMenu>
-                                                    </p:column>
-                                                    <p:column>
-                                                        <p:message for="accessRight" />
-                                                    </p:column>
-                                                </p:row>-->
-
                         <p:row>
                             <p:column colspan="3">
                                 <p:commandButton value="Update Staff" update="@form staffListForm:staffDataTable" actionListener="#{staffManagementManagedBean.updateStaff}" oncomplete="PF('dialogUpdateStaff').hide();" />
@@ -162,7 +147,7 @@
                 </p:dialog>
 
             </h:form>
-            
+
             <h:form id="formCreateNewStaff">
 
                 <p:dialog id="dialogCreateNewStaff" widgetVar="dialogCreateNewStaff" header="Create New Staff" closable="true">
@@ -172,53 +157,53 @@
                     <p:panelGrid>
 
                         <p:row>
-                        <p:column>
-                            <p:outputLabel value="First Name: " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="firstName" value="#{staffManagementManagedBean.newStaffEntity.firstName}" required="true" requiredMessage="First Name is required!" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="firstName" />
-                        </p:column>
-                    </p:row>
+                            <p:column>
+                                <p:outputLabel value="First Name: " />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="firstName" value="#{staffManagementManagedBean.newStaffEntity.firstName}" required="true" requiredMessage="First Name is required!" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="firstName" />
+                            </p:column>
+                        </p:row>
 
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel value="Last Name: " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="lastName" value="#{staffManagementManagedBean.newStaffEntity.lastName}" required="true" requiredMessage="Last Name is required!" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="lastName" />
-                        </p:column>
-                    </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Last Name: " />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="lastName" value="#{staffManagementManagedBean.newStaffEntity.lastName}" required="true" requiredMessage="Last Name is required!" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="lastName" />
+                            </p:column>
+                        </p:row>
 
 
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel value="Username: " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="username" value="#{staffManagementManagedBean.newStaffEntity.username}" required="true" requiredMessage="Username is required!" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="username" />
-                        </p:column>
-                    </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Username: " />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="username" value="#{staffManagementManagedBean.newStaffEntity.username}" required="true" requiredMessage="Username is required!" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="username" />
+                            </p:column>
+                        </p:row>
 
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel value="Password: " />
-                        </p:column>
-                        <p:column>
-                            <p:password id="password" value="#{staffManagementManagedBean.newStaffEntity.password}" required="true" requiredMessage="Password is required!" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="password" />
-                        </p:column>
-                    </p:row>
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel value="Password: " />
+                            </p:column>
+                            <p:column>
+                                <p:password id="password" value="#{staffManagementManagedBean.newStaffEntity.password}" required="true" requiredMessage="Password is required!" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="password" />
+                            </p:column>
+                        </p:row>
 
                         <p:row>
                             <p:column colspan="3">
@@ -232,7 +217,7 @@
                 </p:dialog>
 
             </h:form>
-            
+
         </div>
 
     </ui:define>
