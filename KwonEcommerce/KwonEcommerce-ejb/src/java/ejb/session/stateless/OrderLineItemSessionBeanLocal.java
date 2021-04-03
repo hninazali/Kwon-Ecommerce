@@ -29,4 +29,6 @@ public interface OrderLineItemSessionBeanLocal {
     void updateOrderLineItemEntity(OrderLineItemEntity orderLineItemEntity);
 
     void deleteOrderLineItemEntity(OrderLineItemEntity orderLineItemEntity);
+
+    public OrderLineItemEntity updateOrderLineItemEntityQty(Long lineItemId, Integer quantity) throws OrderLineItemNotFoundException;
 }

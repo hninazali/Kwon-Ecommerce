@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
@@ -67,9 +66,9 @@ public class OrderTransactionEntity implements Serializable
     @JoinColumn(nullable = true)
     private StaffEntity staffEntity;
     
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(nullable = true)
-    private List<CustomerEntity> customerEntities;
+    private CustomerEntity customerEntity;
 
     
     
@@ -78,7 +77,6 @@ public class OrderTransactionEntity implements Serializable
         orderLineItemEntities = new ArrayList<>();
         voidRefund = false;
         this.shippingStatus = ShippingStatusEnum.NOT_SHIPPED;
-        customerEntities = new ArrayList<>();
     }
     
     
@@ -265,20 +263,6 @@ public class OrderTransactionEntity implements Serializable
             }
         }
     }
-    
-    
-    
-    public List<CustomerEntity> getCustomerEntities() {
-        return customerEntities;
-    }
-
-    public void setCustomerEntity(List<CustomerEntity> customerEntities) 
-    {
-        for(CustomerEntity ce: customerEntities)
-        {
-            customerEntities.add(ce);
-        }
-    }
 
     public ShippingStatusEnum getShippingStatus() {
         return shippingStatus;
@@ -286,5 +270,13 @@ public class OrderTransactionEntity implements Serializable
 
     public void setShippingStatus(ShippingStatusEnum shippingStatus) {
         this.shippingStatus = shippingStatus;
+    }
+
+    public CustomerEntity getCustomerEntity() {
+        return customerEntity;
+    }
+
+    public void setCustomerEntity(CustomerEntity customerEntity) {
+        this.customerEntity = customerEntity;
     }
 }

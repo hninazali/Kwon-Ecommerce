@@ -90,6 +90,8 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
     @Override
     public CustomerEntity retrieveCustomerById(Long customerId) throws CustomerNotFoundException {
         CustomerEntity customerEntity = entityManager.find(CustomerEntity.class, customerId);
+        
+        customerEntity.getGroupCartEntities().size();
 
         if (customerEntity != null) {
             return customerEntity;

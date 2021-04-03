@@ -50,7 +50,7 @@ public class OrderLineItemSessionBean implements OrderLineItemSessionBeanLocal {
     @Override
     public OrderLineItemEntity createNewOrderLineItem(Long customerId, OrderLineItemEntity newOrderLineItem) throws CreateNewOrderLineItemException, CustomerNotFoundException, InputDataValidationException {
         
-                Set<ConstraintViolation<OrderLineItemEntity>> constraintViolations = validator.validate(newOrderLineItem);
+        Set<ConstraintViolation<OrderLineItemEntity>> constraintViolations = validator.validate(newOrderLineItem);
                 
         if (newOrderLineItem != null) {
             try {
@@ -100,6 +100,15 @@ public class OrderLineItemSessionBean implements OrderLineItemSessionBeanLocal {
     @Override
     public void updateOrderLineItemEntity(OrderLineItemEntity orderLineItemEntity) {
         entityManager.merge(orderLineItemEntity);
+    }
+    
+    @Override
+    public OrderLineItemEntity updateOrderLineItemEntityQty(Long lineItemId, Integer quantity) throws OrderLineItemNotFoundException {
+        OrderLineItemEntity lineItem = this.retrieveOrderLineItemById(lineItemId);
+        
+        lineItem.setQuantity(quantity);
+        
+        return lineItem;
     }
 
     @Override

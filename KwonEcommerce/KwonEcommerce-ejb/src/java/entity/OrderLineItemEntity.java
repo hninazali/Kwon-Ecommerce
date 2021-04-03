@@ -30,13 +30,16 @@ public class OrderLineItemEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderLineItemId;
-    @Column(nullable = false)
-    @NotNull
-    @Min(1)
-    private Integer serialNumber;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    //@Column(nullable = false)
+    //@NotNull
+    //@Min(1)
+    //private Integer serialNumber;
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true)
     private ProductEntity productEntity;
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true)
+    private BundleEntity bundleEntity;
     @Column(nullable = false)
     @NotNull
     @Min(1)
@@ -59,9 +62,17 @@ public class OrderLineItemEntity implements Serializable {
     public OrderLineItemEntity() {
     }
 
-    public OrderLineItemEntity(Integer serialNumber, ProductEntity productEntity, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal) {
-        this.serialNumber = serialNumber;
+    public OrderLineItemEntity(ProductEntity productEntity, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal) 
+    {
         this.productEntity = productEntity;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.subTotal = subTotal;
+    }
+    
+    public OrderLineItemEntity(BundleEntity bundleEntity, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal) 
+    {
+        this.bundleEntity = bundleEntity;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.subTotal = subTotal;
@@ -103,14 +114,6 @@ public class OrderLineItemEntity implements Serializable {
         this.orderLineItemId = orderLineItemId;
     }
 
-    public Integer getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(Integer serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
     public ProductEntity getProductEntity() {
         return productEntity;
     }
@@ -149,5 +152,13 @@ public class OrderLineItemEntity implements Serializable {
 
     public void setCustomerEntity(CustomerEntity customerEntity) {
         this.customerEntity = customerEntity;
+    }
+
+    public BundleEntity getBundleEntity() {
+        return bundleEntity;
+    }
+
+    public void setBundleEntity(BundleEntity bundleEntity) {
+        this.bundleEntity = bundleEntity;
     }
 }

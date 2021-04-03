@@ -1,6 +1,7 @@
 package ejb.session.stateless;
 
 //import entity.CustomerEntity;
+import entity.CustomerEntity;
 import entity.OrderTransactionEntity;
 import entity.OrderLineItemEntity;
 import entity.StaffEntity;
@@ -32,6 +33,9 @@ import util.exception.StaffNotFoundException;
 
 public class OrderTransactionSessionBean implements OrderTransactionSessionBeanLocal
 {   
+
+    @EJB(name = "CustomerSessionBeanLocal")
+    private CustomerSessionBeanLocal customerSessionBeanLocal;
 
     //@EJB(name = "CustomerEntitySessionBeanLocal")
     //private CustomerEntitySessionBeanLocal customerEntitySessionBeanLocal;
@@ -73,6 +77,43 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
                     productSessionBeanLocal.debitQuantityOnHand(orderTransactionLineItemEntity.getProductEntity().getProductId(), orderTransactionLineItemEntity.getQuantity());
                     entityManager.persist(orderTransactionLineItemEntity);
                 }
+
+                entityManager.flush();
+
+                return newOrderTransaction;
+            }
+            catch(ProductNotFoundException | ProductInsufficientQuantityOnHandException ex)
+            {
+                // The line below rolls back all changes made to the database.
+                eJBContext.setRollbackOnly();
+                throw new CreateNewOrderTransactionException(ex.getMessage());
+            }
+        }
+        else
+        {
+            throw new CreateNewOrderTransactionException("Order transaction information not provided");
+        }
+    }
+    
+    @Override
+    public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction) throws CustomerNotFoundException, CreateNewOrderTransactionException
+    {
+        if(newOrderTransaction != null)
+        {
+            try
+            {
+                CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+                newOrderTransaction.setCustomerEntity(customer);
+                customer.getOrderTransactionEntities().add(newOrderTransaction);
+
+                entityManager.persist(newOrderTransaction);
+
+                
+                for(OrderLineItemEntity orderLineItemEntity : newOrderTransaction.getOrderLineItemEntities())
+                {
+                    productSessionBeanLocal.debitQuantityOnHand(orderLineItemEntity.getProductEntity().getProductId(), orderLineItemEntity.getQuantity());
+                }
+                
 
                 entityManager.flush();
 

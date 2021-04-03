@@ -63,7 +63,7 @@ public class CustomerEntity implements Serializable {
     @ManyToMany(mappedBy = "customerEntities", fetch = FetchType.LAZY)
     private List<GroupCartEntity> groupCartEntities;
 
-    @ManyToMany(mappedBy = "customerEntities", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY)
     private List<OrderTransactionEntity> orderTransactionEntities;
 
     @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY)

@@ -11,6 +11,7 @@ import java.util.List;
 import javax.ejb.Local;
 import util.enumeration.ShippingStatusEnum;
 import util.exception.CreateNewOrderTransactionException;
+import util.exception.CustomerNotFoundException;
 import util.exception.OrderTransactionAlreadyVoidedRefundedException;
 import util.exception.OrderTransactionNotFoundException;
 import util.exception.StaffNotFoundException;
@@ -41,5 +42,7 @@ public interface OrderTransactionSessionBeanLocal {
     public void updateShippingStatus(long orderId, ShippingStatusEnum shippingStatus) throws OrderTransactionNotFoundException;
 
     public List<OrderLineItemEntity> retrieveOrderLineItemsByProductId(Long productId);
+
+    public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction) throws CustomerNotFoundException, CreateNewOrderTransactionException;
     
 }

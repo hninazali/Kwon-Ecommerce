@@ -25,14 +25,20 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.CreateNewOrderLineItemException;
+import util.exception.CreateNewOrderTransactionException;
 import util.exception.CreateNewPersonalCartException;
 import util.exception.CustomerNotFoundException;
 import util.exception.GroupCartNotFoundException;
 import util.exception.InputDataValidationException;
+import util.exception.OrderLineItemNotFoundException;
 import util.exception.PersonalCartNotFoundException;
 
 @Stateless
 public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
+
+    @EJB(name = "OrderLineItemSessionBeanLocal")
+    private OrderLineItemSessionBeanLocal orderLineItemSessionBeanLocal;
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
@@ -91,6 +97,16 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
 
         return personalCartEntities;
     }
+    
+    @Override
+    public PersonalCartEntity retrievePersonalCartEntity(Long customerId) throws CustomerNotFoundException
+    {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        PersonalCartEntity personalCart = customer.getPersonalCartEntity();
+        personalCart.getOrderLineItemEntities().size();
+        
+        return personalCart;
+    }
 
     @Override
     public PersonalCartEntity retrievePersonalCartById(Long personalCartId) throws PersonalCartNotFoundException {
@@ -102,16 +118,60 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
             throw new PersonalCartNotFoundException("Personal Cart ID " + personalCartId + " does not exist!");
         }
     }
+    
+    @Override
+    public PersonalCartEntity retrievePersonalCartByIdEager(Long personalCartId) throws PersonalCartNotFoundException {
+        PersonalCartEntity personalCartEntity = entityManager.find(PersonalCartEntity.class, personalCartId);
+
+        if (personalCartEntity != null) {
+            personalCartEntity.getOrderLineItemEntities().size();
+            return personalCartEntity;
+        } else {
+            throw new PersonalCartNotFoundException("Personal Cart ID " + personalCartId + " does not exist!");
+        }
+    }
 
     @Override
     public void addOrderLineItemToCart(Long personalCartId, OrderLineItemEntity orderLineItemEntity) throws PersonalCartNotFoundException {
         PersonalCartEntity personalCartEntity = retrievePersonalCartById(personalCartId);
         personalCartEntity.getOrderLineItemEntities().add(orderLineItemEntity);
     }
+    
+    @Override
+    public OrderLineItemEntity addNewOrderLineItemToCart(Long customerId, OrderLineItemEntity orderLineItemEntity) throws CreateNewOrderLineItemException, CustomerNotFoundException, InputDataValidationException {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        OrderLineItemEntity lineItem = orderLineItemSessionBeanLocal.createNewOrderLineItem(customerId, orderLineItemEntity);
+        PersonalCartEntity personalCartEntity = customer.getPersonalCartEntity();
+        personalCartEntity.getOrderLineItemEntities().add(lineItem);
+        
+        return lineItem;
+    }
+    
+    @Override
+    public OrderLineItemEntity updateOrderLineItem(Long customerId, OrderLineItemEntity orderLineItemEntity, Integer newQuantity) throws CustomerNotFoundException, OrderLineItemNotFoundException
+    {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        OrderLineItemEntity lineItem = orderLineItemSessionBeanLocal.updateOrderLineItemEntityQty(orderLineItemEntity.getOrderLineItemId(), newQuantity);
+        
+        return lineItem;
+    }
+    
+    @Override
+    public void removeOrderLineItem(Long customerId, OrderLineItemEntity orderLineItemEntity) throws CustomerNotFoundException, OrderLineItemNotFoundException
+    {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        OrderLineItemEntity lineItem = orderLineItemSessionBeanLocal.retrieveOrderLineItemById(orderLineItemEntity.getOrderLineItemId());
+        PersonalCartEntity personalCart = customer.getPersonalCartEntity();
+        
+        personalCart.getOrderLineItemEntities().remove(lineItem);
+        lineItem.setCustomerEntity(null);
+        customer.getOrderLineItemEntities().remove(lineItem);
+        entityManager.remove(lineItem);
+    }
 
     @Override
-    public void checkOutCart(Long customerId, Long personalCartId) throws PersonalCartNotFoundException, CustomerNotFoundException {
-        PersonalCartEntity personalCartEntity = retrievePersonalCartById(personalCartId);
+    public OrderTransactionEntity checkOutCart(Long customerId, Long personalCartId) throws PersonalCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException {
+        PersonalCartEntity personalCartEntity = retrievePersonalCartByIdEager(personalCartId);
         CustomerEntity customerEntity = customerSessionBeanLocal.retrieveCustomerById(customerId);
         Integer totalQty = 0;
         BigDecimal totalAmount = BigDecimal.ZERO;
@@ -124,11 +184,19 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
         }
 
         OrderTransactionEntity orderTransactionEntity = new OrderTransactionEntity(totalLineItem, totalQty, totalAmount, new Date(), false);
-        orderTransactionEntity.getCustomerEntities().add(customerEntity);
-        clearPersonalCart(personalCartEntity);
+        OrderTransactionEntity afterCheckout = orderTransactionSessionBeanLocal.createNewOrderTransactionForCustomer(customerId, orderTransactionEntity);
+        clearPersonalCart(personalCartEntity, customerEntity);
+        
+        return afterCheckout;
     }
 
-    public void clearPersonalCart(PersonalCartEntity personalCartEntity) {
+    public void clearPersonalCart(PersonalCartEntity personalCartEntity, CustomerEntity customer) 
+    {
+        for (OrderLineItemEntity lineItem : personalCartEntity.getOrderLineItemEntities())
+        {
+            customer.getOrderLineItemEntities().remove(lineItem);
+            lineItem.setCustomerEntity(null);
+        }
         personalCartEntity.getOrderLineItemEntities().clear();
 
     }
