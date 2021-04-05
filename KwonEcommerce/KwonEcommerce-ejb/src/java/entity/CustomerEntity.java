@@ -29,7 +29,7 @@ public class CustomerEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long customerId;
     @Column(nullable = false, length = 32)
     @NotNull
