@@ -157,10 +157,10 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
     }
     
     @Override
-    public void removeOrderLineItem(Long customerId, OrderLineItemEntity orderLineItemEntity) throws CustomerNotFoundException, OrderLineItemNotFoundException
+    public void removeOrderLineItem(Long customerId, Long lineItemId) throws CustomerNotFoundException, OrderLineItemNotFoundException
     {
         CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
-        OrderLineItemEntity lineItem = orderLineItemSessionBeanLocal.retrieveOrderLineItemById(orderLineItemEntity.getOrderLineItemId());
+        OrderLineItemEntity lineItem = orderLineItemSessionBeanLocal.retrieveOrderLineItemById(lineItemId);
         PersonalCartEntity personalCart = customer.getPersonalCartEntity();
         
         personalCart.getOrderLineItemEntities().remove(lineItem);
