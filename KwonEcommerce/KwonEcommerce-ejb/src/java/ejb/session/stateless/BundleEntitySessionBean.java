@@ -53,6 +53,9 @@ import util.exception.UpdateProductException;
  */
 @Stateless
 public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
+
+    @EJB(name = "CategoryEntitySessionBeanLocal")
+    private CategoryEntitySessionBeanLocal categoryEntitySessionBeanLocal;
     @PersistenceContext(unitName = "KwonEcommerce-ejbPU")
     private EntityManager entityManager;
 
@@ -248,7 +251,9 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
     // Updated in v5.0 to include association with new category entity
     // Updated in v5.1 with category entity and tag entity processing
     @Override
-    public void updateBundle(BundleEntity bundleEntity, List<Long> bundleLineItemIds, List<Long> tagIds) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException {
+    public void updateBundle(BundleEntity bundleEntity) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException, CategoryNotFoundException {
+        Integer currQty = 0;
+        BigDecimal price = new BigDecimal(0);
         if (bundleEntity != null && bundleEntity.getBundleId() != null) {
             Set<ConstraintViolation<BundleEntity>> constraintViolations = validator.validate(bundleEntity);
 
@@ -256,6 +261,62 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
                 BundleEntity bundleEntityToUpdate = retrieveBundleByBundleId(bundleEntity.getBundleId());
 
                 if (bundleEntityToUpdate.getSkuCode().equals(bundleEntity.getSkuCode())) {
+                    if (bundleEntityToUpdate.getBundleLineItems().size() == bundleEntity.getBundleLineItems().size())
+                    {
+                        for (BundleLineItemEntity lineItem2 : bundleEntity.getBundleLineItems())
+                        {
+                            for (BundleLineItemEntity lineItem : bundleEntityToUpdate.getBundleLineItems())
+                            {
+                                if (lineItem.getProductEntity().getName().equals(lineItem2.getProductEntity().getName()))
+                                    lineItem.setQuantity(lineItem2.getQuantity());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (BundleLineItemEntity temp : bundleEntityToUpdate.getBundleLineItems())
+                        {
+                            bundleEntityToUpdate.getBundleLineItems().remove(temp);
+                            entityManager.remove(temp);
+                        }
+                        for (BundleLineItemEntity bundleLineItem : bundleEntity.getBundleLineItems())
+                        {
+                            ProductEntity tempProd = bundleLineItem.getProductEntity();
+                            BundleLineItemEntity lineItemTemp = new BundleLineItemEntity(bundleLineItem.getSerialNumber(), tempProd, 
+                                    bundleLineItem.getQuantity(), tempProd.getUnitPrice().multiply(new BigDecimal(bundleLineItem.getQuantity())));
+                            entityManager.persist(lineItemTemp);
+                            bundleEntityToUpdate.getBundleLineItems().add(lineItemTemp);
+                        }
+                    }
+                    
+                    for (CategoryEntity cat : bundleEntityToUpdate.getCategoryEntities())
+                    {
+                        CategoryEntity categoryEntityToUpdate = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(cat.getCategoryId());
+                        categoryEntityToUpdate.getBundleEntities().remove(bundleEntityToUpdate);
+                        bundleEntityToUpdate.getCategoryEntities().remove(cat);
+                    }
+                    for (TagEntity tagTemp : bundleEntityToUpdate.getTagEntities())
+                    {
+                        TagEntity tagEntityToUpdate = tagEntitySessionBeanLocal.retrieveTagByTagId(tagTemp.getTagId());
+                        tagEntityToUpdate.getBundleEntities().remove(bundleEntityToUpdate);
+                        bundleEntityToUpdate.getTagEntities().remove(tagTemp);
+                    }
+                    for (BundleLineItemEntity lineItems : bundleEntityToUpdate.getBundleLineItems())
+                    {
+                        ProductEntity prod = lineItems.getProductEntity();
+                        
+                        CategoryEntity category = prod.getCategoryEntity();
+                        category.getBundleEntities().add(bundleEntityToUpdate);
+                        bundleEntityToUpdate.getCategoryEntities().add(category);
+                        
+                        List<TagEntity> tags = prod.getTagEntities();
+                        for (TagEntity eachTag : tags)
+                        {
+                            eachTag.getBundleEntities().add(bundleEntityToUpdate);
+                            bundleEntityToUpdate.getTagEntities().add(eachTag);
+                        }
+                        price.add(lineItems.getSubTotal());
+                    }
 //                    // Added in v5.1
 //                    if(categoryId != null && (!productEntityToUpdate.getCategoryEntity().getCategoryId().equals(categoryId)))
 //                    {
@@ -269,33 +330,33 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
 //                        productEntityToUpdate.setCategoryEntity(categoryEntityToUpdate);
 //                    }
 
-                    // Added in v5.1
-                    if (tagIds != null) {
-                        for (TagEntity tagEntity : bundleEntityToUpdate.getTagEntities()) {
-                            tagEntity.getBundleEntities().remove(bundleEntityToUpdate);
-                        }
-
-                        bundleEntityToUpdate.getTagEntities().clear();
-
-                        for (Long tagId : tagIds) {
-                            TagEntity tagEntity = tagEntitySessionBeanLocal.retrieveTagByTagId(tagId);
-                            bundleEntityToUpdate.addTag(tagEntity);
-                        }
-                    }
-
-                    if (bundleLineItemIds != null) {
-//                        for(ProductEntity existingProduct:bundleEntityToUpdate.getProductEntities())
-//                        {
-//                            existingProduct.getBundleEntities().remove(bundleEntityToUpdate);
+//                    // Added in v5.1
+//                    if (tagIds != null) {
+//                        for (TagEntity tagEntity : bundleEntityToUpdate.getTagEntities()) {
+//                            tagEntity.getBundleEntities().remove(bundleEntityToUpdate);
 //                        }
-                        bundleEntityToUpdate.getCategoryEntities().clear();
-                        bundleEntityToUpdate.getBundleLineItems().clear();
+//
+//                        bundleEntityToUpdate.getTagEntities().clear();
+//
+//                        for (Long tagId : tagIds) {
+//                            TagEntity tagEntity = tagEntitySessionBeanLocal.retrieveTagByTagId(tagId);
+//                            bundleEntityToUpdate.addTag(tagEntity);
+//                        }
+//                    }
 
-                        for (Long newBundleLineItemId : bundleLineItemIds) {
-                            BundleLineItemEntity updatedBundleLineItem = bundleLineItemEntitySessionBeanLocal.retrieveBundleLineItemByBundleLineItemId(newBundleLineItemId);
-                            bundleEntityToUpdate.addBundleLineItem(updatedBundleLineItem);
-                        }
-                    }
+//                    if (bundleLineItemIds != null) {
+////                        for(ProductEntity existingProduct:bundleEntityToUpdate.getProductEntities())
+////                        {
+////                            existingProduct.getBundleEntities().remove(bundleEntityToUpdate);
+////                        }
+//                        bundleEntityToUpdate.getCategoryEntities().clear();
+//                        bundleEntityToUpdate.getBundleLineItems().clear();
+//
+//                        for (Long newBundleLineItemId : bundleLineItemIds) {
+//                            BundleLineItemEntity updatedBundleLineItem = bundleLineItemEntitySessionBeanLocal.retrieveBundleLineItemByBundleLineItemId(newBundleLineItemId);
+//                            bundleEntityToUpdate.addBundleLineItem(updatedBundleLineItem);
+//                        }
+//                    }
 
                     bundleEntityToUpdate.setName(bundleEntity.getName());
                     bundleEntityToUpdate.setDescription(bundleEntity.getDescription());

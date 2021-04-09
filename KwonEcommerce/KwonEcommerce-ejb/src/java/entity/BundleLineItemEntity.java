@@ -46,23 +46,31 @@ public class BundleLineItemEntity implements Serializable {
 //    @DecimalMin("0.00")
 //    @Digits(integer = 9, fraction = 2) // 11 - 2 digits to the left of the decimal point
 //    private BigDecimal unitPrice;
-//    @Column(nullable = false, precision = 11, scale = 2)
-//    @NotNull
-//    @DecimalMin("0.00")
-//    @Digits(integer = 9, fraction = 2) // 11 - 2 digits to the left of the decimal point
-//    private BigDecimal subTotal;
+    @Column(nullable = false, precision = 11, scale = 2)
+    @NotNull
+    @DecimalMin("0.00")
+    @Digits(integer = 9, fraction = 2) // 11 - 2 digits to the left of the decimal point
+    private BigDecimal subTotal;
 
     public BundleLineItemEntity() {
     }
 
-    public BundleLineItemEntity(Integer serialNumber, ProductEntity productEntity, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal) {
+//    public BundleLineItemEntity(Integer serialNumber, ProductEntity productEntity, Integer quantity, BigDecimal unitPrice, BigDecimal subTotal) {
+//        this.serialNumber = serialNumber;
+//        this.productEntity = productEntity;
+//        this.quantity = quantity;
+//        this.unitPrice = unitPrice;
+//        this.subTotal = subTotal;
+
+    public BundleLineItemEntity(Integer serialNumber, ProductEntity productEntity, Integer quantity, BigDecimal subTotal) 
+    {
         this.serialNumber = serialNumber;
         this.productEntity = productEntity;
         this.quantity = quantity;
-        this.unitPrice = unitPrice;
         this.subTotal = subTotal;
     }
 
+//    }
     @Override
     public int hashCode() {
         int hash = 0;
@@ -123,13 +131,13 @@ public class BundleLineItemEntity implements Serializable {
         this.quantity = quantity;
     }
 
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
+//    public BigDecimal getUnitPrice() {
+//        return unitPrice;
+//    }
+//
+//    public void setUnitPrice(BigDecimal unitPrice) {
+//        this.unitPrice = unitPrice;
+//    }
 
     public BigDecimal getSubTotal() {
         return subTotal;

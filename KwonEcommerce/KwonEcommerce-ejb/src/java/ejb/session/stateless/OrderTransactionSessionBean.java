@@ -19,6 +19,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.ShippingStatusEnum;
+import util.exception.BundleInsufficientQuantityOnHandException;
+import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CustomerNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
@@ -33,6 +35,9 @@ import util.exception.StaffNotFoundException;
 
 public class OrderTransactionSessionBean implements OrderTransactionSessionBeanLocal
 {   
+
+    @EJB(name = "BundleEntitySessionBeanLocal")
+    private BundleEntitySessionBeanLocal bundleEntitySessionBeanLocal;
 
     @EJB(name = "CustomerSessionBeanLocal")
     private CustomerSessionBeanLocal customerSessionBeanLocal;
@@ -60,7 +65,7 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
     // Updated in v4.1
     
     @Override
-    public OrderTransactionEntity createNewOrderTransaction(Long staffId, OrderTransactionEntity newOrderTransaction) throws StaffNotFoundException, CreateNewOrderTransactionException
+    public OrderTransactionEntity createNewOrderTransaction(Long staffId, OrderTransactionEntity newOrderTransaction) throws StaffNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException
     {
         if(newOrderTransaction != null)
         {
@@ -72,13 +77,21 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
 
                 entityManager.persist(newOrderTransaction);
 
-                for(OrderLineItemEntity orderTransactionLineItemEntity:newOrderTransaction.getOrderLineItemEntities())
+                for(OrderLineItemEntity orderLineItem:newOrderTransaction.getOrderLineItemEntities())
                 {
-                    productSessionBeanLocal.debitQuantityOnHand(orderTransactionLineItemEntity.getProductEntity().getProductId(), orderTransactionLineItemEntity.getQuantity());
-                    entityManager.persist(orderTransactionLineItemEntity);
+                    if (orderLineItem.getProductEntity() != null) 
+                    {
+                        productSessionBeanLocal.debitQuantityOnHand(orderLineItem.getProductEntity().getProductId(), orderLineItem.getQuantity());
+                        //entityManager.persist(orderLineItem);
+                    }
+                    else
+                    {
+                        bundleEntitySessionBeanLocal.debitQuantityOnHand(orderLineItem.getBundleEntity().getBundleId(), orderLineItem.getQuantity());
+                        //entityManager.persist(orderLineItem);
+                    }
                 }
 
-                entityManager.flush();
+                //entityManager.flush();
 
                 return newOrderTransaction;
             }
@@ -171,9 +184,9 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
         
         if(orderTransactionEntity != null)
         {
-            for(OrderLineItemEntity orderTransactionLineItemEntity:orderTransactionEntity.getOrderLineItemEntities())
+            for(OrderLineItemEntity orderLineItem:orderTransactionEntity.getOrderLineItemEntities())
             {
-                orderTransactionLineItemEntity.getProductEntity();
+                orderLineItem.getProductEntity();
             }
             
             return orderTransactionEntity;
@@ -203,16 +216,30 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
         
         if(!orderTransactionEntity.getVoidRefund())
         {
-            for(OrderLineItemEntity orderTransactionLineItemEntity:orderTransactionEntity.getOrderLineItemEntities())
+            for(OrderLineItemEntity orderLineItem:orderTransactionEntity.getOrderLineItemEntities())
             {
-                try
+                if (orderLineItem.getProductEntity() != null)
                 {
-                    productSessionBeanLocal.creditQuantityOnHand(orderTransactionLineItemEntity.getProductEntity().getProductId(), orderTransactionLineItemEntity.getQuantity());
+                    try
+                    {
+                        productSessionBeanLocal.creditQuantityOnHand(orderLineItem.getProductEntity().getProductId(), orderLineItem.getQuantity());
+                    }
+                    catch(ProductNotFoundException ex)
+                    {
+                        ex.printStackTrace(); // Ignore exception since this should not happen
+                    }    
                 }
-                catch(ProductNotFoundException ex)
+                else
                 {
-                    ex.printStackTrace(); // Ignore exception since this should not happen
-                }                
+                   try
+                    {
+                        bundleEntitySessionBeanLocal.creditQuantityOnHand(orderLineItem.getBundleEntity().getBundleId(), orderLineItem.getQuantity());
+                    }
+                    catch(BundleNotFoundException | ProductNotFoundException ex)
+                    {
+                        ex.printStackTrace(); // Ignore exception since this should not happen
+                    }    
+                }
             }
             
             orderTransactionEntity.setVoidRefund(true);
@@ -245,10 +272,10 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
 
                 entityManager.persist(newOrderTransaction);
 
-                for(OrderTransactionLineItemEntity orderTransactionLineItemEntity:newOrderTransaction.getOrderTransactionLineItemEntities())
+                for(OrderTransactionLineItemEntity orderLineItem:newOrderTransaction.getOrderTransactionLineItemEntities())
                 {
-                    productSessionBeanLocal.debitQuantityOnHand(orderTransactionLineItemEntity.getProductEntity().getProductId(), orderTransactionLineItemEntity.getQuantity());
-                    entityManager.persist(orderTransactionLineItemEntity);
+                    productSessionBeanLocal.debitQuantityOnHand(orderLineItem.getProductEntity().getProductId(), orderLineItem.getQuantity());
+                    entityManager.persist(orderLineItem);
                 }
 
                 entityManager.flush();
@@ -287,37 +314,12 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
         LocalDate nowDate = LocalDate.now();
         if (nowDate.isAfter(localNewDate))
         {
-            approveRefund(orderTransaction);
+            this.voidRefundOrderTransaction(orderTransaction.getOrderTransactionId());
             return true;
         }
         else
         {
             return false;
-        }
-    }
-    
-    @Override
-    public void approveRefund(OrderTransactionEntity orderTransaction) throws OrderTransactionAlreadyVoidedRefundedException
-    {
-        if(!orderTransaction.getVoidRefund())
-        {
-            for(OrderLineItemEntity orderLineItemEntity:orderTransaction.getOrderLineItemEntities())
-            {
-                try
-                {
-                    productSessionBeanLocal.creditQuantityOnHand(orderLineItemEntity.getProductEntity().getProductId(), orderLineItemEntity.getQuantity());
-                }
-                catch(ProductNotFoundException ex)
-                {
-                    ex.printStackTrace(); // Ignore exception since this should not happen
-                }                
-            }
-            
-            orderTransaction.setVoidRefund(true);
-        }
-        else
-        {
-            throw new OrderTransactionAlreadyVoidedRefundedException("The sale transaction has aready been voided/refunded");
         }
     }
     

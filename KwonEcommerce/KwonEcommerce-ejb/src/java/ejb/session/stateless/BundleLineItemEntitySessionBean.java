@@ -71,7 +71,6 @@ public class BundleLineItemEntitySessionBean implements BundleLineItemEntitySess
     
     // Newly addded in v5.1
     
-    
     @Override
     public BundleLineItemEntity retrieveBundleLineItemByBundleLineItemId(Long bundleLineItemId) throws BundleNotFoundException
     {
@@ -93,117 +92,117 @@ public class BundleLineItemEntitySessionBean implements BundleLineItemEntitySess
     // Updated in v5.0 to include association with new category entity
     // Updated in v5.1 with category entity and tag entity processing
     
-    @Override
-    public void updateBundle(BundleEntity bundleEntity, List<Long> bundleLineItemIds, List<Long> tagIds) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException
-    {
-        if(bundleEntity != null && bundleEntity.getBundleId()!= null)
-        {
-            Set<ConstraintViolation<BundleEntity>>constraintViolations = validator.validate(bundleEntity);
-        
-            if(constraintViolations.isEmpty())
-            {
-                BundleEntity bundleEntityToUpdate = retrieveBundleByBundleId(bundleEntity.getBundleId());
-
-                if(bundleEntityToUpdate.getSkuCode().equals(bundleEntity.getSkuCode()))
-                {
+//    @Override
+//    public void updateBundle(BundleEntity bundleEntity, List<Long> bundleLineItemIds, List<Long> tagIds) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException
+//    {
+//        if(bundleEntity != null && bundleEntity.getBundleId()!= null)
+//        {
+//            Set<ConstraintViolation<BundleEntity>>constraintViolations = validator.validate(bundleEntity);
+//        
+//            if(constraintViolations.isEmpty())
+//            {
+//                BundleEntity bundleEntityToUpdate = retrieveBundleByBundleId(bundleEntity.getBundleId());
+//
+//                if(bundleEntityToUpdate.getSkuCode().equals(bundleEntity.getSkuCode()))
+//                {
+////                    // Added in v5.1
+////                    if(categoryId != null && (!productEntityToUpdate.getCategoryEntity().getCategoryId().equals(categoryId)))
+////                    {
+////                        CategoryEntity categoryEntityToUpdate = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(categoryId);
+////                        
+////                        if(!categoryEntityToUpdate.getSubCategoryEntities().isEmpty())
+////                        {
+////                            throw new UpdateProductException("Selected category for the new product is not a leaf category");
+////                        }
+////                        
+////                        productEntityToUpdate.setCategoryEntity(categoryEntityToUpdate);
+////                    }
+//                    
 //                    // Added in v5.1
-//                    if(categoryId != null && (!productEntityToUpdate.getCategoryEntity().getCategoryId().equals(categoryId)))
+//                    if(tagIds != null)
 //                    {
-//                        CategoryEntity categoryEntityToUpdate = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(categoryId);
-//                        
-//                        if(!categoryEntityToUpdate.getSubCategoryEntities().isEmpty())
+//                        for(TagEntity tagEntity:bundleEntityToUpdate.getTagEntities())
 //                        {
-//                            throw new UpdateProductException("Selected category for the new product is not a leaf category");
+//                            tagEntity.getBundleEntities().remove(bundleEntityToUpdate);
 //                        }
 //                        
-//                        productEntityToUpdate.setCategoryEntity(categoryEntityToUpdate);
+//                        bundleEntityToUpdate.getTagEntities().clear();
+//                        
+//                        for(Long tagId:tagIds)
+//                        {
+//                            TagEntity tagEntity = tagEntitySessionBeanLocal.retrieveTagByTagId(tagId);
+//                            bundleEntityToUpdate.addTag(tagEntity);
+//                        }
 //                    }
-                    
-                    // Added in v5.1
-                    if(tagIds != null)
-                    {
-                        for(TagEntity tagEntity:bundleEntityToUpdate.getTagEntities())
-                        {
-                            tagEntity.getBundleEntities().remove(bundleEntityToUpdate);
-                        }
-                        
-                        bundleEntityToUpdate.getTagEntities().clear();
-                        
-                        for(Long tagId:tagIds)
-                        {
-                            TagEntity tagEntity = tagEntitySessionBeanLocal.retrieveTagByTagId(tagId);
-                            bundleEntityToUpdate.addTag(tagEntity);
-                        }
-                    }
-                    
-                     if(bundleLineItemIds != null)
-                    {
-//                        for(ProductEntity existingProduct:bundleEntityToUpdate.getProductEntities())
+//                    
+//                     if(bundleLineItemIds != null)
+//                    {
+////                        for(ProductEntity existingProduct:bundleEntityToUpdate.getProductEntities())
+////                        {
+////                            existingProduct.getBundleEntities().remove(bundleEntityToUpdate);
+////                        }
+//                        bundleEntityToUpdate.getCategoryEntities().clear();
+//                        bundleEntityToUpdate.getBundleLineItems().clear();
+//                        
+//                        for(Long newBundleLineItemId:bundleLineItemIds)
 //                        {
-//                            existingProduct.getBundleEntities().remove(bundleEntityToUpdate);
+//                            BundleLineItemEntity updatedBundleLineItem = productEntitySessionBeanLocal.retrieveProductByProductId(newProductId);
+//                            bundleEntityToUpdate.addProduct(updatedProduct);
 //                        }
-                        bundleEntityToUpdate.getCategoryEntities().clear();
-                        bundleEntityToUpdate.getBundleLineItems().clear();
-                        
-                        for(Long newBundleLineItemId:bundleLineItemIds)
-                        {
-                            BundleLineItemEntity updatedBundleLineItem = productEntitySessionBeanLocal.retrieveProductByProductId(newProductId);
-                            bundleEntityToUpdate.addProduct(updatedProduct);
-                        }
-                    }
-                                
-                    bundleEntityToUpdate.setName(bundleEntity.getName());
-                    bundleEntityToUpdate.setDescription(bundleEntity.getDescription());
-                    bundleEntityToUpdate.setUnitPrice(bundleEntity.getUnitPrice());
-                    // Removed in v5.0
-                    //productEntityToUpdate.setCategory(bundleEntity.getCategory());
-                    // Added in v5.1
-                    bundleEntityToUpdate.setBundleRating((bundleEntity.getBundleRating()));
-                }
-                else
-                {
-                    throw new UpdateBundleException("SKU Code of bundle record to be updated does not match the existing record");
-                }
-            }
-            else
-            {
-                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
-            }
-        }
-        else
-        {
-            throw new BundleNotFoundException("Bundle ID not provided for bundle to be updated");
-        }
-    }
-    
-    @Override
-    public void debitQuantityOnHand(Long bundleId, Integer quantityToDebit) throws BundleNotFoundException, ProductInsufficientQuantityOnHandException
-    {
-        BundleEntity bundleEntity = retrieveBundleByBundleId(bundleId);
-        
-        if(bundleEntity.getQuantityOnHand() >= quantityToDebit)
-        {
-            bundleEntity.setQuantityOnHand(bundleEntity.getQuantityOnHand() - quantityToDebit);
-            for (BundleLineItemEntity bundleLineItem: bundleEntity.getBundleLineItems()) {
-                bundleLineItem.getProductEntity().debitQuantityOnHand();
-            }
-        }
-        else
-        {
-            throw new ProductInsufficientQuantityOnHandException("Product " + bundleEntity.getSkuCode() + " quantity on hand is " + bundleEntity.getQuantityOnHand() + " versus quantity to debit of " + quantityToDebit);
-        }
-    }
-    
-    
-    
-    // Added in v4.1
-    
-    @Override
-    public void creditQuantityOnHand(Long productId, Integer quantityToCredit) throws ProductNotFoundException
-    {
-        ProductEntity productEntity = retrieveProductByProductId(productId);
-        productEntity.setQuantityOnHand(productEntity.getQuantityOnHand() + quantityToCredit);
-    }
+//                    }
+//                                
+//                    bundleEntityToUpdate.setName(bundleEntity.getName());
+//                    bundleEntityToUpdate.setDescription(bundleEntity.getDescription());
+//                    bundleEntityToUpdate.setUnitPrice(bundleEntity.getUnitPrice());
+//                    // Removed in v5.0
+//                    //productEntityToUpdate.setCategory(bundleEntity.getCategory());
+//                    // Added in v5.1
+//                    bundleEntityToUpdate.setBundleRating((bundleEntity.getBundleRating()));
+//                }
+//                else
+//                {
+//                    throw new UpdateBundleException("SKU Code of bundle record to be updated does not match the existing record");
+//                }
+//            }
+//            else
+//            {
+//                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+//            }
+//        }
+//        else
+//        {
+//            throw new BundleNotFoundException("Bundle ID not provided for bundle to be updated");
+//        }
+//    }
+//    
+//    @Override
+//    public void debitQuantityOnHand(Long bundleId, Integer quantityToDebit) throws BundleNotFoundException, ProductInsufficientQuantityOnHandException
+//    {
+//        BundleEntity bundleEntity = retrieveBundleByBundleId(bundleId);
+//        
+//        if(bundleEntity.getQuantityOnHand() >= quantityToDebit)
+//        {
+//            bundleEntity.setQuantityOnHand(bundleEntity.getQuantityOnHand() - quantityToDebit);
+//            for (BundleLineItemEntity bundleLineItem: bundleEntity.getBundleLineItems()) {
+//                bundleLineItem.getProductEntity().debitQuantityOnHand();
+//            }
+//        }
+//        else
+//        {
+//            throw new ProductInsufficientQuantityOnHandException("Product " + bundleEntity.getSkuCode() + " quantity on hand is " + bundleEntity.getQuantityOnHand() + " versus quantity to debit of " + quantityToDebit);
+//        }
+//    }
+//    
+//    
+//    
+//    // Added in v4.1
+//    
+//    @Override
+//    public void creditQuantityOnHand(Long productId, Integer quantityToCredit) throws ProductNotFoundException
+//    {
+//        ProductEntity productEntity = retrieveProductByProductId(productId);
+//        productEntity.setQuantityOnHand(productEntity.getQuantityOnHand() + quantityToCredit);
+//    }
 }
 
 

@@ -114,11 +114,7 @@ public class BundleManagementManagedBean implements Serializable {
         setBundleEntities(getBundleEntitySessionBeanLocal().retrieveAllBundles());
         categoryEntities = getCategoryEntitySessionBeanLocal().retrieveAllLeafCategories();
         tagEntities = getTagEntitySessionBeanLocal().retrieveAllTags();
-<<<<<<< Updated upstream
 //      setBrandEntities(brandEntitySessionBeanLocal.retrieveAllBrands());
-=======
-//        setBrandEntities(brandEntitySessionBeanLocal.retrieveAllBrands());
->>>>>>> Stashed changes
     }
     
     
@@ -142,12 +138,7 @@ public class BundleManagementManagedBean implements Serializable {
         try
         {
             BundleEntity be = getBundleEntitySessionBeanLocal().createNewBundle(getNewBundleEntity(), tagIdsNew);
-<<<<<<< Updated upstream
 //          ProductEntity pe = productEntitySessionBeanLocal.createNewProduct(newProductEntity, categoryIdNew, tagIdsNew, brandIdNew);
-=======
-//            ProductEntity pe = productEntitySessionBeanLocal.createNewProduct(newProductEntity, categoryIdNew, tagIdsNew, brandIdNew);
->>>>>>> Stashed changes
-            getBundleEntities().add(be);
             
             if(getFilteredBundleEntities() != null)
             {
@@ -195,7 +186,7 @@ public class BundleManagementManagedBean implements Serializable {
         
         try
         {
-            getBundleEntitySessionBeanLocal().updateBundle(getSelectedBundleEntityToUpdate(), getProductIdsUpdate(), tagIdsUpdate);
+            getBundleEntitySessionBeanLocal().updateBundle(getSelectedBundleEntityToUpdate());
                         
 //            for(CategoryEntity ce:categoryEntities)
 //            {
@@ -206,15 +197,15 @@ public class BundleManagementManagedBean implements Serializable {
 //                }                
 //            }
             
-            getSelectedBundleEntityToUpdate().getTagEntities().clear();
-            
-            for(TagEntity te:tagEntities)
-            {
-                if(tagIdsUpdate.contains(te.getTagId()))
-                {
-                    getSelectedBundleEntityToUpdate().getTagEntities().add(te);
-                }                
-            }
+//            getSelectedBundleEntityToUpdate().getTagEntities().clear();
+//            
+//            for(TagEntity te:tagEntities)
+//            {
+//                if(tagIdsUpdate.contains(te.getTagId()))
+//                {
+//                    getSelectedBundleEntityToUpdate().getTagEntities().add(te);
+//                }                
+//            }
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Bundle updated successfully", null));
         }
@@ -431,8 +422,6 @@ public class BundleManagementManagedBean implements Serializable {
     public void setBundleEntities(List<BundleEntity> bundleEntities) {
         this.bundleEntities = bundleEntities;
     }
-
-<<<<<<< Updated upstream
     /**
      * @return the newBundleEntity
      */
@@ -450,103 +439,73 @@ public class BundleManagementManagedBean implements Serializable {
     /**
      * @return the bundleEntitySessionBeanLocal
      */
-=======
->>>>>>> Stashed changes
     public BundleEntitySessionBeanLocal getBundleEntitySessionBeanLocal() {
         return bundleEntitySessionBeanLocal;
     }
 
-<<<<<<< Updated upstream
     /**
      * @param bundleEntitySessionBeanLocal the bundleEntitySessionBeanLocal to set
      */
-=======
->>>>>>> Stashed changes
     public void setBundleEntitySessionBeanLocal(BundleEntitySessionBeanLocal bundleEntitySessionBeanLocal) {
         this.bundleEntitySessionBeanLocal = bundleEntitySessionBeanLocal;
     }
-
-<<<<<<< Updated upstream
+    
     /**
      * @return the productEntitySessionBeanLocal
      */
-=======
->>>>>>> Stashed changes
     public ProductEntitySessionBeanLocal getProductEntitySessionBeanLocal() {
         return productEntitySessionBeanLocal;
     }
-
-<<<<<<< Updated upstream
+    
     /**
      * @param productEntitySessionBeanLocal the productEntitySessionBeanLocal to set
      */
-=======
->>>>>>> Stashed changes
     public void setProductEntitySessionBeanLocal(ProductEntitySessionBeanLocal productEntitySessionBeanLocal) {
         this.productEntitySessionBeanLocal = productEntitySessionBeanLocal;
     }
 
-<<<<<<< Updated upstream
     /**
      * @return the categoryEntitySessionBeanLocal
      */
-=======
->>>>>>> Stashed changes
     public CategoryEntitySessionBeanLocal getCategoryEntitySessionBeanLocal() {
         return categoryEntitySessionBeanLocal;
     }
 
-<<<<<<< Updated upstream
     /**
      * @param categoryEntitySessionBeanLocal the categoryEntitySessionBeanLocal to set
      */
-=======
->>>>>>> Stashed changes
     public void setCategoryEntitySessionBeanLocal(CategoryEntitySessionBeanLocal categoryEntitySessionBeanLocal) {
         this.categoryEntitySessionBeanLocal = categoryEntitySessionBeanLocal;
     }
 
-<<<<<<< Updated upstream
     /**
      * @return the tagEntitySessionBeanLocal
      */
-=======
->>>>>>> Stashed changes
     public TagEntitySessionBeanLocal getTagEntitySessionBeanLocal() {
         return tagEntitySessionBeanLocal;
     }
 
-<<<<<<< Updated upstream
     /**
      * @param tagEntitySessionBeanLocal the tagEntitySessionBeanLocal to set
      */
-=======
->>>>>>> Stashed changes
     public void setTagEntitySessionBeanLocal(TagEntitySessionBeanLocal tagEntitySessionBeanLocal) {
         this.tagEntitySessionBeanLocal = tagEntitySessionBeanLocal;
     }
 
-<<<<<<< Updated upstream
     /**
      * @return the filteredBundleEntities
      */
-=======
->>>>>>> Stashed changes
     public List<BundleEntity> getFilteredBundleEntities() {
         return filteredBundleEntities;
     }
 
-<<<<<<< Updated upstream
     /**
      * @param filteredBundleEntities the filteredBundleEntities to set
      */
-=======
->>>>>>> Stashed changes
     public void setFilteredBundleEntities(List<BundleEntity> filteredBundleEntities) {
         this.filteredBundleEntities = filteredBundleEntities;
     }
 
-<<<<<<< Updated upstream
     /**
      * @return the selectedBundleEntityToUpdate
      */
@@ -560,44 +519,17 @@ public class BundleManagementManagedBean implements Serializable {
     public void setSelectedBundleEntityToUpdate(BundleEntity selectedBundleEntityToUpdate) {
         this.selectedBundleEntityToUpdate = selectedBundleEntityToUpdate;
     }
-
-    /**
-     * @return the productIdsUpdate
-     */
-=======
-    public BundleEntity getNewBundleEntity() {
-        return newBundleEntity;
-    }
-
-    public void setNewBundleEntity(BundleEntity newBundleEntity) {
-        this.newBundleEntity = newBundleEntity;
-    }
-
->>>>>>> Stashed changes
+    
     public List<Long> getProductIdsUpdate() {
         return productIdsUpdate;
     }
-
-<<<<<<< Updated upstream
+    
     /**
      * @param productIdsUpdate the productIdsUpdate to set
      */
     public void setProductIdsUpdate(List<Long> productIdsUpdate) {
         this.productIdsUpdate = productIdsUpdate;
     }
-=======
-    public void setProductIdsUpdate(List<Long> productIdsUpdate) {
-        this.productIdsUpdate = productIdsUpdate;
-    }
-
-    public BundleEntity getSelectedBundleEntityToUpdate() {
-        return selectedBundleEntityToUpdate;
-    }
-
-    public void setSelectedBundleEntityToUpdate(BundleEntity selectedBundleEntityToUpdate) {
-        this.selectedBundleEntityToUpdate = selectedBundleEntityToUpdate;
-    }
->>>>>>> Stashed changes
     
     
 }

@@ -14,6 +14,7 @@ import javax.validation.ConstraintViolation;
 import util.exception.BundleInsufficientQuantityOnHandException;
 import util.exception.BundleNotFoundException;
 import util.exception.BundleSkuCodeExistException;
+import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewBundleException;
 import util.exception.DeleteBundleException;
 import util.exception.InputDataValidationException;
@@ -38,7 +39,7 @@ public interface BundleEntitySessionBeanLocal {
     public List<BundleEntity> filterBundlesByPrice(BigDecimal startPrice, BigDecimal endPrice);
     public BundleEntity retrieveBundleByBundleId(Long bundleId) throws BundleNotFoundException;
     public BundleEntity retrieveBundleByBundleSkuCode(String skuCode) throws BundleNotFoundException;
-    public void updateBundle(BundleEntity bundleEntity, List<Long> productIds, List<Long> tagIds) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException;
+    public void updateBundle(BundleEntity bundleEntity) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException, CategoryNotFoundException;
     public void deleteBundle(Long bundleId) throws BundleNotFoundException, DeleteBundleException;
     public void debitQuantityOnHand(Long bundleId, Integer quantityToDebit) throws BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException;
     public void creditQuantityOnHand(Long bundleId, Integer quantityToCredit) throws ProductNotFoundException, BundleNotFoundException;
