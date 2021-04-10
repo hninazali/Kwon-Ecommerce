@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -80,7 +82,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
     }
 
     @Override
-    public BundleEntity createNewBundle(BundleEntity newBundleEntity, List<Long> tagIds) throws BundleSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException {
+    public BundleEntity createNewBundle(BundleEntity newBundleEntity, List<Long> tagIds) throws BundleSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException, ProductNotFoundException, CategoryNotFoundException {
         Set<ConstraintViolation<BundleEntity>> constraintViolations = validator.validate(newBundleEntity);
 
         if (constraintViolations.isEmpty()) {
@@ -90,8 +92,21 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
                     for (Long tagId : tagIds) {
                         TagEntity tagEntity = tagEntitySessionBeanLocal.retrieveTagByTagId(tagId);
                         newBundleEntity.addTag(tagEntity);
+                        tagEntity.getBundleEntities().add(newBundleEntity);
                     }
                 }
+                
+                for (BundleLineItemEntity lineItem : newBundleEntity.getBundleLineItems())
+                {
+                    ProductEntity tempProduct = lineItem.getProductEntity();
+                    ProductEntity productEntity = productEntitySessionBeanLocal.retrieveProductByProductId(tempProduct.getProductId());
+                    CategoryEntity tempCategory = productEntity.getCategoryEntity();
+                    CategoryEntity categoryEntity = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(tempCategory.getCategoryId());
+                    newBundleEntity.getCategoryEntities().add(categoryEntity);
+                    categoryEntity.getBundleEntities().add(newBundleEntity);
+                }
+                
+                entityManager.persist(newBundleEntity);
 
                 entityManager.flush();
 
@@ -108,6 +123,10 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
                 }
             } catch (TagNotFoundException ex) {
                 throw new CreateNewBundleException("An error has occurred while creating the new bundle: " + ex.getMessage());
+            } catch (ProductNotFoundException ex) {
+                throw new ProductNotFoundException("An error has occurred while creating the new bundle: " + ex.getMessage());
+            } catch (CategoryNotFoundException ex) {
+                throw new CategoryNotFoundException("An error has occurred while creating the new bundle: " + ex.getMessage());
             }
         } else {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
@@ -251,7 +270,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
     // Updated in v5.0 to include association with new category entity
     // Updated in v5.1 with category entity and tag entity processing
     @Override
-    public void updateBundle(BundleEntity bundleEntity) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException, CategoryNotFoundException {
+    public void updateBundle(BundleEntity bundleEntity, List<Long> tagIds) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException, CategoryNotFoundException {
         Integer currQty = 0;
         BigDecimal price = new BigDecimal(0);
         if (bundleEntity != null && bundleEntity.getBundleId() != null) {
@@ -282,7 +301,7 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
                         for (BundleLineItemEntity bundleLineItem : bundleEntity.getBundleLineItems())
                         {
                             ProductEntity tempProd = bundleLineItem.getProductEntity();
-                            BundleLineItemEntity lineItemTemp = new BundleLineItemEntity(bundleLineItem.getSerialNumber(), tempProd, 
+                            BundleLineItemEntity lineItemTemp = new BundleLineItemEntity(tempProd, 
                                     bundleLineItem.getQuantity(), tempProd.getUnitPrice().multiply(new BigDecimal(bundleLineItem.getQuantity())));
                             entityManager.persist(lineItemTemp);
                             bundleEntityToUpdate.getBundleLineItems().add(lineItemTemp);
@@ -295,12 +314,6 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
                         categoryEntityToUpdate.getBundleEntities().remove(bundleEntityToUpdate);
                         bundleEntityToUpdate.getCategoryEntities().remove(cat);
                     }
-                    for (TagEntity tagTemp : bundleEntityToUpdate.getTagEntities())
-                    {
-                        TagEntity tagEntityToUpdate = tagEntitySessionBeanLocal.retrieveTagByTagId(tagTemp.getTagId());
-                        tagEntityToUpdate.getBundleEntities().remove(bundleEntityToUpdate);
-                        bundleEntityToUpdate.getTagEntities().remove(tagTemp);
-                    }
                     for (BundleLineItemEntity lineItems : bundleEntityToUpdate.getBundleLineItems())
                     {
                         ProductEntity prod = lineItems.getProductEntity();
@@ -308,62 +321,27 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
                         CategoryEntity category = prod.getCategoryEntity();
                         category.getBundleEntities().add(bundleEntityToUpdate);
                         bundleEntityToUpdate.getCategoryEntities().add(category);
-                        
-                        List<TagEntity> tags = prod.getTagEntities();
-                        for (TagEntity eachTag : tags)
-                        {
-                            eachTag.getBundleEntities().add(bundleEntityToUpdate);
-                            bundleEntityToUpdate.getTagEntities().add(eachTag);
-                        }
                         price.add(lineItems.getSubTotal());
                     }
-//                    // Added in v5.1
-//                    if(categoryId != null && (!productEntityToUpdate.getCategoryEntity().getCategoryId().equals(categoryId)))
-//                    {
-//                        CategoryEntity categoryEntityToUpdate = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(categoryId);
-//                        
-//                        if(!categoryEntityToUpdate.getSubCategoryEntities().isEmpty())
-//                        {
-//                            throw new UpdateProductException("Selected category for the new product is not a leaf category");
-//                        }
-//                        
-//                        productEntityToUpdate.setCategoryEntity(categoryEntityToUpdate);
-//                    }
 
-//                    // Added in v5.1
-//                    if (tagIds != null) {
-//                        for (TagEntity tagEntity : bundleEntityToUpdate.getTagEntities()) {
-//                            tagEntity.getBundleEntities().remove(bundleEntityToUpdate);
-//                        }
-//
-//                        bundleEntityToUpdate.getTagEntities().clear();
-//
-//                        for (Long tagId : tagIds) {
-//                            TagEntity tagEntity = tagEntitySessionBeanLocal.retrieveTagByTagId(tagId);
-//                            bundleEntityToUpdate.addTag(tagEntity);
-//                        }
-//                    }
+                    if (tagIds != null) {
+                        for (TagEntity tagEntity : bundleEntityToUpdate.getTagEntities()) {
+                            tagEntity.getBundleEntities().remove(bundleEntityToUpdate);
+                        }
 
-//                    if (bundleLineItemIds != null) {
-////                        for(ProductEntity existingProduct:bundleEntityToUpdate.getProductEntities())
-////                        {
-////                            existingProduct.getBundleEntities().remove(bundleEntityToUpdate);
-////                        }
-//                        bundleEntityToUpdate.getCategoryEntities().clear();
-//                        bundleEntityToUpdate.getBundleLineItems().clear();
-//
-//                        for (Long newBundleLineItemId : bundleLineItemIds) {
-//                            BundleLineItemEntity updatedBundleLineItem = bundleLineItemEntitySessionBeanLocal.retrieveBundleLineItemByBundleLineItemId(newBundleLineItemId);
-//                            bundleEntityToUpdate.addBundleLineItem(updatedBundleLineItem);
-//                        }
-//                    }
+                        bundleEntityToUpdate.getTagEntities().clear();
+
+                        for (Long tagId : tagIds) {
+                            TagEntity tagEntity = tagEntitySessionBeanLocal.retrieveTagByTagId(tagId);
+                            bundleEntityToUpdate.getTagEntities().add(tagEntity);
+                            tagEntity.getBundleEntities().add(bundleEntityToUpdate);
+                        }
+                    }
 
                     bundleEntityToUpdate.setName(bundleEntity.getName());
                     bundleEntityToUpdate.setDescription(bundleEntity.getDescription());
                     bundleEntityToUpdate.setUnitPrice(bundleEntity.getUnitPrice());
-                    // Removed in v5.0
-                    //productEntityToUpdate.setCategory(bundleEntity.getCategory());
-                    // Added in v5.1
+                    bundleEntityToUpdate.setQuantityOnHand(bundleEntity.getQuantityOnHand());
                     bundleEntityToUpdate.setBundleRating((bundleEntity.getBundleRating()));
                 } else {
                     throw new UpdateBundleException("SKU Code of bundle record to be updated does not match the existing record");

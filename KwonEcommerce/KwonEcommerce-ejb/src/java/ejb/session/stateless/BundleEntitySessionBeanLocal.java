@@ -32,14 +32,14 @@ import util.exception.UpdateBundleException;
 @Local
 public interface BundleEntitySessionBeanLocal {
     
-    public BundleEntity createNewBundle(BundleEntity newBundleEntity, List<Long> tagIds) throws BundleSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException;
+    public BundleEntity createNewBundle(BundleEntity newBundleEntity, List<Long> tagIds) throws BundleSkuCodeExistException, UnknownPersistenceException, InputDataValidationException, CreateNewBundleException, ProductNotFoundException, CategoryNotFoundException;
     public List<BundleEntity> retrieveAllBundles();
     public List<BundleEntity> searchBundlesByName(String searchString);
     public List<BundleEntity> filterBundlesByTags(List<Long> tagIds, String condition);
     public List<BundleEntity> filterBundlesByPrice(BigDecimal startPrice, BigDecimal endPrice);
     public BundleEntity retrieveBundleByBundleId(Long bundleId) throws BundleNotFoundException;
     public BundleEntity retrieveBundleByBundleSkuCode(String skuCode) throws BundleNotFoundException;
-    public void updateBundle(BundleEntity bundleEntity) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException, CategoryNotFoundException;
+    public void updateBundle(BundleEntity bundleEntity, List<Long> tagIds) throws BundleNotFoundException, TagNotFoundException, UpdateBundleException, InputDataValidationException, ProductNotFoundException, CategoryNotFoundException;
     public void deleteBundle(Long bundleId) throws BundleNotFoundException, DeleteBundleException;
     public void debitQuantityOnHand(Long bundleId, Integer quantityToDebit) throws BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException;
     public void creditQuantityOnHand(Long bundleId, Integer quantityToCredit) throws ProductNotFoundException, BundleNotFoundException;

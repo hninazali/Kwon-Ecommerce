@@ -30,10 +30,10 @@ public class BundleLineItemEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bundleLineItemId;
-    @Column(nullable = false)
-    @NotNull
-    @Min(1)
-    private Integer serialNumber;
+//    @Column(nullable = false)
+//    @NotNull
+//    @Min(1)
+//    private Integer serialNumber;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private ProductEntity productEntity;
@@ -62,9 +62,9 @@ public class BundleLineItemEntity implements Serializable {
 //        this.unitPrice = unitPrice;
 //        this.subTotal = subTotal;
 
-    public BundleLineItemEntity(Integer serialNumber, ProductEntity productEntity, Integer quantity, BigDecimal subTotal) 
+    public BundleLineItemEntity(ProductEntity productEntity, Integer quantity, BigDecimal subTotal) 
     {
-        this.serialNumber = serialNumber;
+        //this.serialNumber = serialNumber;
         this.productEntity = productEntity;
         this.quantity = quantity;
         this.subTotal = subTotal;
@@ -107,13 +107,13 @@ public class BundleLineItemEntity implements Serializable {
         this.bundleLineItemId = bundleLineItemId;
     }
 
-    public Integer getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(Integer serialNumber) {
-        this.serialNumber = serialNumber;
-    }
+//    public Integer getSerialNumber() {
+//        return serialNumber;
+//    }
+//
+//    public void setSerialNumber(Integer serialNumber) {
+//        this.serialNumber = serialNumber;
+//    }
 
     public ProductEntity getProductEntity() {
         return productEntity;

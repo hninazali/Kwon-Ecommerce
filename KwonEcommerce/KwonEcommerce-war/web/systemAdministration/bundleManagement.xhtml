@@ -9,25 +9,25 @@
 
     <ui:define name="content">
         <ez:Breadcrumb pageName="bundleManagement" />
-        
+
         <div>
             <h3>Bundle Management</h3>
-            
+
             <h:form>
-            
+
                 <p:menubar>
 
-                    <p:submenu label="File" icon="ui-icon-document">
-                        <p:menuitem value="Create New Bundle" onclick="PF('dialogCreateNewBundle').show()" icon="pi pi-plus" />
+                    <p:submenu label="Create New Bundle " icon="pi pi-plus">
+                        <p:menuitem value="Create New Bundle" outcome="/systemAdministration/createNewBundle.xhtml" icon="pi pi-plus" />
                     </p:submenu>                                        
 
                 </p:menubar>
                 <br/>
 
             </h:form>
-            
+
             <h:form id="formAllBundles">
-            
+
                 <p:messages id="messages" redisplay="false" closable="true" />
 
                 <p:dataTable id="dataTableAllBundles" widgetVar="dataTableAllBundles" value="#{bundleManagementManagedBean.bundleEntities}" var="bundleEntity" rowKey="#{bundleEntity.bundleId}" rowIndexVar="row"
@@ -52,7 +52,7 @@
                     <p:column headerText="Name" sortBy="#{bundleEntity.name}" filterBy="#{bundleEntity.name}" filterMatchMode="contains">
                         <h:outputText value="#{bundleEntity.name}" />
                     </p:column> 
-                    
+
                     <p:column headerText="Description" sortBy="#{bundleEntity.description}" filterBy="#{bundleEntity.description}" filterMatchMode="contains">
                         <h:outputText value="#{bundleEntity.description}" />
                     </p:column>
@@ -101,156 +101,6 @@
                 </p:confirmDialog>
 
             </h:form>
-            
-            <h:form id="formCreateNewBundle">
-
-                <p:dialog id="dialogCreateNewBundle" widgetVar="dialogCreateNewBundle" header="Create New Bundle" closable="true">
-
-                    <p:messages id="messagesCreateNewBundle" redisplay="false" />
-
-                    <p:panelGrid>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="bundleSkuCode" value="SKU Code: " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:inputText id="bundleSkuCode" value="#{bundleManagementManagedBean.newBundleEntity.skuCode}" placeholder="BUND999" required="true" requiredMessage="SKU Code is required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="bundleSkuCode" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="name" value="Name: " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:inputText id="name" value="#{bundleManagementManagedBean.newBundleEntity.name}" placeholder="Bundle 1" required="true" requiredMessage="Name is required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="name" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="description" value="Description " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:inputText id="description" value="#{bundleManagementManagedBean.newBundleEntity.description}" placeholder="Bundle 1" required="true" requiredMessage="Description is required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="description" />
-                            </p:column>
-                        </p:row>
-                        
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="selProducts" value="Product(s) " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:selectManyMenu id="selProducts" value="#{bundleManagementManagedBean.productIdsNew}" showCheckbox="true">
-                                    <f:selectItems value="#{bundleManagementManagedBean.productEntities}" var="productEntity" itemValue="#{productEntity.productId}" itemLabel="#{productEntity.name}" />
-                                </p:selectManyMenu>
-                            </p:column>
-                            <p:column>
-                                <p:message for="selProducts" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="quantityOnHand" value="Quantity On Hand " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:spinner id="quantityOnHand" value="#{bundleManagementManagedBean.newBundleEntity.quantityOnHand}" placeholder="100" min="0" max="1000000" required="true" requiredMessage="Quantity On Hand is required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="quantityOnHand" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="reorderQuantity" value="Reorder Quantity " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:spinner id="reorderQuantity" value="#{bundleManagementManagedBean.newBundleEntity.reorderQuantity}" placeholder="10" min="0" max="1000000" stepFactor="10" required="true" requiredMessage="Reorder Quantity is required" validator="reorderQuantityValidator" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="reorderQuantity" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="unitPrice" value="Unit Price " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>                            
-                                <p:spinner id="unitPrice" value="#{bundleManagementManagedBean.newBundleEntity.unitPrice}" placeholder="10.00" min="0" max="1000000" stepFactor="0.01" required="true" requiredMessage="Unit Price is required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="unitPrice" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="bundleRating" value="Bundle Rating " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:rating id="bundleRating" value="#{bundleManagementManagedBean.newBundleEntity.bundleRating}" stars="5" required="true" requiredMessage="Bundle Rating is required" cancel="false">
-                                    <f:validateLongRange minimum="1" maximum="5" />
-                                </p:rating>
-                            </p:column>
-                            <p:column>
-                                <p:message for="bundleRating" />
-                            </p:column>
-                        </p:row>
-
-<!--                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="selCategory" value="Category " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:selectOneMenu id="selCategory" value="#{productManagementManagedBean.categoryIdNew}">
-                                    <f:selectItem itemValue="0" itemLabel="[Select One]" noSelectionOption="true" />
-                                    <f:selectItems value="#{productManagementManagedBean.categoryEntities}" var="categoryEntity" itemValue="#{categoryEntity.categoryId}" itemLabel="#{categoryEntity.name}" />
-                                </p:selectOneMenu>
-                            </p:column>
-                            <p:column>
-                                <p:message for="selCategory" />
-                            </p:column>
-                        </p:row>-->
-
-                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="selTags" value="Tag(s) " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:selectManyMenu id="selTags" value="#{bundleManagementManagedBean.tagIdsNew}" showCheckbox="true">
-                                    <f:selectItems value="#{bundleManagementManagedBean.tagEntities}" var="tagEntity" itemValue="#{tagEntity.tagId}" itemLabel="#{tagEntity.name}" />
-                                </p:selectManyMenu>
-                            </p:column>
-                            <p:column>
-                                <p:message for="selTags" />
-                            </p:column>
-                        </p:row>
-
-                        <p:row>
-                            <p:column colspan="3">
-                                <p:commandButton type="reset" value="Clear" />&nbsp;
-                                <p:commandButton  value="Create New Bundle" update="@form formAllBundles:dataTableAllBundles" actionListener="#{bundleManagementManagedBean.createNewBundle}" oncomplete="PF('dialogCreateNewBundle').show();" />
-                            </p:column>
-                        </p:row>
-
-                    </p:panelGrid>
-
-                </p:dialog>
-
-            </h:form>
 
             <ez:ViewBundle id="ccViewBundle" />
 
@@ -297,7 +147,7 @@
                                 <p:message for="name" />
                             </p:column>
                         </p:row>
-                        
+
 
                         <p:row>
                             <p:column>
@@ -311,20 +161,20 @@
                             </p:column>
                         </p:row>
 
-                         <p:row>
-                            <p:column>
-                                <p:outputLabel for="selProducts" value="Product(s) " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:selectManyMenu id="selProducts" value="#{bundleManagementManagedBean.productIdsNew}" showCheckbox="true">
-                                    <f:selectItems value="#{bundleManagementManagedBean.productEntities}" var="productEntity" itemValue="#{productEntity.productId}" itemLabel="#{productEntity.name}" />
-                                </p:selectManyMenu>
-                            </p:column>
-                            <p:column>
-                                <p:message for="selProducts" />
-                            </p:column>
-                        </p:row>
-                        
+                        <!--                         <p:row>
+                                                    <p:column>
+                                                        <p:outputLabel for="selProducts" value="Product(s) " style="font-weight: bold;" />
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:selectManyMenu id="selProducts" value="#{bundleManagementManagedBean.productIdsNew}" showCheckbox="true">
+                                                            <f:selectItems value="#{bundleManagementManagedBean.productEntities}" var="productEntity" itemValue="#{productEntity.productId}" itemLabel="#{productEntity.name}" />
+                                                        </p:selectManyMenu>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:message for="selProducts" />
+                                                    </p:column>
+                                                </p:row>-->
+
                         <p:row>
                             <p:column>
                                 <p:outputLabel for="quantityOnHand" value="Quantity On Hand " />
@@ -373,22 +223,7 @@
                             <p:column>
                                 <p:message for="bundleRating" />
                             </p:column>
-                        </p:row>                    
-
-<!--                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="selCategory" value="Category " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:selectOneMenu id="selCategory" value="#{productManagementManagedBean.categoryIdUpdate}">
-                                    <f:selectItem itemValue="0" itemLabel="[Select One]" noSelectionOption="true" />
-                                    <f:selectItems value="#{productManagementManagedBean.categoryEntities}" var="categoryEntity" itemValue="#{categoryEntity.categoryId}" itemLabel="#{categoryEntity.name}" />
-                                </p:selectOneMenu>
-                            </p:column>
-                            <p:column>
-                                <p:message for="selCategory" />
-                            </p:column>
-                        </p:row>-->
+                        </p:row>
 
                         <p:row>
                             <p:column>
@@ -406,6 +241,30 @@
 
                         <p:row>
                             <p:column colspan="3">
+                                <p:dataTable value="#{bundleManagementManagedBean.selectedBundleEntityToUpdate.bundleLineItems}" var="lineItem">
+
+                                    <p:column headerText="Product SKU Code">
+                                        <h:outputText value="#{lineItem.productEntity.skuCode}" />
+                                    </p:column>
+
+                                    <p:column headerText="Product Name">
+                                        <h:outputText value="#{lineItem.productEntity.name}" />
+                                    </p:column>
+
+                                    <p:column headerText="Unit Price">
+                                        <h:outputText value="#{lineItem.productEntity.unitPrice}" />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Quantity On Hand">
+                                        <p:inputText value="#{lineItem.quantity}" />
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="3">
                                 <p:commandButton value="Update Bundle" update="@form formAllBundles:dataTableAllBundles" actionListener="#{bundleManagementManagedBean.updateBundle}" oncomplete="PF('dialogUpdateBundle').show();" />
                             </p:column>
                         </p:row>
@@ -415,7 +274,7 @@
                 </p:dialog>
 
             </h:form>
-            
+
             <h:form id="formOrderBundle">
 
                 <p:dialog id="dialogOrderBundle" widgetVar="dialogOrderBundle" header="Order Bundle" closable="true">

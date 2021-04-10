@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -73,7 +74,7 @@ public class BundleEntity implements Serializable {
     @Max(5)
     private Integer bundleRating;
   
-    @OneToMany    
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<BundleLineItemEntity> bundleLineItems;
     
     @ManyToMany(mappedBy="bundleEntities", fetch = FetchType.LAZY)
@@ -307,4 +308,12 @@ public class BundleEntity implements Serializable {
     public void setCategoryEntities(List<CategoryEntity> categoryEntities) {
         this.categoryEntities = categoryEntities;
     }  
+
+    public Integer getReorderQuantity() {
+        return reorderQuantity;
+    }
+
+    public void setReorderQuantity(Integer reorderQuantity) {
+        this.reorderQuantity = reorderQuantity;
+    }
 }

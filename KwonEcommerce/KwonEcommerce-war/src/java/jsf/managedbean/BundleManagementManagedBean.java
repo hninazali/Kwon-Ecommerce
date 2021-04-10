@@ -32,6 +32,7 @@ import javax.inject.Inject;
 import util.exception.BrandNotFoundException;
 import util.exception.BundleNotFoundException;
 import util.exception.BundleSkuCodeExistException;
+import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewBrandException;
 import util.exception.CreateNewBundleException;
 import util.exception.CreateNewProductException;
@@ -153,7 +154,7 @@ public class BundleManagementManagedBean implements Serializable {
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New bundle created successfully (Bundle ID: " + be.getBundleId() + ")", null));
         }
-        catch(InputDataValidationException | CreateNewBundleException | BundleSkuCodeExistException | UnknownPersistenceException ex)
+        catch(InputDataValidationException | CreateNewBundleException | BundleSkuCodeExistException | ProductNotFoundException | CategoryNotFoundException | UnknownPersistenceException ex)
         {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while creating the new bundle: " + ex.getMessage(), null));
         }
@@ -164,6 +165,7 @@ public class BundleManagementManagedBean implements Serializable {
     public void doUpdateBundle(ActionEvent event)
     {
         setSelectedBundleEntityToUpdate((BundleEntity)event.getComponent().getAttributes().get("bundleEntityToUpdate"));
+        selectedBundleEntityToUpdate.getBundleLineItems().size();
         
 //        categoryIdUpdate = selectedBundleEntityToUpdate.getCategoryEntity().getCategoryId();
 //        setBrandIdUpdate(selectedBundleEntityToUpdate.getBrandEntity().getBrandId());
@@ -186,7 +188,7 @@ public class BundleManagementManagedBean implements Serializable {
         
         try
         {
-            getBundleEntitySessionBeanLocal().updateBundle(getSelectedBundleEntityToUpdate());
+            getBundleEntitySessionBeanLocal().updateBundle(getSelectedBundleEntityToUpdate(), tagIdsUpdate);
                         
 //            for(CategoryEntity ce:categoryEntities)
 //            {

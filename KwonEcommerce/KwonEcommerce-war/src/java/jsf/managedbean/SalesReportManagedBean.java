@@ -419,7 +419,7 @@ public class SalesReportManagedBean implements Serializable{
         ChartData data = new ChartData();
 
         BarChartDataSet barDataSet = new BarChartDataSet();
-        barDataSet.setLabel("Sales Report by Category");
+        barDataSet.setLabel("Sales Report by Product");
 
         List<String> productNames = new ArrayList<>();
         for (ProductEntity product : this.getProducts()) {
@@ -517,7 +517,7 @@ public class SalesReportManagedBean implements Serializable{
         ChartData data = new ChartData();
 
         BarChartDataSet barDataSet = new BarChartDataSet();
-        barDataSet.setLabel("Sales Report by Category");
+        barDataSet.setLabel("Monthly Sales Report");
 
         List<String> months = new ArrayList<>();
         months.add("January");
