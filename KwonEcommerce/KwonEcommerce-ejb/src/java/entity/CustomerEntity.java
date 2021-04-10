@@ -39,6 +39,10 @@ public class CustomerEntity implements Serializable {
     @NotNull
     @Size(max = 32)
     private String lastName;
+    @Column(nullable = false, unique = true, length = 32)
+    @NotNull
+    @Size(max = 32)
+    private String username;
     @Column(nullable = false, unique = true, length = 64)
     @NotNull
     @Size(max = 64)
@@ -83,6 +87,20 @@ public class CustomerEntity implements Serializable {
 
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.personalCartEntity = personalCartEntity;
+        this.banned = false;
+
+        setPassword(password);
+    }
+    
+    public CustomerEntity(String firstName, String lastName, String username, String email, String password, PersonalCartEntity personalCartEntity, Boolean banned) {
+        this();
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.personalCartEntity = personalCartEntity;
@@ -217,5 +235,13 @@ public class CustomerEntity implements Serializable {
 
     public void setBanned(Boolean banned) {
         this.banned = banned;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -6,28 +6,28 @@
 package ws.datamodel;
 
 import entity.GroupCartEntity;
-import entity.OrderLineItemEntity;
-import entity.ProductEntity;
+import entity.BundleEntity;
 
 /**
  *
  * @author User
  */
-public class AddItemToGroupCartReq {
+public class AddBundleToGroupCartReq 
+{
     private String username;
     private String password;
     private GroupCartEntity groupCart;
-    private ProductEntity product;
+    private BundleEntity bundle;
     private Integer quantity;
 
-    public AddItemToGroupCartReq() {
+    public AddBundleToGroupCartReq() {
     }
 
-    public AddItemToGroupCartReq(String username, String password, GroupCartEntity groupCart, ProductEntity product, Integer quantity) {
+    public AddBundleToGroupCartReq(String username, String password, GroupCartEntity groupCart, BundleEntity bundle, Integer quantity) {
         this.username = username;
         this.password = password;
         this.groupCart = groupCart;
-        this.product = product;
+        this.bundle = bundle;
         this.quantity = quantity;
     }
 
@@ -55,12 +55,12 @@ public class AddItemToGroupCartReq {
         this.groupCart = groupCart;
     }
 
-    public ProductEntity getProduct() {
-        return product;
+    public BundleEntity getBundle() {
+        return bundle;
     }
 
-    public void setProduct(ProductEntity product) {
-        this.product = product;
+    public void setBundle(BundleEntity bundle) {
+        this.bundle = bundle;
     }
 
     public Integer getQuantity() {
@@ -70,7 +70,5 @@ public class AddItemToGroupCartReq {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
-    
-    
     
 }

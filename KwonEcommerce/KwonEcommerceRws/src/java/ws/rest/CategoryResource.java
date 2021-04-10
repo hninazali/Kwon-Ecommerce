@@ -5,8 +5,8 @@
  */
 package ws.rest;
 
-import ejb.session.stateless.BundleEntitySessionBeanLocal;
-import entity.BundleEntity;
+import ejb.session.stateless.CategoryEntitySessionBeanLocal;
+import entity.CategoryEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,9 +14,11 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PUT;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -26,32 +28,39 @@ import javax.ws.rs.core.Response;
  *
  * @author User
  */
-@Path("Bundle")
-public class BundleResource 
+@Path("Category")
+public class CategoryResource 
 {
 
-    BundleEntitySessionBeanLocal bundleEntitySessionBean = lookupBundleEntitySessionBeanLocal();
+    CategoryEntitySessionBeanLocal categoryEntitySessionBean = lookupCategoryEntitySessionBeanLocal();
     
 
     @Context
     private UriInfo context;
 
     /**
-     * Creates a new instance of BundleResource
+     * Creates a new instance of CategoryResource
      */
-    public BundleResource() {
+    public CategoryResource() {
     }
     
-    @Path("retrieveAllBundles")
+    @Path("retrieveAllCategories")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllBundles()
+    public Response retrieveAllCategories()
     {
         try
         {
-            List<BundleEntity> bundles = bundleEntitySessionBean.retrieveAllBundles();
+            List<CategoryEntity> categories = categoryEntitySessionBean.retrieveAllCategories();
             
-            GenericEntity<List<BundleEntity>> genericEntity = new GenericEntity<List<BundleEntity>>(bundles){
+            for (CategoryEntity category : categories)
+            {
+                category.getBundleEntities().clear();
+                category.getProductEntities().clear();
+                category.getSubCategoryEntities().clear();
+            }
+            
+            GenericEntity<List<CategoryEntity>> genericEntity = new GenericEntity<List<CategoryEntity>>(categories){
             };
             
             //==============================================================
@@ -67,10 +76,10 @@ public class BundleResource
         }
     }
 
-    private BundleEntitySessionBeanLocal lookupBundleEntitySessionBeanLocal() {
+    private CategoryEntitySessionBeanLocal lookupCategoryEntitySessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
-            return (BundleEntitySessionBeanLocal) c.lookup("java:global/KwonEcommerce/KwonEcommerce-ejb/BundleEntitySessionBean!ejb.session.stateless.BundleEntitySessionBeanLocal");
+            return (CategoryEntitySessionBeanLocal) c.lookup("java:global/KwonEcommerce/KwonEcommerce-ejb/CategoryEntitySessionBean!ejb.session.stateless.CategoryEntitySessionBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

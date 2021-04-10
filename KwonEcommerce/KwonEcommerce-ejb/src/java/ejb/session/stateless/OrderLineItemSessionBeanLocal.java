@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.OrderLineItemEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CustomerNotFoundException;
 import util.exception.InputDataValidationException;
@@ -34,4 +35,6 @@ public interface OrderLineItemSessionBeanLocal {
     public OrderLineItemEntity updateOrderLineItemEntityQty(Long lineItemId, Integer quantity) throws OrderLineItemNotFoundException;
 
     public OrderLineItemEntity createLineItemForCart(Long productId, Integer quantity) throws ProductNotFoundException;
+
+    public OrderLineItemEntity createLineItemForCartBundle(Long bundleId, Integer quantity) throws BundleNotFoundException;
 }

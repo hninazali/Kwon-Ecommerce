@@ -5,8 +5,8 @@
  */
 package ws.rest;
 
-import ejb.session.stateless.BundleEntitySessionBeanLocal;
-import entity.BundleEntity;
+import ejb.session.stateless.TagEntitySessionBeanLocal;
+import entity.TagEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,9 +14,11 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PUT;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -26,32 +28,38 @@ import javax.ws.rs.core.Response;
  *
  * @author User
  */
-@Path("Bundle")
-public class BundleResource 
+@Path("Tag")
+public class TagResource 
 {
 
-    BundleEntitySessionBeanLocal bundleEntitySessionBean = lookupBundleEntitySessionBeanLocal();
+    TagEntitySessionBeanLocal tagEntitySessionBean = lookupTagEntitySessionBeanLocal();
     
 
     @Context
     private UriInfo context;
 
     /**
-     * Creates a new instance of BundleResource
+     * Creates a new instance of TagResource
      */
-    public BundleResource() {
+    public TagResource() {
     }
     
-    @Path("retrieveAllBundles")
+    @Path("retrieveAllTags")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllBundles()
+    public Response retrieveAllTags()
     {
         try
         {
-            List<BundleEntity> bundles = bundleEntitySessionBean.retrieveAllBundles();
+            List<TagEntity> tags = tagEntitySessionBean.retrieveAllTags();
             
-            GenericEntity<List<BundleEntity>> genericEntity = new GenericEntity<List<BundleEntity>>(bundles){
+            for (TagEntity tag : tags)
+            {
+                tag.getBundleEntities().clear();
+                tag.getProductEntities().clear();
+            }
+            
+            GenericEntity<List<TagEntity>> genericEntity = new GenericEntity<List<TagEntity>>(tags){
             };
             
             //==============================================================
@@ -67,10 +75,10 @@ public class BundleResource
         }
     }
 
-    private BundleEntitySessionBeanLocal lookupBundleEntitySessionBeanLocal() {
+    private TagEntitySessionBeanLocal lookupTagEntitySessionBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
-            return (BundleEntitySessionBeanLocal) c.lookup("java:global/KwonEcommerce/KwonEcommerce-ejb/BundleEntitySessionBean!ejb.session.stateless.BundleEntitySessionBeanLocal");
+            return (TagEntitySessionBeanLocal) c.lookup("java:global/KwonEcommerce/KwonEcommerce-ejb/TagEntitySessionBean!ejb.session.stateless.TagEntitySessionBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

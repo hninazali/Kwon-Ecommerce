@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.BundleEntity;
 import entity.CustomerEntity;
 import entity.GroupCartEntity;
 import entity.OrderLineItemEntity;
@@ -207,6 +208,21 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
     }
     
     @Override
+    public boolean bundleIsInsideCart(Long customerId, BundleEntity bundle) throws CustomerNotFoundException
+    {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        PersonalCartEntity personalCart = customer.getPersonalCartEntity();
+        for (OrderLineItemEntity lineItem : personalCart.getOrderLineItemEntities())
+        {
+            if (lineItem.getBundleEntity().getName().equals(bundle.getName()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
     public OrderLineItemEntity addQuantity(Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException
     {
         OrderLineItemEntity returnLineItem = new OrderLineItemEntity();
@@ -215,6 +231,25 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
         for (OrderLineItemEntity lineItem : personalCart.getOrderLineItemEntities())
         {
             if (lineItem.getProductEntity().getName().equals(product.getName()))
+            {
+                Integer currentQty = lineItem.getQuantity();
+                lineItem.setQuantity(currentQty + addedQty);
+                returnLineItem = lineItem;
+                break;
+            }
+        }
+        return returnLineItem;
+    }
+    
+    @Override
+    public OrderLineItemEntity addQuantityBundle(Long customerId, BundleEntity bundle, Integer addedQty) throws CustomerNotFoundException
+    {
+        OrderLineItemEntity returnLineItem = new OrderLineItemEntity();
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        PersonalCartEntity personalCart = customer.getPersonalCartEntity();
+        for (OrderLineItemEntity lineItem : personalCart.getOrderLineItemEntities())
+        {
+            if (lineItem.getBundleEntity().getName().equals(bundle.getName()))
             {
                 Integer currentQty = lineItem.getQuantity();
                 lineItem.setQuantity(currentQty + addedQty);
