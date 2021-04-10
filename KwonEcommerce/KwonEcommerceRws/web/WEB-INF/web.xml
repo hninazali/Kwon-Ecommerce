@@ -11,4 +11,10 @@
         <local>ejb.session.stateless.OrderLineItemSessionBeanLocal</local>
         <ejb-link>KwonEcommerce-ejb.jar#OrderLineItemSessionBean</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>BrandEntitySessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.BrandEntitySessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#BrandEntitySessionBean</ejb-link>
+    </ejb-local-ref>
 </web-app>
