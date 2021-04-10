@@ -12,6 +12,7 @@ import static entity.CustomerEntity_.customerId;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
 import entity.PersonalCartEntity;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InitialContext;
@@ -72,6 +73,24 @@ public class PersonalCartResource
             PersonalCartEntity personalCart = personalCartSessionBean.retrievePersonalCartEntity(customerId);
             
             return Response.status(Response.Status.OK).entity(personalCart).build();
+        }
+        catch (CustomerNotFoundException ex)
+        {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @Path("retrieveAllPersonalOrderLineItems")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveAllPersonalOrderLineItems(Long customerId)
+    {
+        try
+        {
+            PersonalCartEntity personalCart = personalCartSessionBean.retrievePersonalCartEntity(customerId);
+            List<OrderLineItemEntity> orderLineItems = personalCart.getOrderLineItemEntities();
+            
+            return Response.status(Response.Status.OK).entity(orderLineItems).build();
         }
         catch (CustomerNotFoundException ex)
         {
