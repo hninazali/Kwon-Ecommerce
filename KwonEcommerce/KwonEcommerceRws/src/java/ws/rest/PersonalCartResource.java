@@ -116,11 +116,21 @@ public class PersonalCartResource
                 
             CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
             
-            OrderLineItemEntity temp = orderLineItemSessionBean.createLineItemForCart(req.getProduct().getProductId(), req.getQuantity());
+            if (personalCartSessionBean.isInsideCart(customer.getCustomerId(), req.getProduct()))
+            {
+                OrderLineItemEntity lineItemEntity = personalCartSessionBean.addQuantity(customer.getCustomerId(), req.getProduct(), req.getQuantity());
+                
+                return Response.status(Response.Status.OK).entity(lineItemEntity.getOrderLineItemId()).build();
+            }
+            else
+            {
             
-            OrderLineItemEntity lineItem = personalCartSessionBean.addNewOrderLineItemToCart(customer.getCustomerId(), temp);
-            
-            return Response.status(Response.Status.OK).entity(lineItem.getOrderLineItemId()).build();
+                OrderLineItemEntity temp = orderLineItemSessionBean.createLineItemForCart(req.getProduct().getProductId(), req.getQuantity());
+
+                OrderLineItemEntity lineItem = personalCartSessionBean.addNewOrderLineItemToCart(customer.getCustomerId(), temp);
+
+                return Response.status(Response.Status.OK).entity(lineItem.getOrderLineItemId()).build();
+            }
             }
             catch(InvalidLoginCredentialException ex)
             {
@@ -173,13 +183,12 @@ public class PersonalCartResource
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkOutCart(@QueryParam("username") String username, 
-                                        @QueryParam("password") String password)
+    public Response checkOutCart(CheckoutPersonalCartReq req)
     {
         try
         {
 
-        CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+        CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
 
         OrderTransactionEntity orderTransaction = personalCartSessionBean.checkOutCart(customer.getCustomerId(), customer.getPersonalCartEntity().getPersonalCartId());
 

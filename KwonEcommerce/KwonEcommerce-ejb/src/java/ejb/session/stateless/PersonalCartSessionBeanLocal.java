@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
 import entity.PersonalCartEntity;
+import entity.ProductEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.CreateNewOrderLineItemException;
@@ -40,4 +41,8 @@ public interface PersonalCartSessionBeanLocal {
     public void removeOrderLineItem(Long customerId, Long lineItemId) throws CustomerNotFoundException, OrderLineItemNotFoundException;
 
     public PersonalCartEntity retrievePersonalCartByIdEager(Long personalCartId) throws PersonalCartNotFoundException;
+
+    public boolean isInsideCart(Long customerId, ProductEntity product) throws CustomerNotFoundException;
+
+    public OrderLineItemEntity addQuantity(Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException;
 }

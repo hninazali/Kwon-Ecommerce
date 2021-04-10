@@ -15,15 +15,13 @@ public class CheckoutPersonalCartReq
 {
     private String username;
     private String password;
-    private PersonalCartEntity personalCart;
 
     public CheckoutPersonalCartReq() {
     }
 
-    public CheckoutPersonalCartReq(String username, String password, PersonalCartEntity personalCart) {
+    public CheckoutPersonalCartReq(String username, String password) {
         this.username = username;
         this.password = password;
-        this.personalCart = personalCart;
     }
 
     public String getUsername() {
@@ -40,14 +38,6 @@ public class CheckoutPersonalCartReq
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public PersonalCartEntity getPersonalCart() {
-        return personalCart;
-    }
-
-    public void setPersonalCart(PersonalCartEntity personalCart) {
-        this.personalCart = personalCart;
     }
     
 }

@@ -234,7 +234,30 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
         return productEntities;
     }
     
-    
+    @Override
+    public List<ProductEntity> filterProductsByTag(Long tagId) throws TagNotFoundException
+    {
+        List<ProductEntity> productEntities = new ArrayList<>();
+        TagEntity tag = tagEntitySessionBeanLocal.retrieveTagByTagId(tagId);
+        
+        productEntities = tag.getProductEntities();
+        
+        for(ProductEntity productEntity:productEntities)
+        {
+            productEntity.getCategoryEntity();
+            productEntity.getTagEntities().size();
+            productEntity.getBrandEntity();
+        }
+        
+        Collections.sort(productEntities, new Comparator<ProductEntity>()
+            {
+                public int compare(ProductEntity pe1, ProductEntity pe2) {
+                    return pe1.getSkuCode().compareTo(pe2.getSkuCode());
+                }
+            });
+
+        return productEntities;
+    }
     
     @Override
     public List<ProductEntity> filterProductsByTags(List<Long> tagIds, String condition)

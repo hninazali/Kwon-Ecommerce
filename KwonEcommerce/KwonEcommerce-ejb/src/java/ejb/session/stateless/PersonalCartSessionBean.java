@@ -10,6 +10,7 @@ import entity.GroupCartEntity;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
 import entity.PersonalCartEntity;
+import entity.ProductEntity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
@@ -188,6 +189,40 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
         clearPersonalCart(personalCartEntity, customerEntity);
         
         return afterCheckout;
+    }
+    
+    @Override
+    public boolean isInsideCart(Long customerId, ProductEntity product) throws CustomerNotFoundException
+    {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        PersonalCartEntity personalCart = customer.getPersonalCartEntity();
+        for (OrderLineItemEntity lineItem : personalCart.getOrderLineItemEntities())
+        {
+            if (lineItem.getProductEntity().getName().equals(product.getName()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public OrderLineItemEntity addQuantity(Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException
+    {
+        OrderLineItemEntity returnLineItem = new OrderLineItemEntity();
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        PersonalCartEntity personalCart = customer.getPersonalCartEntity();
+        for (OrderLineItemEntity lineItem : personalCart.getOrderLineItemEntities())
+        {
+            if (lineItem.getProductEntity().getName().equals(product.getName()))
+            {
+                Integer currentQty = lineItem.getQuantity();
+                lineItem.setQuantity(currentQty + addedQty);
+                returnLineItem = lineItem;
+                break;
+            }
+        }
+        return returnLineItem;
     }
 
     public void clearPersonalCart(PersonalCartEntity personalCartEntity, CustomerEntity customer) 

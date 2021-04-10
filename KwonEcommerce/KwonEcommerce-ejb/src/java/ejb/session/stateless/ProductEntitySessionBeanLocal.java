@@ -53,4 +53,6 @@ public interface ProductEntitySessionBeanLocal
     public void orderProduct(long productId, int quantityToOrder) throws ProductNotFoundException;
 
     public void approveOrder(long requestId) throws OrderRequestNotFoundException, ProductNotFoundException;
+
+    public List<ProductEntity> filterProductsByTag(Long tagId) throws TagNotFoundException;
 }

@@ -160,6 +160,43 @@ public class ProductResource
         }
     }
     
+    @Path("filterProductsByTag/{tagId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response filterProductsByTag(@PathParam("tagId") Long tagId)
+    {
+        try
+        {
+            List<ProductEntity> products = productEntitySessionBean.filterProductsByTag(tagId);
+            
+            for(ProductEntity productEntity : products)
+            {
+                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
+                {
+                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
+                }
+                
+                productEntity.getCategoryEntity().getProductEntities().clear();
+                
+                for(TagEntity tagEntity:productEntity.getTagEntities())
+                {
+                    tagEntity.getProductEntities().clear();
+                }
+                
+                productEntity.getBrandEntity().getProductEntities().clear();
+            }
+            
+            GenericEntity<List<ProductEntity>> genericEntity = new GenericEntity<List<ProductEntity>>(products){
+            };
+            
+            return Response.status(Status.OK).entity(genericEntity).build();
+        }
+        catch (Exception ex)
+        {
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
     @Path("retrieveProduct/{productId}")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
