@@ -9,12 +9,12 @@
 
     <ui:define name="content">
         <ez:Breadcrumb pageName="productManagement" />
-        
+
         <div>
             <h3>Product Management</h3>
-            
+
             <h:form>
-            
+
                 <p:menubar>
 
                     <p:submenu label="Create New Product" icon="ui-icon-document">
@@ -25,9 +25,9 @@
                 <br/>
 
             </h:form>
-            
+
             <h:form id="formAllProducts">
-            
+
                 <p:messages id="messages" redisplay="false" closable="true" />
 
                 <p:dataTable id="dataTableAllProducts" widgetVar="dataTableAllProducts" value="#{productManagementManagedBean.productEntities}" var="productEntity" rowKey="#{productEntity.productId}" rowIndexVar="row"
@@ -52,11 +52,11 @@
                     <p:column headerText="Name" sortBy="#{productEntity.name}" filterBy="#{productEntity.name}" filterMatchMode="contains">
                         <h:outputText value="#{productEntity.name}" />
                     </p:column>
-                    
+
                     <p:column headerText="Brand" sortBy="#{productEntity.brandEntity.name}" filterBy="#{productEntity.brandEntity}" filterMatchMode="contains">
                         <h:outputText value="#{productEntity.brandEntity.name}" />
                     </p:column>
-                    
+
                     <p:column headerText="Description" sortBy="#{productEntity.description}" filterBy="#{productEntity.description}" filterMatchMode="contains">
                         <h:outputText value="#{productEntity.description}" />
                     </p:column>
@@ -105,7 +105,7 @@
                 </p:confirmDialog>
 
             </h:form>
-            
+
             <h:form id="formCreateNewProduct">
 
                 <p:dialog id="dialogCreateNewProduct" widgetVar="dialogCreateNewProduct" header="Create New Product" closable="true">
@@ -116,7 +116,7 @@
 
                         <p:row>
                             <p:column>
-                                <p:outputLabel for="skuCode" value="SKU Code: " style="font-weight: bold;" />
+                                <p:outputLabel for="skuCode" value="SKU Code " style="font-weight: bold;" />
                             </p:column>
                             <p:column>
                                 <p:inputText id="skuCode" value="#{productManagementManagedBean.newProductEntity.skuCode}" placeholder="PROD999" required="true" requiredMessage="SKU Code is required" />
@@ -128,13 +128,28 @@
 
                         <p:row>
                             <p:column>
-                                <p:outputLabel for="name" value="Name: " style="font-weight: bold;" />
+                                <p:outputLabel for="name" value="Name " style="font-weight: bold;" />
                             </p:column>
                             <p:column>
                                 <p:inputText id="name" value="#{productManagementManagedBean.newProductEntity.name}" placeholder="Product 1" required="true" requiredMessage="Name is required" />
                             </p:column>
                             <p:column>
                                 <p:message for="name" />
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="selBrand" value="Brand " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="selBrand" value="#{productManagementManagedBean.brandIdNew}">
+                                    <f:selectItem itemValue="0" itemLabel="[Select One]" noSelectionOption="true" />
+                                    <f:selectItems value="#{productManagementManagedBean.brandEntities}" var="brandEntity" itemValue="#{brandEntity.brandId}" itemLabel="#{brandEntity.name}" />
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="selBrand" />
                             </p:column>
                         </p:row>
 
@@ -149,6 +164,34 @@
                                 <p:message for="description" />
                             </p:column>
                         </p:row>
+
+                        <!--                        <p:row>
+                                                    <p:column>
+                                                        <p:outputLabel for="imageLink" value="Image Link " style="font-weight: bold;" />
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:inputText id="imageLink" value="" placeholder="https:// ..." required="true" requiredMessage="Image Link is required" />
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:message for="imageLink" />
+                                                    </p:column>
+                                                </p:row>-->
+
+                        <p:row>
+                            <div class="card">
+                                <h:form enctype="multipart/form-data">
+                                    <p:fileUpload listener="#{fileUploadViewManagedBean.handleFileUpload}" mode="advanced" dragDropSupport="false"
+                                                  update="messages" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                                  validateContentType="true" accept=".gif,.jpg,.jpeg,.png"/>
+
+                                    <p:growl id="messages" showDetail="true"/>
+                                </h:form>
+                            </div>
+
+                        </p:row>
+                        
+                        
+
 
                         <p:row>
                             <p:column>
@@ -300,6 +343,18 @@
                             </p:column>
                         </p:row>
 
+<!--                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="imageLink" value="Image Link " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="imageLink" value="" placeholder="https:// ..." required="true" requiredMessage="Image Link is required" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="imageLink" />
+                            </p:column>
+                        </p:row>-->
+
                         <p:row>
                             <p:column>
                                 <p:outputLabel for="quantityOnHand" value="Quantity On Hand " />
@@ -390,7 +445,7 @@
                 </p:dialog>
 
             </h:form>
-            
+
             <h:form id="formOrderProduct">
 
                 <p:dialog id="dialogOrderProduct" widgetVar="dialogOrderProduct" header="Order Product" closable="true">

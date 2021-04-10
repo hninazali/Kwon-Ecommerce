@@ -62,6 +62,7 @@ public class ProductEntity implements Serializable
     @Min(1)
     @Max(5)
     private Integer productRating;
+//    private String imgLink;
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -71,7 +72,7 @@ public class ProductEntity implements Serializable
     private List<TagEntity> tagEntities;
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = true)
     private BrandEntity brandEntity;
   
     
@@ -82,7 +83,7 @@ public class ProductEntity implements Serializable
 
     
         
-    public ProductEntity(String skuCode, String name, String description, Integer quantityOnHand, Integer reorderQuantity, BigDecimal unitPrice /*, String category*/ , Integer productRating) 
+    public ProductEntity(String skuCode, String name, String description, Integer quantityOnHand, Integer reorderQuantity, BigDecimal unitPrice /*, String category*/ , Integer productRating /*, String imgLink*/) 
     {
         this();
         
@@ -93,7 +94,8 @@ public class ProductEntity implements Serializable
         this.reorderQuantity = reorderQuantity;
         this.unitPrice = unitPrice;
         this.productRating = productRating;
-     
+//        this.imgLink = imgLink;
+//     
     }
     
     
@@ -283,4 +285,18 @@ public class ProductEntity implements Serializable
     public void setBrandEntity(BrandEntity brandEntity) {
         this.brandEntity = brandEntity;
     }
+
+    /**
+     * @return the imgLink
+     */
+//    public String getImgLink() {
+//        return imgLink;
+//    }
+//
+//    /**
+//     * @param imgLink the imgLink to set
+//     */
+//    public void setImgLink(String imgLink) {
+//        this.imgLink = imgLink;
+//    }
 }

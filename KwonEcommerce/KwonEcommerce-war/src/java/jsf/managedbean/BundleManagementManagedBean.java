@@ -69,7 +69,7 @@ public class BundleManagementManagedBean implements Serializable {
 //    private ViewProductManagedBean viewProductManagedBean;
     private ViewBundleManagedBean viewBundleManagedBean;
     
-    //private List<ProductEntity> productEntities;
+    private List<ProductEntity> productEntities;
 //    private List<ProductEntity> filteredProductEntities;
     
     private List<BundleEntity> bundleEntities;

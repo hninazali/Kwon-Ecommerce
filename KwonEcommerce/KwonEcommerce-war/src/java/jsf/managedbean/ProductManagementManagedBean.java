@@ -65,6 +65,7 @@ public class ProductManagementManagedBean implements Serializable {
     private Long categoryIdNew;
     private List<Long> tagIdsNew;
     private Long brandIdNew;
+    
     private List<CategoryEntity> categoryEntities;
     private List<TagEntity> tagEntities;   
     private List<BrandEntity> brandEntities;
@@ -112,11 +113,16 @@ public class ProductManagementManagedBean implements Serializable {
         if(categoryIdNew == 0)
         {
             categoryIdNew = null;
-        }                
+        }    
+        
+        if(getBrandIdNew() == 0)
+        {
+            setBrandIdNew(null);
+        }
         
         try
         {
-            ProductEntity pe = productEntitySessionBeanLocal.createNewProduct(newProductEntity, categoryIdNew, tagIdsNew, brandIdNew);
+            ProductEntity pe = productEntitySessionBeanLocal.createNewProduct(newProductEntity, categoryIdNew, tagIdsNew, getBrandIdNew());
             productEntities.add(pe);
             
             if(filteredProductEntities != null)
@@ -127,7 +133,7 @@ public class ProductManagementManagedBean implements Serializable {
             newProductEntity = new ProductEntity();
             categoryIdNew = null;
             tagIdsNew = null;
-            brandIdNew = null;
+            setBrandIdNew(null);
             
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "New product created successfully (Product ID: " + pe.getProductId() + ")", null));
@@ -358,6 +364,20 @@ public class ProductManagementManagedBean implements Serializable {
 
     public void setBrandEntities(List<BrandEntity> brandEntities) {
         this.brandEntities = brandEntities;
+    }
+
+    /**
+     * @return the brandIdNew
+     */
+    public Long getBrandIdNew() {
+        return brandIdNew;
+    }
+
+    /**
+     * @param brandIdNew the brandIdNew to set
+     */
+    public void setBrandIdNew(Long brandIdNew) {
+        this.brandIdNew = brandIdNew;
     }
     
     
