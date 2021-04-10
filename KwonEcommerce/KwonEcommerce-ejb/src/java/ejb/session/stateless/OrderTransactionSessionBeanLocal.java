@@ -10,6 +10,8 @@ import entity.OrderTransactionEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.enumeration.ShippingStatusEnum;
+import util.exception.BundleInsufficientQuantityOnHandException;
+import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CustomerNotFoundException;
 import util.exception.OrderTransactionAlreadyVoidedRefundedException;
@@ -23,7 +25,7 @@ import util.exception.StaffNotFoundException;
 @Local
 public interface OrderTransactionSessionBeanLocal {
 
-    public OrderTransactionEntity createNewOrderTransaction(Long staffId, OrderTransactionEntity newOrderTransaction) throws StaffNotFoundException, CreateNewOrderTransactionException;
+    public OrderTransactionEntity createNewOrderTransaction(Long staffId, OrderTransactionEntity newOrderTransaction) throws StaffNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException;
 
     public List<OrderTransactionEntity> retrieveAllOrderTransactions();
 
@@ -36,8 +38,6 @@ public interface OrderTransactionSessionBeanLocal {
     public OrderTransactionEntity retrieveOrderTransactionById(Long orderTransactionId) throws OrderTransactionNotFoundException;
 
     public boolean refundOrder(long orderTransactionId) throws OrderTransactionNotFoundException, OrderTransactionAlreadyVoidedRefundedException;
-
-    public void approveRefund(OrderTransactionEntity orderTransaction) throws OrderTransactionAlreadyVoidedRefundedException;
 
     public void updateShippingStatus(long orderId, ShippingStatusEnum shippingStatus) throws OrderTransactionNotFoundException;
 

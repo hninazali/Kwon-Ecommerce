@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
@@ -29,20 +31,6 @@ import javax.validation.constraints.Size;
  */
 @Entity
 public class BundleEntity implements Serializable {
-
-    /**
-     * @return the bundleRating
-     */
-    public Integer getBundleRating() {
-        return bundleRating;
-    }
-
-    /**
-     * @param bundleRating the bundleRating to set
-     */
-    public void setBundleRating(Integer bundleRating) {
-        this.bundleRating = bundleRating;
-    }
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -67,21 +55,26 @@ public class BundleEntity implements Serializable {
     @Min(0)
     private Integer quantityOnHand;
     
+    @Column(nullable = false)
+    @NotNull
+    @Min(0)
+    private Integer reorderQuantity;
+    
     @Column(nullable = false, precision = 11, scale = 2)
     @NotNull
     @DecimalMin("0.00")
     @Digits(integer = 9, fraction = 2) // 11 - 2 digits to the left of the decimal point
     private BigDecimal unitPrice;  
     
-     @Column(nullable = false)
+    @Column(nullable = false)
     @NotNull
     @Positive
     @Min(1)
     @Max(5)
     private Integer bundleRating;
   
-    @ManyToMany    
-    private List<ProductEntity> productEntities;
+    @OneToMany    
+    private List<BundleLineItemEntity> bundleLineItems;
     
     @ManyToMany(mappedBy="bundleEntities", fetch = FetchType.LAZY)
     private List<CategoryEntity> categoryEntities;
@@ -92,19 +85,21 @@ public class BundleEntity implements Serializable {
     
 
     public BundleEntity() {
+        bundleLineItems = new ArrayList<>();
+        categoryEntities = new ArrayList<>();
+        tagEntities = new ArrayList<>();
     }
     
     
-    
-    public BundleEntity(String bundleSkuCode, String name, String description, BigDecimal unitPrice, List<ProductEntity> productEntities) {
+    public BundleEntity(String bundleSkuCode, String name, String description, BigDecimal unitPrice, List<BundleLineItemEntity> bundleLineItemEntities) {
         this.skuCode = bundleSkuCode;
         this.name = name;
         this.description = description;
         this.unitPrice = unitPrice;
-        this.productEntities = productEntities;
+        this.bundleLineItems = bundleLineItemEntities;
         
-        for(ProductEntity product : productEntities){
-            categoryEntities.add(product.getCategoryEntity());
+        for(BundleLineItemEntity bundleLineItem: bundleLineItems){
+            categoryEntities.add(bundleLineItem.getProductEntity().getCategoryEntity());
         }
         
     }
@@ -144,36 +139,26 @@ public class BundleEntity implements Serializable {
         }
     }
     
-     public void addProduct(ProductEntity productEntity)
+     public void addBundleLineItem(BundleLineItemEntity bundleLineItemEntity)
     {
-        if(productEntity != null)
+        if(bundleLineItemEntity != null)
         {
-            if(!this.productEntities.contains(productEntity))
+            if(!this.bundleLineItems.contains(bundleLineItemEntity))
             {
-                this.productEntities.add(productEntity);
-                this.categoryEntities.add(productEntity.getCategoryEntity());
-                
-//                if(!productEntity.getBundleEntities().contains(this))
-//                {                    
-//                    productEntity.getBundleEntities().add(this);
-//                }
+                this.getBundleLineItems().add(bundleLineItemEntity);
+                this.categoryEntities.add(bundleLineItemEntity.getProductEntity().getCategoryEntity());     
             }
         }
     }
      
     //might not need to use this method, because everytime there is an update, you just clear the entire list and add back.
-     public void removeProduct(ProductEntity productEntity)
+     public void removeBundleLineItem(BundleLineItemEntity bundleLineItemEntity)
     {
-        if(productEntity != null)
+        if(bundleLineItemEntity != null)
         {
-            if(this.productEntities.contains(productEntity))
+            if(this.getBundleLineItems().contains(bundleLineItemEntity))
             {
-                this.productEntities.remove(productEntity);
-                
-//                if(productEntity.getBundleEntities().contains(this))
-//                {
-//                    productEntity.getBundleEntities().remove(this);
-//                }
+                this.getBundleLineItems().remove(bundleLineItemEntity);
             }
         }
     }
@@ -223,7 +208,7 @@ public class BundleEntity implements Serializable {
      * @param skuCode the skuCode to set
      */
     public void setSkuCode(String skuCode) {
-        this.skuCode = skuCode;
+        this.setSkuCode(skuCode);
     }
 
     /**
@@ -237,7 +222,7 @@ public class BundleEntity implements Serializable {
      * @param name the name to set
      */
     public void setName(String name) {
-        this.name = name;
+        this.setName(name);
     }
 
     /**
@@ -251,7 +236,7 @@ public class BundleEntity implements Serializable {
      * @param description the description to set
      */
     public void setDescription(String description) {
-        this.description = description;
+        this.setDescription(description);
     }
 
     /**
@@ -265,21 +250,7 @@ public class BundleEntity implements Serializable {
      * @param unitPrice the unitPrice to set
      */
     public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    /**
-     * @return the productEntities
-     */
-    public List<ProductEntity> getProductEntities() {
-        return productEntities;
-    }
-
-    /**
-     * @param productEntities the productEntities to set
-     */
-    public void setProductEntities(List<ProductEntity> productEntities) {
-        this.productEntities = productEntities;
+        this.setUnitPrice(unitPrice);
     }
 
     /**
@@ -314,9 +285,26 @@ public class BundleEntity implements Serializable {
      * @param quantityOnHand the quantityOnHand to set
      */
     public void setQuantityOnHand(Integer quantityOnHand) {
-        this.quantityOnHand = quantityOnHand;
+        this.setQuantityOnHand(quantityOnHand);
     }
 
-  
-    
+    public Integer getBundleRating() {
+        return bundleRating;
+    }
+
+    public void setBundleRating(Integer bundleRating) {
+        this.bundleRating = bundleRating;
+    }
+
+    public List<BundleLineItemEntity> getBundleLineItems() {
+        return bundleLineItems;
+    }
+
+    public void setBundleLineItems(List<BundleLineItemEntity> bundleLineItems) {
+        this.bundleLineItems = bundleLineItems;
+    }
+
+    public void setCategoryEntities(List<CategoryEntity> categoryEntities) {
+        this.categoryEntities = categoryEntities;
+    }  
 }

@@ -139,7 +139,6 @@ public class BundleManagementManagedBean implements Serializable {
         {
             BundleEntity be = getBundleEntitySessionBeanLocal().createNewBundle(getNewBundleEntity(), tagIdsNew);
 //          ProductEntity pe = productEntitySessionBeanLocal.createNewProduct(newProductEntity, categoryIdNew, tagIdsNew, brandIdNew);
-            getBundleEntities().add(be);
             
             if(getFilteredBundleEntities() != null)
             {
@@ -187,7 +186,7 @@ public class BundleManagementManagedBean implements Serializable {
         
         try
         {
-            getBundleEntitySessionBeanLocal().updateBundle(getSelectedBundleEntityToUpdate(), getProductIdsUpdate(), tagIdsUpdate);
+            getBundleEntitySessionBeanLocal().updateBundle(getSelectedBundleEntityToUpdate());
                         
 //            for(CategoryEntity ce:categoryEntities)
 //            {
@@ -198,15 +197,15 @@ public class BundleManagementManagedBean implements Serializable {
 //                }                
 //            }
             
-            getSelectedBundleEntityToUpdate().getTagEntities().clear();
-            
-            for(TagEntity te:tagEntities)
-            {
-                if(tagIdsUpdate.contains(te.getTagId()))
-                {
-                    getSelectedBundleEntityToUpdate().getTagEntities().add(te);
-                }                
-            }
+//            getSelectedBundleEntityToUpdate().getTagEntities().clear();
+//            
+//            for(TagEntity te:tagEntities)
+//            {
+//                if(tagIdsUpdate.contains(te.getTagId()))
+//                {
+//                    getSelectedBundleEntityToUpdate().getTagEntities().add(te);
+//                }                
+//            }
 
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Bundle updated successfully", null));
         }
@@ -423,7 +422,6 @@ public class BundleManagementManagedBean implements Serializable {
     public void setBundleEntities(List<BundleEntity> bundleEntities) {
         this.bundleEntities = bundleEntities;
     }
-
     /**
      * @return the newBundleEntity
      */
@@ -451,14 +449,14 @@ public class BundleManagementManagedBean implements Serializable {
     public void setBundleEntitySessionBeanLocal(BundleEntitySessionBeanLocal bundleEntitySessionBeanLocal) {
         this.bundleEntitySessionBeanLocal = bundleEntitySessionBeanLocal;
     }
-
+    
     /**
      * @return the productEntitySessionBeanLocal
      */
     public ProductEntitySessionBeanLocal getProductEntitySessionBeanLocal() {
         return productEntitySessionBeanLocal;
     }
-
+    
     /**
      * @param productEntitySessionBeanLocal the productEntitySessionBeanLocal to set
      */
@@ -521,14 +519,11 @@ public class BundleManagementManagedBean implements Serializable {
     public void setSelectedBundleEntityToUpdate(BundleEntity selectedBundleEntityToUpdate) {
         this.selectedBundleEntityToUpdate = selectedBundleEntityToUpdate;
     }
-
-    /**
-     * @return the productIdsUpdate
-     */
+    
     public List<Long> getProductIdsUpdate() {
         return productIdsUpdate;
     }
-
+    
     /**
      * @param productIdsUpdate the productIdsUpdate to set
      */

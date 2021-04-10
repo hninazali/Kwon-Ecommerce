@@ -8,6 +8,8 @@ package ejb.session.stateless;
 import entity.CustomerEntity;
 import entity.GroupCartEntity;
 import entity.OrderLineItemEntity;
+import entity.ProductEntity;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
@@ -25,6 +27,7 @@ import util.exception.CreateNewOrderLineItemException;
 import util.exception.CustomerNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
+import util.exception.ProductNotFoundException;
 
 @Stateless
 public class OrderLineItemSessionBean implements OrderLineItemSessionBeanLocal {
@@ -75,6 +78,14 @@ public class OrderLineItemSessionBean implements OrderLineItemSessionBeanLocal {
         } else {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
+    }
+    
+    @Override
+    public OrderLineItemEntity createLineItemForCart(Long productId, Integer quantity) throws ProductNotFoundException
+    {
+        ProductEntity product = productSessionBeanLocal.retrieveProductByProductId(productId);
+        OrderLineItemEntity lineItem = new OrderLineItemEntity(product, quantity, product.getUnitPrice(), product.getUnitPrice().multiply(new BigDecimal(quantity)));
+        return lineItem;
     }
 
     @Override

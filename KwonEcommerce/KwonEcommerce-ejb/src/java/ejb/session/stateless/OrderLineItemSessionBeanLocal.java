@@ -12,6 +12,7 @@ import util.exception.CreateNewOrderLineItemException;
 import util.exception.CustomerNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
+import util.exception.ProductNotFoundException;
 
 /**
  *
@@ -31,4 +32,6 @@ public interface OrderLineItemSessionBeanLocal {
     void deleteOrderLineItemEntity(OrderLineItemEntity orderLineItemEntity);
 
     public OrderLineItemEntity updateOrderLineItemEntityQty(Long lineItemId, Integer quantity) throws OrderLineItemNotFoundException;
+
+    public OrderLineItemEntity createLineItemForCart(Long productId, Integer quantity) throws ProductNotFoundException;
 }

@@ -5,30 +5,27 @@
  */
 package ws.datamodel;
 
-import entity.OrderLineItemEntity;
-import entity.ProductEntity;
+import java.util.List;
 
 /**
  *
  * @author User
  */
-public class AddItemToPersonalCartReq 
+public class FilterProductsByTagsReq 
 {
     private String username;
     private String password;
-    private ProductEntity product;
-    private Integer quantity;
-    
-    public AddItemToPersonalCartReq()
-    {
-        
+    private List<Long> tagIds;
+    private String condition;
+
+    public FilterProductsByTagsReq() {
     }
 
-    public AddItemToPersonalCartReq(String username, String password, ProductEntity product, Integer quantity) {
+    public FilterProductsByTagsReq(String username, String password, List<Long> tagIds, String condition) {
         this.username = username;
         this.password = password;
-        this.product = product;
-        this.quantity = quantity;
+        this.tagIds = tagIds;
+        this.condition = condition;
     }
 
     public String getUsername() {
@@ -47,22 +44,21 @@ public class AddItemToPersonalCartReq
         this.password = password;
     }
 
-    public ProductEntity getProduct() {
-        return product;
+    public List<Long> getTagIds() {
+        return tagIds;
     }
 
-    public void setProduct(ProductEntity product) {
-        this.product = product;
+    public void setTagIds(List<Long> tagIds) {
+        this.tagIds = tagIds;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public String getCondition() {
+        return condition;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setCondition(String condition) {
+        this.condition = condition;
     }
-    
     
     
 }

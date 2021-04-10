@@ -6,6 +6,7 @@
 package ws.rest;
 
 import ejb.session.stateless.CustomerSessionBeanLocal;
+import ejb.session.stateless.OrderLineItemSessionBeanLocal;
 import ejb.session.stateless.PersonalCartSessionBeanLocal;
 import entity.CustomerEntity;
 import static entity.CustomerEntity_.customerId;
@@ -26,6 +27,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import util.exception.CreateNewOrderLineItemException;
@@ -35,6 +38,7 @@ import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.OrderLineItemNotFoundException;
 import util.exception.PersonalCartNotFoundException;
+import util.exception.ProductNotFoundException;
 import ws.datamodel.AddItemToPersonalCartReq;
 import ws.datamodel.CheckoutPersonalCartReq;
 import ws.datamodel.RemoveOrderLineItemReq;
@@ -48,6 +52,8 @@ import ws.datamodel.UpdateOrderLineItemReq;
 @Path("PersonalCart")
 public class PersonalCartResource 
 {
+
+    OrderLineItemSessionBeanLocal orderLineItemSessionBean = lookupOrderLineItemSessionBeanLocal();
 
     CustomerSessionBeanLocal customerSessionBean = lookupCustomerSessionBeanLocal();
 
@@ -110,7 +116,9 @@ public class PersonalCartResource
                 
             CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
             
-            OrderLineItemEntity lineItem = personalCartSessionBean.addNewOrderLineItemToCart(customer.getCustomerId(), req.getLineItem());
+            OrderLineItemEntity temp = orderLineItemSessionBean.createLineItemForCart(req.getProduct().getProductId(), req.getQuantity());
+            
+            OrderLineItemEntity lineItem = personalCartSessionBean.addNewOrderLineItemToCart(customer.getCustomerId(), temp);
             
             return Response.status(Response.Status.OK).entity(lineItem.getOrderLineItemId()).build();
             }
@@ -118,7 +126,7 @@ public class PersonalCartResource
             {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
-            catch(CreateNewOrderLineItemException | CustomerNotFoundException | InputDataValidationException ex)
+            catch(CreateNewOrderLineItemException | CustomerNotFoundException | InputDataValidationException | ProductNotFoundException ex)
             {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }
@@ -129,6 +137,7 @@ public class PersonalCartResource
         }
     }
     
+    @Path("updateOrderLineItem")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -164,62 +173,52 @@ public class PersonalCartResource
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkOutCart(CheckoutPersonalCartReq req)
+    public Response checkOutCart(@QueryParam("username") String username, 
+                                        @QueryParam("password") String password)
     {
-        if (req != null)
+        try
         {
-            try
-            {
-                
-            CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
-            
-            OrderTransactionEntity orderTransaction = personalCartSessionBean.checkOutCart(customer.getCustomerId(), req.getPersonalCart().getPersonalCartId());
-            
-            return Response.status(Response.Status.OK).entity(orderTransaction.getOrderTransactionId()).build();
-            }
-            catch(InvalidLoginCredentialException ex)
-            {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-            }
-            catch(PersonalCartNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException  ex)
-            {
-                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
-            }
+
+        CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+
+        OrderTransactionEntity orderTransaction = personalCartSessionBean.checkOutCart(customer.getCustomerId(), customer.getPersonalCartEntity().getPersonalCartId());
+
+        return Response.status(Response.Status.OK).entity(orderTransaction.getOrderTransactionId()).build();
         }
-        else
+        catch(InvalidLoginCredentialException ex)
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+        }
+        catch(PersonalCartNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException  ex)
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
     
+    @Path("{lineItemId}")
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removeOrderLineItem(RemoveOrderLineItemReq req)
+    public Response removeOrderLineItem(@QueryParam("username") String username, 
+                                        @QueryParam("password") String password,
+                                        @PathParam("lineItemId") Long lineItemId)
     {
-        if (req != null)
+        try
         {
-            try
-            {
-                
-            CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
-            
-            personalCartSessionBean.removeOrderLineItem(customer.getCustomerId(), req.getLineItem());
-            
-            return Response.status(Response.Status.OK).build();
-            }
-            catch(InvalidLoginCredentialException ex)
-            {
-                return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-            }
-            catch(OrderLineItemNotFoundException | CustomerNotFoundException  ex)
-            {
-                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
-            }
+
+        CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+
+        personalCartSessionBean.removeOrderLineItem(customer.getCustomerId(), lineItemId);
+
+        return Response.status(Response.Status.OK).build();
         }
-        else
+        catch(InvalidLoginCredentialException ex)
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+        }
+        catch(OrderLineItemNotFoundException | CustomerNotFoundException  ex)
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
 
@@ -237,6 +236,16 @@ public class PersonalCartResource
         try {
             javax.naming.Context c = new InitialContext();
             return (CustomerSessionBeanLocal) c.lookup("java:global/KwonEcommerce/KwonEcommerce-ejb/CustomerSessionBean!ejb.session.stateless.CustomerSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private OrderLineItemSessionBeanLocal lookupOrderLineItemSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (OrderLineItemSessionBeanLocal) c.lookup("java:global/KwonEcommerce/KwonEcommerce-ejb/OrderLineItemSessionBean!ejb.session.stateless.OrderLineItemSessionBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);
