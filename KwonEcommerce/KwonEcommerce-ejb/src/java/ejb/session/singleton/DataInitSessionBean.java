@@ -126,7 +126,7 @@ public class DataInitSessionBean {
             tagIdsPopularDiscountNew.add(tagEntityNew.getTagId());
 
             List<Long> tagIdsEmpty = new ArrayList<>();
-
+            
             // Updated in v5.0
             // Updated in v5.1
             
@@ -147,6 +147,27 @@ public class DataInitSessionBean {
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD011", "VT Cosmetics Lotion", "VT Cosmetics Lotion", 100, 10, new BigDecimal("95.00"), 3), lotions.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
             productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD012", "CandyLab Lotion", "CandyLab Lotion", 100, 10, new BigDecimal("19.05"), 4), lotions.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
             
+
+//            // Updated in v5.0
+//            // Updated in v5.1
+//            
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD001", "Innisfree Primer", "Best primer ever!! Fills up n blur out the pores.", 100, 10, new BigDecimal("10.00"), 1, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fus.innisfree.com%2Fproducts%2Fpore-blur-primer&psig=AOvVaw3zMD3bPJJmhsFudqJ7XvAh&ust=1618114417815000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKD5yoro8u8CFQAAAAAdAAAAABAK"), primer.getCategoryId(), tagIdsPopular, innisfree.getBrandId());
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD002", "Laneige Primer", "For best whitening effect", 100, 10, new BigDecimal("25.50"), 2, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.laneige.com%2Fint%2Fen%2Fmakeup%2Fwater-glow-base-corrector.html&psig=AOvVaw3i79RzJw1w9QXN9uabLw2p&ust=1618114453504000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNDrwJvo8u8CFQAAAAAdAAAAABAE"), primer.getCategoryId(), tagIdsDiscount, innisfree.getBrandId());
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD003", "Etude House Foundation", "Become a princess!", 100, 10, new BigDecimal("20.00"), 1, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fcosmetic-love.com%2Fproducts%2Fetude-house-double-lasting-foundation-new-30g&psig=AOvVaw0KIeDaPLDeNxYYTths1fTr&ust=1618114533851000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMiF4MHo8u8CFQAAAAAdAAAAABAK"), foundation.getCategoryId(), tagIdsPopularNew, innisfree.getBrandId());
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD004", "THEFACESHOP Foundation", "For best whitening effect", 100, 10, new BigDecimal("10.00"), 2, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.koinshop.com%2Fproduct%2Fthe-face-shop-ink-lasting-foundation-slim-fit-bright-cream-beige%2F&psig=AOvVaw1xgfMDuwDHSAe1wyYMsDJ1&ust=1618114586307000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMCLg9vo8u8CFQAAAAAdAAAAABAE"), foundation.getCategoryId(), tagIdsPopularDiscountNew, innisfree.getBrandId());
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD005", "Innisfree Lipstick", "Most unique color", 100, 10, new BigDecimal("35.00"), 1, "https://www.google.com/url?sa=i&url=http%3A%2F%2Fwww.innisfree.com%2Fsg%2Fen%2Fproduct%2FproductList.do%3FcatCd01%3DUB%26catCd02%3DUBBB%26skinType%3Dmb&psig=AOvVaw2PJaPeKZ8T8uR-wCrNnDY_&ust=1618114617804000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCPi0zero8u8CFQAAAAAdAAAAABAG"), lipstick.getCategoryId(), tagIdsPopular, innisfree.getBrandId());
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD006", "COSRX Lipstick", "Boost your confidence!", 100, 10, new BigDecimal("20.05"), 2, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fthebeautyjunkee.blogspot.com%2F2019%2F03%2Ffebruary-2019-beauty-favorites.html&psig=AOvVaw0lTK-lqIV7xsFRtulYlH7u&ust=1618114667903000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCPCzxaDp8u8CFQAAAAAdAAAAABAE"), lipstick.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
+//            
+//            // Added in v5.0
+//            // Updated in v5.1
+//            
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD007", "Moonshot Shampoo", "Moonshot Shampoo", 100, 10, new BigDecimal("20.00"), 3, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fficklebeauty.com%2Fproducts%2Fpyungkang-yul-ato-wash-shampoo-blue-label&psig=AOvVaw3O2eImyqb1TnJDDEhRghyk&ust=1618114903093000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIC5i_Pp8u8CFQAAAAAdAAAAABAJ"), shampoo.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD008", "The Saem Shampoo", "The Saem Shampoo", 100, 10, new BigDecimal("30.50"), 4, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbeautyboxkorea.com%2Fproduct%2Fthe-saem-silk-hair-refresh-shampoo-320ml%2F19536%2F&psig=AOvVaw3QmphpCsSVCr2npbmlMhEM&ust=1618114933189000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCLDUqYDq8u8CFQAAAAAdAAAAABAE"), shampoo.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD009", "Skin Food Bodywash", "Skin Food Bodywash", 100, 10, new BigDecimal("50.00"), 3, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.carousell.sg%2Fp%2Fskinfood-rose-tea-scented-body-wash-body-milk-335ml-114903087%2F&psig=AOvVaw1_naHXJOn4q73A19PKE173&ust=1618114966661000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKCV5ZTq8u8CFQAAAAAdAAAAABAD"), bodyWash.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD010", "Dr Jart+ Bodywash", "Dr Jart+ Bodywash", 100, 10, new BigDecimal("100.00"), 4, "https://www.google.com/url?sa=i&url=http%3A%2F%2Fwww.stylekorean.com%2Fshop%2Fdr.jart-ceramidin-body-wash-250ml%2F1525315985%2F&psig=AOvVaw17iI3K7p3VN313-2TvKgcK&ust=1618115004293000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNDlm6Lq8u8CFQAAAAAdAAAAABAQ"), bodyWash.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD011", "VT Cosmetics Lotion", "VT Cosmetics Lotion", 100, 10, new BigDecimal("95.00"), 3, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fus.drjart.com%2Fproducts%2Fcica-cream&psig=AOvVaw3bxOoWf46Jo-b8ra14NPLU&ust=1618115127116000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNi52dzq8u8CFQAAAAAdAAAAABAG"), lotions.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD012", "CandyLab Lotion", "CandyLab Lotion", 100, 10, new BigDecimal("19.05"), 4, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.beautykoreamall.com%2Fproduct%2F%3FSM%3Dview%26prd_code%3D1608625290&psig=AOvVaw0Qa4briN0qUnH4UOotwvVt&ust=1618115158551000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKDx3-3q8u8CFQAAAAAdAAAAABAD"), lotions.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
+//            
             PersonalCartEntity pc1 = personalCartSessionBeanLocal.createPersonalCartEntity(new PersonalCartEntity());
             PersonalCartEntity pc2 = personalCartSessionBeanLocal.createPersonalCartEntity(new PersonalCartEntity());
             PersonalCartEntity pc3 = personalCartSessionBeanLocal.createPersonalCartEntity(new PersonalCartEntity());
