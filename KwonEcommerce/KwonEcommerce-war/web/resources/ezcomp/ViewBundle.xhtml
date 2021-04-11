@@ -12,122 +12,135 @@
 
     <!-- IMPLEMENTATION -->
     <cc:implementation>
-        
+
         <h:form id="formViewBundle">
-            
+
             <p:dialog id="dialogViewBundle" widgetVar="dialogViewBundle" header="View Bundle" closable="true">
 
                 <p:panelGrid>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Bundle ID: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{viewBundleManagedBean.bundleEntityToView.bundleId}" />
+                            <h:outputText value="#{viewBundleManagedbean.bundleEntityToView.bundleId}" />
                         </p:column>
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="SKU Code: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{viewBundleManagedBean.bundleEntityToView.skuCode}" />
+                            <h:outputText value="#{viewBundleManagedbean.bundleEntityToView.skuCode}" />
                         </p:column>
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Name: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{viewBundleManagedBean.bundleEntityToView.name}" />
+                            <h:outputText value="#{viewBundleManagedbean.bundleEntityToView.name}" />
                         </p:column>
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Description: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{viewBundleManagedBean.bundleEntityToView.description}" />
+                            <h:outputText value="#{viewBundleManagedbean.bundleEntityToView.description}" />
                         </p:column>
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Quantity On Hand: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{viewBundleManagedBean.bundleEntityToView.quantityOnHand}" />
+                            <h:outputText value="#{viewBundleManagedbean.bundleEntityToView.quantityOnHand}" />
                         </p:column>
                     </p:row>
-                    
-<!--                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Reorder Quantity: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{viewBundleManagedBean.bundleEntityToView.reorderQuantity}" />
-                        </p:column>
-                    </p:row>-->
-                    
+
+                    <!--                    <p:row>
+                                            <p:column>
+                                                <h:outputLabel value="Reorder Quantity: " />
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText value="#{viewBundleManagedBean.bundleEntityToView.reorderQuantity}" />
+                                            </p:column>
+                                        </p:row>-->
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Unit Price: " />
                         </p:column>
                         <p:column>
-                            <h:outputText value="#{viewBundleManagedBean.bundleEntityToView.unitPrice}">
+                            <h:outputText value="#{viewBundleManagedbean.bundleEntityToView.unitPrice}">
                                 <f:convertNumber type="currency" currencySymbol="$" maxIntegerDigits="5" maxFractionDigits="2"/>
                             </h:outputText>
                         </p:column>
                     </p:row>
-                    
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Bundle Rating: " />
                         </p:column>
                         <p:column>
-                            <p:rating id="bundleRating" value="#{viewBundleManagedBean.bundleEntityToView.bundleRating}" stars="5" readonly="true" />
+                            <p:rating id="bundleRating" value="#{viewBundleManagedbean.bundleEntityToView.bundleRating}" stars="5" readonly="true" />
                         </p:column>
                     </p:row>
-                    
-<!--                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Category: " />
-                        </p:column>
-                        <p:column>
-                            <h:outputText value="#{viewBundleManagedBean.bundleEntityToView.categoryEntity.name}" />
-                        </p:column>
-                    </p:row>-->
 
-                    <p:row>
-                        <p:column>
-                            <h:outputLabel value="Products(s): " />
-                        </p:column>
-                        <p:column>
-                            <p:dataList value="#{viewBundleManagedBean.bundleEntityToView.productEntities}" var="product" type="unordered">
-                                #{product.name}
-                            </p:dataList>
-                        </p:column>
-                    </p:row>
-                    
+                    <!--                    <p:row>
+                                            <p:column>
+                                                <h:outputLabel value="Category: " />
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText value="#{viewBundleManagedBean.bundleEntityToView.categoryEntity.name}" />
+                                            </p:column>
+                                        </p:row>-->
+
                     <p:row>
                         <p:column>
                             <h:outputLabel value="Tag(s): " />
                         </p:column>
                         <p:column>
-                            <p:dataList value="#{viewBundleManagedBean.bundleEntityToView.tagEntities}" var="tag" type="unordered">
+                            <p:dataList value="#{viewBundleManagedbean.bundleEntityToView.tagEntities}" var="tag" type="unordered">
                                 #{tag.name}
                             </p:dataList>
                         </p:column>
                     </p:row>
                     
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:dataTable value="#{viewBundleManagedbean.bundleEntityToView.bundleLineItems}" var="lineItem">
+
+                                <p:column headerText="Product SKU Code">
+                                    <h:outputText value="#{lineItem.productEntity.skuCode}" />
+                                </p:column>
+
+                                <p:column headerText="Product Name">
+                                    <h:outputText value="#{lineItem.productEntity.name}" />
+                                </p:column>
+
+                                <p:column headerText="Unit Price">
+                                    <h:outputText value="#{lineItem.productEntity.unitPrice}" />
+                                </p:column>
+
+                                <p:column headerText="Quantity">
+                                    <h:outputText value="#{lineItem.quantity}" />
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:column>
+                    </p:row>
+
                 </p:panelGrid>
 
             </p:dialog>
-            
+
         </h:form>
     </cc:implementation>
 </html>

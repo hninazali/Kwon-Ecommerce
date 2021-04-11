@@ -28,9 +28,10 @@ public class ViewBundleManagedBean implements Serializable {
         bundleEntityToView = new BundleEntity();
     }
     
-     @PostConstruct
+    @PostConstruct
     public void postConstruct()
-    {        
+    {
+        
     }
 
     /**
