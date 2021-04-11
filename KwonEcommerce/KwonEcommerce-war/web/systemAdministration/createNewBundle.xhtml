@@ -139,11 +139,17 @@
                 </p:column>
 
                 <p:column headerText="Quantity To Be Sold">
-                    <p:inputText value="#{lineItem.quantity}" />
+                    <h:outputText value="#{lineItem.quantity}" />
                 </p:column>
 
                 <p:column headerText="Subtotal">
-                    <p:inputText value="#{lineItem.subTotal}" />
+                    <h:outputText value="#{lineItem.subTotal}" />
+                </p:column>
+                
+                <p:column headerText="Remove">
+                    <p:commandButton actionListener="#{createNewBundleManagedBean.removeLineItem}" update="@form formCreateNewBundle:dataTableLineItems" icon="pi pi-trash" title="Remove">
+                        <f:attribute name="removeLineItem" value="#{lineItem}" />
+                    </p:commandButton>
                 </p:column>
 
             </p:dataTable>

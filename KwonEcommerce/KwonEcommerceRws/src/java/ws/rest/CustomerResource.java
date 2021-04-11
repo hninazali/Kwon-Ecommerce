@@ -17,13 +17,20 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import util.exception.CustomerNotFoundException;
+import util.exception.CustomerUsernameExistException;
+import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.UnknownPersistenceException;
+import util.exception.UpdateCustomerException;
+import ws.datamodel.UpdateCustomerReq;
 
 /**
  * REST Web Service
@@ -72,6 +79,60 @@ public class CustomerResource
         catch(Exception ex)
         {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+    
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response registerCustomer(CustomerEntity customer)
+    {
+        if (customer != null)
+        {
+            try
+            {
+                Long customerId = customerSessionBean.createNewCustomer(customer);
+                
+                return Response.status(Response.Status.OK).entity(customerId).build();
+            }
+            catch (CustomerUsernameExistException | UnknownPersistenceException | InputDataValidationException ex)
+            {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            }
+        }
+        else
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+        }
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editCustomer(UpdateCustomerReq req)
+    {
+        if (req != null)
+        {
+            try
+            {
+                CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
+                
+                customerSessionBean.updateCustomer(req.getUpdatedCustomer());
+                
+                return Response.status(Response.Status.OK).build();
+            }
+            catch(InvalidLoginCredentialException ex)
+            {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            }
+            catch (UpdateCustomerException | CustomerNotFoundException | InputDataValidationException ex)
+            {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            }
+        }
+        else
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
         }
     }
 

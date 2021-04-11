@@ -140,9 +140,11 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
             if (constraintViolations.isEmpty()) {
                 CustomerEntity customerEntityToUpdate = retrieveCustomerById(customerEntity.getCustomerId());
 
-                if (customerEntityToUpdate.getEmail().equals(customerEntity.getEmail())) {
+                if (customerEntityToUpdate.getUsername().equals(customerEntity.getUsername())) {
                     customerEntityToUpdate.setFirstName(customerEntity.getFirstName());
                     customerEntityToUpdate.setLastName(customerEntity.getLastName());
+                    customerEntityToUpdate.setAddress(customerEntity.getAddress());
+                    customerEntityToUpdate.setPostalCode(customerEntity.getPostalCode());
                 } else {
                     throw new UpdateCustomerException("Email of customer record to be updated does not match the existing record");
                 }

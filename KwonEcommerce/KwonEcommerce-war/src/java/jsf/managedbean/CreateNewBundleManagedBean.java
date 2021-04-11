@@ -87,22 +87,63 @@ public class CreateNewBundleManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while creating the new bundle: " + ex.getMessage(), null));
         }
     }
+    
+    public void removeLineItem(ActionEvent event)
+    {
+        BundleLineItemEntity lineItemToRemove = (BundleLineItemEntity) event.getComponent().getAttributes().get("removeLineItem");
+        
+        lineItems.remove(lineItemToRemove);
+        newBundle.getBundleLineItems().remove(lineItemToRemove);
+        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Item Removed!!!", null));
+    }
 
     public void addLineItem(ActionEvent event) {
-        BundleLineItemEntity lineItem = new BundleLineItemEntity();
-        lineItem.setProductEntity(selectedProductEntityToAdd);
-        lineItem.setQuantity(quantityToAdd);
-        BigDecimal newQtyToAdd = new BigDecimal(quantityToAdd);
-        BigDecimal newSubtotal = selectedProductEntityToAdd.getUnitPrice().multiply(newQtyToAdd);
-        lineItem.setSubTotal(newSubtotal);
-        
-        lineItems.add(lineItem);
-        newBundle.getBundleLineItems().add(lineItem);
+        if (isInsideLineItems())
+        {
+            for (BundleLineItemEntity temp : newBundle.getBundleLineItems())
+            {
+                if (temp.getProductEntity().getSkuCode().equals(selectedProductEntityToAdd.getSkuCode()))
+                {
+                    Integer currQty = temp.getQuantity();
+                    Integer newQty = currQty + quantityToAdd;
+                    BigDecimal tempNum = new BigDecimal(newQty);
+                    BigDecimal tempTotal = selectedProductEntityToAdd.getUnitPrice().multiply(tempNum);;
+                    
+                    temp.setQuantity(newQty);
+                    temp.setSubTotal(tempNum);
+                }
+            }
+        }
+        else
+        {
+            BundleLineItemEntity lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(selectedProductEntityToAdd);
+            lineItem.setQuantity(quantityToAdd);
+            BigDecimal newQtyToAdd = new BigDecimal(quantityToAdd);
+            BigDecimal newSubtotal = selectedProductEntityToAdd.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
 
+            lineItems.add(lineItem);
+            newBundle.getBundleLineItems().add(lineItem);
+        }
+        
         selectedProductEntityToAdd = new ProductEntity();
         quantityToAdd = 0;
 
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Product Added!!!", null));
+    }
+    
+    public boolean isInsideLineItems()
+    {
+        for (BundleLineItemEntity line : newBundle.getBundleLineItems())
+        {
+            if (line.getProductEntity().getSkuCode().equals(selectedProductEntityToAdd.getSkuCode()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void createBundle(ActionEvent event) {
