@@ -52,9 +52,10 @@ public class CustomerManagedBean implements Serializable {
     
     public void banCustomer(ActionEvent actionEvent) {
         customerEntityToBan = (CustomerEntity) actionEvent.getComponent().getAttributes().get("customerEntityToBan");
-        customerEntities = customerSessionBeanLocal.retrieveAllCustomers();
+        
         try {
             customerSessionBeanLocal.banCustomer(customerEntityToBan.getCustomerId());
+            customerEntities = customerSessionBeanLocal.retrieveAllCustomers();
         } catch (BanCustomerException | CustomerNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while banning customer: " + ex.getMessage(), null));
         }

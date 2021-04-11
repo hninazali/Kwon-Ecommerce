@@ -52,6 +52,14 @@ public class CustomerEntity implements Serializable {
     @NotNull
     @Size(min = 8, max = 32)
     private String password;
+    @Column(nullable = false, length = 32)
+    @NotNull
+    @Size(min = 8, max = 100)
+    private String address;
+    @Column(nullable = false, length = 32)
+    @NotNull
+    @Size(min = 6, max = 10)
+    private String postalCode;
     @Column(columnDefinition = "CHAR(32) NOT NULL")
     private String salt;
     @Column(nullable = false)
@@ -103,6 +111,22 @@ public class CustomerEntity implements Serializable {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.personalCartEntity = personalCartEntity;
+        this.banned = false;
+
+        setPassword(password);
+    }
+    
+    public CustomerEntity(String firstName, String lastName, String username, String email, String password, String address, String postalCode, PersonalCartEntity personalCartEntity, Boolean banned) {
+        this();
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.postalCode = postalCode;
         this.personalCartEntity = personalCartEntity;
         this.banned = false;
 
@@ -243,5 +267,21 @@ public class CustomerEntity implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 }

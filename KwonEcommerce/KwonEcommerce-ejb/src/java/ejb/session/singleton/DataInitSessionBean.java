@@ -6,6 +6,7 @@
 package ejb.session.singleton;
 
 import ejb.session.stateless.BrandEntitySessionBeanLocal;
+import ejb.session.stateless.BundleEntitySessionBeanLocal;
 import ejb.session.stateless.CategoryEntitySessionBeanLocal;
 import ejb.session.stateless.CustomerSessionBeanLocal;
 import ejb.session.stateless.PersonalCartSessionBeanLocal;
@@ -17,6 +18,8 @@ import entity.ProductEntity;
 import entity.StaffEntity;
 import entity.TagEntity;
 import entity.BrandEntity;
+import entity.BundleEntity;
+import entity.BundleLineItemEntity;
 import entity.CustomerEntity;
 import entity.PersonalCartEntity;
 import java.math.BigDecimal;
@@ -29,13 +32,17 @@ import javax.ejb.LocalBean;
 import javax.ejb.Startup;
 import util.enumeration.AccessRightEnum;
 import util.exception.BrandNotFoundException;
+import util.exception.BundleSkuCodeExistException;
+import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewBrandException;
+import util.exception.CreateNewBundleException;
 import util.exception.CreateNewCategoryException;
 import util.exception.CreateNewPersonalCartException;
 import util.exception.CreateNewProductException;
 import util.exception.CreateNewTagException;
 import util.exception.CustomerUsernameExistException;
 import util.exception.InputDataValidationException;
+import util.exception.ProductNotFoundException;
 import util.exception.ProductSkuCodeExistException;
 import util.exception.StaffNotFoundException;
 import util.exception.StaffUsernameExistException;
@@ -67,6 +74,9 @@ public class DataInitSessionBean {
     
     @EJB
     private BrandEntitySessionBeanLocal brandEntitySessionBeanLocal;
+    
+    @EJB
+    private BundleEntitySessionBeanLocal bundleEntitySessionBeanLocal;
     
     public DataInitSessionBean() {
     }
@@ -140,22 +150,21 @@ public class DataInitSessionBean {
             // Updated in v5.0
             // Updated in v5.1
             
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD001", "Innisfree Primer", "Best primer ever!! Fills up n blur out the pores.", 100, 10, new BigDecimal("10.00"), 1), primer.getCategoryId(), tagIdsPopular, innisfree.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD002", "Laneige Primer", "For best whitening effect", 100, 10, new BigDecimal("25.50"), 2), primer.getCategoryId(), tagIdsDiscount, laneige.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD003", "Etude House Foundation", "Become a princess!", 100, 10, new BigDecimal("20.00"), 1), foundation.getCategoryId(), tagIdsPopularNew, etudeHouse.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD004", "THEFACESHOP Foundation", "For best whitening effect", 100, 10, new BigDecimal("10.00"), 2), foundation.getCategoryId(), tagIdsPopularDiscountNew, faceShop.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD005", "Innisfree Lipstick", "Most unique color", 100, 10, new BigDecimal("35.00"), 1), lipstick.getCategoryId(), tagIdsPopular, innisfree.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD006", "COSRX Lipstick", "Boost your confidence!", 100, 10, new BigDecimal("20.05"), 2), lipstick.getCategoryId(), tagIdsEmpty, cosrx.getBrandId());
+            ProductEntity product1 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD001", "Innisfree Primer", "Best primer ever!! Fills up n blur out the pores.", 100, 10, new BigDecimal("10.00"), 1), primer.getCategoryId(), tagIdsPopular, innisfree.getBrandId());
+            ProductEntity product2 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD002", "Laneige Primer", "For best whitening effect", 100, 10, new BigDecimal("25.50"), 2), primer.getCategoryId(), tagIdsDiscount, laneige.getBrandId());
+            ProductEntity product3 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD003", "Etude House Foundation", "Become a princess!", 100, 10, new BigDecimal("20.00"), 1), foundation.getCategoryId(), tagIdsPopularNew, etudeHouse.getBrandId());
+            ProductEntity product4 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD004", "THEFACESHOP Foundation", "For best whitening effect", 100, 10, new BigDecimal("10.00"), 2), foundation.getCategoryId(), tagIdsPopularDiscountNew, faceShop.getBrandId());
+            ProductEntity product5 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD005", "Innisfree Lipstick", "Most unique color", 100, 10, new BigDecimal("35.00"), 1), lipstick.getCategoryId(), tagIdsPopular, innisfree.getBrandId());
+            ProductEntity product6 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD006", "COSRX Lipstick", "Boost your confidence!", 100, 10, new BigDecimal("20.05"), 2), lipstick.getCategoryId(), tagIdsEmpty, cosrx.getBrandId());
             
             // Added in v5.0
             // Updated in v5.1
             
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD007", "Moonshot Shampoo", "Moonshot Shampoo", 100, 10, new BigDecimal("20.00"), 3), shampoo.getCategoryId(), tagIdsEmpty, moonshot.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD008", "The Saem Shampoo", "The Saem Shampoo", 100, 10, new BigDecimal("30.50"), 4), shampoo.getCategoryId(), tagIdsEmpty, theSaem.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD009", "Skin Food Bodywash", "Skin Food Bodywash", 100, 10, new BigDecimal("50.00"), 3), bodyWash.getCategoryId(), tagIdsEmpty, skinFood.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD010", "Dr Jart+ Bodywash", "Dr Jart+ Bodywash", 100, 10, new BigDecimal("100.00"), 4), bodyWash.getCategoryId(), tagIdsEmpty, drJart.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD011", "VT Cosmetics Lotion", "VT Cosmetics Lotion", 100, 10, new BigDecimal("95.00"), 3), lotions.getCategoryId(), tagIdsEmpty, vtCosmetics.getBrandId());
-            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD012", "CandyLab Lotion", "CandyLab Lotion", 100, 10, new BigDecimal("19.05"), 4), lotions.getCategoryId(), tagIdsEmpty, candyLab.getBrandId());
+            ProductEntity product7 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD007", "Moonshot Shampoo", "Moonshot Shampoo", 100, 10, new BigDecimal("20.00"), 3), shampoo.getCategoryId(), tagIdsEmpty, moonshot.getBrandId());
+            ProductEntity product8 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD008", "The Saem Shampoo", "The Saem Shampoo", 100, 10, new BigDecimal("30.50"), 4), shampoo.getCategoryId(), tagIdsEmpty, theSaem.getBrandId());
+            ProductEntity product9 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD010", "Dr Jart+ Bodywash", "Dr Jart+ Bodywash", 100, 10, new BigDecimal("100.00"), 4), bodyWash.getCategoryId(), tagIdsEmpty, drJart.getBrandId());
+            ProductEntity product10 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD011", "VT Cosmetics Lotion", "VT Cosmetics Lotion", 100, 10, new BigDecimal("95.00"), 3), lotions.getCategoryId(), tagIdsEmpty, vtCosmetics.getBrandId());
+            ProductEntity product11 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD012", "CandyLab Lotion", "CandyLab Lotion", 100, 10, new BigDecimal("19.05"), 4), lotions.getCategoryId(), tagIdsEmpty, candyLab.getBrandId());
             
 
 //            // Updated in v5.0
@@ -182,11 +191,135 @@ public class DataInitSessionBean {
             PersonalCartEntity pc2 = personalCartSessionBeanLocal.createPersonalCartEntity(new PersonalCartEntity());
             PersonalCartEntity pc3 = personalCartSessionBeanLocal.createPersonalCartEntity(new PersonalCartEntity());
             
-            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "One", "customerone@gmail.com", "password", pc1, false));
-            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Two", "customertwo@gmail.com", "password", pc2, false));
-            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Three", "customerthree@gmail.com", "password", pc3, false));
+            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "One", "CustomerOne", "customerone@gmail.com", "password", "NUS RVRC RVR F #07-722", "119081", pc1, false));
+            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Two", "CustomerTwo", "customertwo@gmail.com", "password", "NUS Cinnamon #09-344", "138593", pc2, false));
+            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Three", "CustomerThree", "customerthree@gmail.com", "password", "NUS Tembusu #05-233", "138598", pc3, false));
+            
+            BundleEntity newBundle = new BundleEntity();
+            
+            BundleLineItemEntity lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(product1);
+            lineItem.setQuantity(1);
+            BigDecimal newQtyToAdd = new BigDecimal(1);
+            BigDecimal newSubtotal = product1.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
+            newBundle.getBundleLineItems().add(lineItem);
+            
+            lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(product2);
+            lineItem.setQuantity(1);
+            newQtyToAdd = new BigDecimal(1);
+            newSubtotal = product2.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
+            newBundle.getBundleLineItems().add(lineItem);
+            
+            lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(product3);
+            lineItem.setQuantity(1);
+            newQtyToAdd = new BigDecimal(1);
+            newSubtotal = product3.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
+            newBundle.getBundleLineItems().add(lineItem);
+            
+            newBundle.setSkuCode("BUND001");
+            newBundle.setName("Primer Foundation Set");
+            newBundle.setDescription("Best primer and foundation set discounted for a limited time only!");
+            newBundle.setQuantityOnHand(10);
+            newBundle.setReorderQuantity(10);
+            newBundle.setUnitPrice(new BigDecimal("50"));
+            newBundle.setBundleRating(3);
 
-        } catch (StaffUsernameExistException | UnknownPersistenceException | InputDataValidationException| ProductSkuCodeExistException | CreateNewCategoryException | CreateNewTagException | CreateNewProductException| CreateNewBrandException | BrandNotFoundException | CustomerUsernameExistException | CreateNewPersonalCartException ex) {
+            BundleEntity newBundleEntity1 = bundleEntitySessionBeanLocal.createNewBundle(newBundle, tagIdsDiscount);
+            
+            newBundle = new BundleEntity();
+            
+            lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(product4);
+            lineItem.setQuantity(2);
+            newQtyToAdd = new BigDecimal(2);
+            newSubtotal = product4.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
+            newBundle.getBundleLineItems().add(lineItem);
+            
+            lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(product5);
+            lineItem.setQuantity(1);
+            newQtyToAdd = new BigDecimal(1);
+            newSubtotal = product5.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
+            newBundle.getBundleLineItems().add(lineItem);
+            
+            lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(product6);
+            lineItem.setQuantity(1);
+            newQtyToAdd = new BigDecimal(1);
+            newSubtotal = product6.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
+            newBundle.getBundleLineItems().add(lineItem);
+            
+            newBundle.setSkuCode("BUND002");
+            newBundle.setName("Foundation Lipstick Set");
+            newBundle.setDescription("New foundation lipstick set selling out fast!");
+            newBundle.setQuantityOnHand(10);
+            newBundle.setReorderQuantity(30);
+            newBundle.setUnitPrice(new BigDecimal("75"));
+            newBundle.setBundleRating(4);
+
+            BundleEntity newBundleEntity2 = bundleEntitySessionBeanLocal.createNewBundle(newBundle, tagIdsPopularNew);
+            
+            newBundle = new BundleEntity();
+            
+            lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(product7);
+            lineItem.setQuantity(1);
+            newQtyToAdd = new BigDecimal(1);
+            newSubtotal = product7.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
+            newBundle.getBundleLineItems().add(lineItem);
+            
+            lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(product8);
+            lineItem.setQuantity(1);
+            newQtyToAdd = new BigDecimal(1);
+            newSubtotal = product8.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
+            newBundle.getBundleLineItems().add(lineItem);
+            
+            lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(product9);
+            lineItem.setQuantity(1);
+            newQtyToAdd = new BigDecimal(1);
+            newSubtotal = product9.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
+            newBundle.getBundleLineItems().add(lineItem);
+            
+            lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(product10);
+            lineItem.setQuantity(1);
+            newQtyToAdd = new BigDecimal(1);
+            newSubtotal = product10.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
+            newBundle.getBundleLineItems().add(lineItem);
+            
+            lineItem = new BundleLineItemEntity();
+            lineItem.setProductEntity(product11);
+            lineItem.setQuantity(1);
+            newQtyToAdd = new BigDecimal(1);
+            newSubtotal = product11.getUnitPrice().multiply(newQtyToAdd);
+            lineItem.setSubTotal(newSubtotal);
+            newBundle.getBundleLineItems().add(lineItem);
+            
+            newBundle.setSkuCode("BUND003");
+            newBundle.setName("All-in-One Bodycare Set");
+            newBundle.setDescription("New all-in-one body care set discounted for a limited time, selling out fast so get it now!");
+            newBundle.setQuantityOnHand(20);
+            newBundle.setReorderQuantity(50);
+            newBundle.setUnitPrice(new BigDecimal("250"));
+            newBundle.setBundleRating(5);
+
+            BundleEntity newBundleEntity3 = bundleEntitySessionBeanLocal.createNewBundle(newBundle, tagIdsPopularDiscountNew);
+
+        } catch (StaffUsernameExistException | UnknownPersistenceException | InputDataValidationException| ProductSkuCodeExistException | CreateNewCategoryException | CreateNewTagException | CreateNewProductException | CreateNewBrandException | BrandNotFoundException | CustomerUsernameExistException | CreateNewPersonalCartException | BundleSkuCodeExistException | CreateNewBundleException | ProductNotFoundException | CategoryNotFoundException ex) {
             ex.printStackTrace();
         }
     }

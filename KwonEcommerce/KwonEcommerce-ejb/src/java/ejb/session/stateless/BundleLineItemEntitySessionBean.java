@@ -7,9 +7,6 @@ package ejb.session.stateless;
 
 import entity.BundleEntity;
 import entity.BundleLineItemEntity;
-import entity.ProductEntity;
-import entity.TagEntity;
-import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -20,12 +17,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.BundleNotFoundException;
-import util.exception.DeleteBundleException;
-import util.exception.InputDataValidationException;
-import util.exception.ProductInsufficientQuantityOnHandException;
-import util.exception.ProductNotFoundException;
-import util.exception.TagNotFoundException;
-import util.exception.UpdateBundleException;
 
 /**
  *
@@ -54,7 +45,7 @@ public class BundleLineItemEntitySessionBean implements BundleLineItemEntitySess
         validator = validatorFactory.getValidator();
     }
   
-   
+    
      // Added in v4.2
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<BundleEntity>>constraintViolations)

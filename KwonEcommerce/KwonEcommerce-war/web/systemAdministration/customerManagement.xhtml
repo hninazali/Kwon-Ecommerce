@@ -41,9 +41,17 @@
                     <p:column headerText="Last Name" sortBy="#{customerEntity.lastName}" filterBy="#{customerEntity.lastName}" style="text-align: center">
                         <h:outputText value="#{customerEntity.lastName}" />
                     </p:column>
+                    
+                    <p:column headerText="Username" sortBy="#{customerEntity.username}" filterBy="#{customerEntity.username}" style="text-align: center">
+                        <h:outputText value="#{customerEntity.username}" />
+                    </p:column>
 
                     <p:column headerText="Email" sortBy="#{customerEntity.email}" filterBy="#{customerEntity.email}" style="text-align: center">
                         <h:outputText value="#{customerEntity.email}" />
+                    </p:column>
+                    
+                    <p:column headerText="Postal Code" sortBy="#{customerEntity.postalCode}" filterBy="#{customerEntity.postalCode}" style="text-align: center">
+                        <h:outputText value="#{customerEntity.postalCode}" />
                     </p:column>
 
                     <p:column headerText="Ban Status" sortBy="#{customerEntity.banned}" filterBy="#{customerEntity.banned}" style="text-align: center">
