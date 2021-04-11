@@ -12,6 +12,7 @@ import entity.CustomerEntity;
 import entity.GroupCartEntity;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
+import entity.PersonalCartEntity;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,6 +107,48 @@ public class GroupCartResource
         }
     }
     
+    @Path("retrieveGroupOrderLineItems")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveAllPersonalOrderLineItems(LeaveGroupCartReq req)
+    {
+        if (req != null)
+        {
+            try
+            {
+                CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
+                
+                GroupCartEntity groupCart = groupCartSessionBean.retrieveGroupCartById(req.getGroupCartId());
+                List<OrderLineItemEntity> orderLineItems = groupCart.getOrderLineItemEntities();
+                
+                for (OrderLineItemEntity lineItem : orderLineItems)
+                {
+                    lineItem.getCustomerEntity().getOrderLineItemEntities().clear();
+                    lineItem.getCustomerEntity().getOrderTransactionEntities().clear();
+                    lineItem.getCustomerEntity().getGroupCartEntities().clear();
+                }
+            
+                GenericEntity<List<OrderLineItemEntity>> genericEntity = new GenericEntity<List<OrderLineItemEntity>>(orderLineItems){
+                };
+
+                return Response.status(Response.Status.OK).entity(orderLineItems).build();
+            }
+            catch(InvalidLoginCredentialException ex)
+            {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            }
+            catch (GroupCartNotFoundException ex)
+            {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+            }
+        }
+        else
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+        }
+    }
+    
     @Path("addItemToGroupCart")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -194,6 +237,7 @@ public class GroupCartResource
         }
     }
     
+    @Path("updateGroupLineItem")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -257,7 +301,8 @@ public class GroupCartResource
         }
     }
     
-    @DELETE
+    @Path("removeGroupLineItem")
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeOrderLineItem(RemoveGroupLineItemReq req)

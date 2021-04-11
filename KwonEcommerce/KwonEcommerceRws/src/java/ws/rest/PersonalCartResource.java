@@ -29,6 +29,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import util.exception.BundleNotFoundException;
@@ -91,14 +92,30 @@ public class PersonalCartResource
     @Path("retrieveAllPersonalOrderLineItems")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllPersonalOrderLineItems(Long customerId)
+    public Response retrieveAllPersonalOrderLineItems(@QueryParam("username") String username, 
+                                        @QueryParam("password") String password)
     {
         try
         {
-            PersonalCartEntity personalCart = personalCartSessionBean.retrievePersonalCartEntity(customerId);
+            CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+            PersonalCartEntity personalCart = personalCartSessionBean.retrievePersonalCartEntity(customer.getCustomerId());
             List<OrderLineItemEntity> orderLineItems = personalCart.getOrderLineItemEntities();
             
-            return Response.status(Response.Status.OK).entity(orderLineItems).build();
+            for (OrderLineItemEntity lineItem : orderLineItems)
+            {
+                lineItem.getCustomerEntity().getOrderLineItemEntities().clear();
+                lineItem.getCustomerEntity().getOrderTransactionEntities().clear();
+                lineItem.getCustomerEntity().getGroupCartEntities().clear();
+            }
+            
+            GenericEntity<List<OrderLineItemEntity>> genericEntity = new GenericEntity<List<OrderLineItemEntity>>(orderLineItems){
+            };
+            
+            return Response.status(Response.Status.OK).entity(genericEntity).build();
+        }
+        catch(InvalidLoginCredentialException ex)
+        {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
         }
         catch (CustomerNotFoundException ex)
         {
