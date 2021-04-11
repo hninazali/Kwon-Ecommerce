@@ -20,6 +20,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -30,6 +31,7 @@ import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.UnknownPersistenceException;
 import util.exception.UpdateCustomerException;
+import ws.datamodel.CheckUsernameReq;
 import ws.datamodel.UpdateCustomerReq;
 
 /**
@@ -126,6 +128,39 @@ public class CustomerResource
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
             catch (UpdateCustomerException | CustomerNotFoundException | InputDataValidationException ex)
+            {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            }
+        }
+        else
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+        }
+    }
+    
+    @Path("isValid")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response isValid(CheckUsernameReq req)
+    {
+        if (req != null)
+        {
+            try
+            {
+                CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
+
+                CustomerEntity customerTemp = customerSessionBean.retrieveCustomerByUsername(req.getUsernameToCheck());
+                
+                Integer returnNum = customerTemp == null ? 1 : 0;
+                
+                return Response.status(Response.Status.OK).entity(returnNum).build();
+            }
+            catch(InvalidLoginCredentialException ex)
+            {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            }
+            catch (CustomerNotFoundException ex)
             {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }
