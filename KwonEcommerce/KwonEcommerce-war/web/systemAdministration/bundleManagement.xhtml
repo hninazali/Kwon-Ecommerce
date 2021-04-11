@@ -67,15 +67,15 @@
                         </h:outputText>
                     </p:column>
 
-                    <p:column headerText="Categories" sortBy="#{bundleEntity.categoryEntity.name}" filterBy="#{bundleEntity.categoryEntity.name}" filterMatchMode="exact">
+<!--                    <p:column headerText="Categories" sortBy="#{bundleEntity.categoryEntities.name}" filterBy="#{bundleEntity.categoryEntities.name}" filterMatchMode="exact">
                         <f:facet name="filter">
                             <p:selectOneMenu id="selCategory" onchange="PF('dataTableAllBundles').filter()">
                                 <f:selectItem itemValue="#{null}" itemLabel="[Select One]" noSelectionOption="true" />
                                 <f:selectItems value="#{bundleManagementManagedBean.categoryEntities}" var="categoryEntity" itemValue="#{categoryEntity.name}" itemLabel="#{categoryEntity.name}" />
                             </p:selectOneMenu>
                         </f:facet>
-                        <h:outputText value="#{bundleEntity.categoryEntity.name}" />
-                    </p:column>
+                        <h:outputText value="#{bundleEntity.categoryEntities.name}" />
+                    </p:column>-->
 
                     <p:column headerText="Action" >
                         <p:commandButton update="ccViewBundle:formViewBundle" oncomplete="PF('dialogViewBundle').show()" icon="ui-icon-document" title="View">
@@ -160,20 +160,6 @@
                                 <p:message for="description" />
                             </p:column>
                         </p:row>
-
-                        <!--                         <p:row>
-                                                    <p:column>
-                                                        <p:outputLabel for="selProducts" value="Product(s) " style="font-weight: bold;" />
-                                                    </p:column>
-                                                    <p:column>
-                                                        <p:selectManyMenu id="selProducts" value="#{bundleManagementManagedBean.productIdsNew}" showCheckbox="true">
-                                                            <f:selectItems value="#{bundleManagementManagedBean.productEntities}" var="productEntity" itemValue="#{productEntity.productId}" itemLabel="#{productEntity.name}" />
-                                                        </p:selectManyMenu>
-                                                    </p:column>
-                                                    <p:column>
-                                                        <p:message for="selProducts" />
-                                                    </p:column>
-                                                </p:row>-->
 
                         <p:row>
                             <p:column>

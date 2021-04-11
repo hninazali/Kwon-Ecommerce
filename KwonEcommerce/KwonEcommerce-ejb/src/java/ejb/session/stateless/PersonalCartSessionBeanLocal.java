@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.BundleEntity;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
 import entity.PersonalCartEntity;
@@ -45,4 +46,8 @@ public interface PersonalCartSessionBeanLocal {
     public boolean isInsideCart(Long customerId, ProductEntity product) throws CustomerNotFoundException;
 
     public OrderLineItemEntity addQuantity(Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException;
+
+    public boolean bundleIsInsideCart(Long customerId, BundleEntity bundle) throws CustomerNotFoundException;
+
+    public OrderLineItemEntity addQuantityBundle(Long customerId, BundleEntity bundle, Integer addedQty) throws CustomerNotFoundException;
 }

@@ -5,9 +5,11 @@
  */
 package ejb.session.stateless;
 
+import entity.BundleEntity;
 import entity.GroupCartEntity;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
+import entity.ProductEntity;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.CreateNewGroupCartException;
@@ -15,6 +17,7 @@ import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CustomerExistInCartException;
 import util.exception.CustomerNotFoundException;
+import util.exception.GroupActivityDetectedException;
 import util.exception.GroupCartNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
@@ -22,7 +25,7 @@ import util.exception.OrderLineItemNotFoundException;
 @Local
 public interface GroupCartSessionBeanLocal {
 
-    GroupCartEntity createNewGroupCart(GroupCartEntity newGroupCartEntity) throws InputDataValidationException, CreateNewGroupCartException;
+    public GroupCartEntity createNewGroupCart(Long ownerId, String groupName, List<String> usernames) throws InputDataValidationException, CreateNewGroupCartException;
 
     List<GroupCartEntity> retrieveAllGroupCartEntities();
 
@@ -43,5 +46,15 @@ public interface GroupCartSessionBeanLocal {
     public GroupCartEntity retrieveGroupCartByIdEager(Long groupCartId) throws GroupCartNotFoundException;
 
     public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException;
+
+    public boolean isInsideCart(Long groupCartId, Long customerId, ProductEntity product) throws CustomerNotFoundException, GroupCartNotFoundException;
+
+    public OrderLineItemEntity addQuantity(Long groupCartId, Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException;
+
+    public void leaveGroup(Long groupCartId, Long customerId) throws GroupCartNotFoundException, CustomerNotFoundException, GroupActivityDetectedException;
+
+    public boolean bundleIsInsideCart(Long groupCartId, Long customerId, BundleEntity bundle) throws CustomerNotFoundException, GroupCartNotFoundException;
+
+    public OrderLineItemEntity addQuantityBundle(Long groupCartId, Long customerId, BundleEntity bundle, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException;
 
 }

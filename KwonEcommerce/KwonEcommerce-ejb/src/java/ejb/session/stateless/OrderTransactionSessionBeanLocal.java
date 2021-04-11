@@ -44,5 +44,7 @@ public interface OrderTransactionSessionBeanLocal {
     public List<OrderLineItemEntity> retrieveOrderLineItemsByProductId(Long productId);
 
     public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction) throws CustomerNotFoundException, CreateNewOrderTransactionException;
+
+    public List<OrderTransactionEntity> retrieveOrderTransactionsByCustomer(Long customerId) throws CustomerNotFoundException;
     
 }

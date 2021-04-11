@@ -95,7 +95,9 @@ public class CreateNewBundleManagedBean implements Serializable {
         BigDecimal newQtyToAdd = new BigDecimal(quantityToAdd);
         BigDecimal newSubtotal = selectedProductEntityToAdd.getUnitPrice().multiply(newQtyToAdd);
         lineItem.setSubTotal(newSubtotal);
+        
         lineItems.add(lineItem);
+        newBundle.getBundleLineItems().add(lineItem);
 
         selectedProductEntityToAdd = new ProductEntity();
         quantityToAdd = 0;
@@ -106,6 +108,8 @@ public class CreateNewBundleManagedBean implements Serializable {
     public void createBundle(ActionEvent event) {
         try {
             BundleEntity newBundleEntity = bundleEntitySessionBeanLocal.createNewBundle(newBundle, tagIdsNew);
+            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Bundle Created!!! (ID :" + newBundleEntity.getBundleId() + ")", null));
         } catch (BundleSkuCodeExistException | UnknownPersistenceException | InputDataValidationException | CreateNewBundleException | ProductNotFoundException | CategoryNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while creating the new bundle: " + ex.getMessage(), null));
         }

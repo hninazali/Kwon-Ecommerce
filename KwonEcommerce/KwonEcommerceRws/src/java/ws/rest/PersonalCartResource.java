@@ -29,8 +29,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CustomerNotFoundException;
@@ -39,6 +41,7 @@ import util.exception.InvalidLoginCredentialException;
 import util.exception.OrderLineItemNotFoundException;
 import util.exception.PersonalCartNotFoundException;
 import util.exception.ProductNotFoundException;
+import ws.datamodel.AddBundleToPersonalCartReq;
 import ws.datamodel.AddItemToPersonalCartReq;
 import ws.datamodel.CheckoutPersonalCartReq;
 import ws.datamodel.RemoveOrderLineItemReq;
@@ -89,14 +92,30 @@ public class PersonalCartResource
     @Path("retrieveAllPersonalOrderLineItems")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllPersonalOrderLineItems(Long customerId)
+    public Response retrieveAllPersonalOrderLineItems(@QueryParam("username") String username, 
+                                        @QueryParam("password") String password)
     {
         try
         {
-            PersonalCartEntity personalCart = personalCartSessionBean.retrievePersonalCartEntity(customerId);
+            CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+            PersonalCartEntity personalCart = personalCartSessionBean.retrievePersonalCartEntity(customer.getCustomerId());
             List<OrderLineItemEntity> orderLineItems = personalCart.getOrderLineItemEntities();
             
-            return Response.status(Response.Status.OK).entity(orderLineItems).build();
+            for (OrderLineItemEntity lineItem : orderLineItems)
+            {
+                lineItem.getCustomerEntity().getOrderLineItemEntities().clear();
+                lineItem.getCustomerEntity().getOrderTransactionEntities().clear();
+                lineItem.getCustomerEntity().getGroupCartEntities().clear();
+            }
+            
+            GenericEntity<List<OrderLineItemEntity>> genericEntity = new GenericEntity<List<OrderLineItemEntity>>(orderLineItems){
+            };
+            
+            return Response.status(Response.Status.OK).entity(genericEntity).build();
+        }
+        catch(InvalidLoginCredentialException ex)
+        {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
         }
         catch (CustomerNotFoundException ex)
         {
@@ -104,6 +123,7 @@ public class PersonalCartResource
         }
     }
     
+    @Path("addItemToCart")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -114,29 +134,73 @@ public class PersonalCartResource
             try
             {
                 
-            CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
-            
-            if (personalCartSessionBean.isInsideCart(customer.getCustomerId(), req.getProduct()))
-            {
-                OrderLineItemEntity lineItemEntity = personalCartSessionBean.addQuantity(customer.getCustomerId(), req.getProduct(), req.getQuantity());
-                
-                return Response.status(Response.Status.OK).entity(lineItemEntity.getOrderLineItemId()).build();
-            }
-            else
-            {
-            
-                OrderLineItemEntity temp = orderLineItemSessionBean.createLineItemForCart(req.getProduct().getProductId(), req.getQuantity());
+                CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
 
-                OrderLineItemEntity lineItem = personalCartSessionBean.addNewOrderLineItemToCart(customer.getCustomerId(), temp);
+                if (personalCartSessionBean.isInsideCart(customer.getCustomerId(), req.getProduct()))
+                {
+                    OrderLineItemEntity lineItemEntity = personalCartSessionBean.addQuantity(customer.getCustomerId(), req.getProduct(), req.getQuantity());
 
-                return Response.status(Response.Status.OK).entity(lineItem.getOrderLineItemId()).build();
-            }
+                    return Response.status(Response.Status.OK).entity(lineItemEntity.getOrderLineItemId()).build();
+                }
+                else
+                {
+
+                    OrderLineItemEntity temp = orderLineItemSessionBean.createLineItemForCart(req.getProduct().getProductId(), req.getQuantity());
+
+                    OrderLineItemEntity lineItem = personalCartSessionBean.addNewOrderLineItemToCart(customer.getCustomerId(), temp);
+
+                    return Response.status(Response.Status.OK).entity(lineItem.getOrderLineItemId()).build();
+                }
             }
             catch(InvalidLoginCredentialException ex)
             {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
             catch(CreateNewOrderLineItemException | CustomerNotFoundException | InputDataValidationException | ProductNotFoundException ex)
+            {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            }
+        }
+        else
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+        }
+    }
+    
+    @Path("addBundleToCart")
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addBundleToPersonalCart(AddBundleToPersonalCartReq req)
+    {
+        if (req != null)
+        {
+            try
+            {
+                
+                CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
+
+                if (personalCartSessionBean.bundleIsInsideCart(customer.getCustomerId(), req.getBundle()))
+                {
+                    OrderLineItemEntity lineItemEntity = personalCartSessionBean.addQuantityBundle(customer.getCustomerId(), req.getBundle(), req.getQuantity());
+
+                    return Response.status(Response.Status.OK).entity(lineItemEntity.getOrderLineItemId()).build();
+                }
+                else
+                {
+
+                    OrderLineItemEntity temp = orderLineItemSessionBean.createLineItemForCartBundle(req.getBundle().getBundleId(), req.getQuantity());
+
+                    OrderLineItemEntity lineItem = personalCartSessionBean.addNewOrderLineItemToCart(customer.getCustomerId(), temp);
+
+                    return Response.status(Response.Status.OK).entity(lineItem.getOrderLineItemId()).build();
+                }
+            }
+            catch(InvalidLoginCredentialException ex)
+            {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            }
+            catch(CreateNewOrderLineItemException | CustomerNotFoundException | InputDataValidationException | BundleNotFoundException ex)
             {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }
@@ -158,11 +222,11 @@ public class PersonalCartResource
             try
             {
                 
-            CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
-            
-            OrderLineItemEntity lineItem = personalCartSessionBean.updateOrderLineItem(customer.getCustomerId(), req.getLineItem(), req.getNewQty());
-            
-            return Response.status(Response.Status.OK).entity(lineItem.getOrderLineItemId()).build();
+                CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
+
+                OrderLineItemEntity lineItem = personalCartSessionBean.updateOrderLineItem(customer.getCustomerId(), req.getLineItem(), req.getNewQty());
+
+                return Response.status(Response.Status.OK).entity(lineItem.getOrderLineItemId()).build();
             }
             catch(InvalidLoginCredentialException ex)
             {
@@ -188,11 +252,11 @@ public class PersonalCartResource
         try
         {
 
-        CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
+            CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
 
-        OrderTransactionEntity orderTransaction = personalCartSessionBean.checkOutCart(customer.getCustomerId(), customer.getPersonalCartEntity().getPersonalCartId());
+            OrderTransactionEntity orderTransaction = personalCartSessionBean.checkOutCart(customer.getCustomerId(), customer.getPersonalCartEntity().getPersonalCartId());
 
-        return Response.status(Response.Status.OK).entity(orderTransaction.getOrderTransactionId()).build();
+            return Response.status(Response.Status.OK).entity(orderTransaction.getOrderTransactionId()).build();
         }
         catch(InvalidLoginCredentialException ex)
         {
@@ -215,11 +279,11 @@ public class PersonalCartResource
         try
         {
 
-        CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+            CustomerEntity customer = customerSessionBean.customerLogin(username, password);
 
-        personalCartSessionBean.removeOrderLineItem(customer.getCustomerId(), lineItemId);
+            personalCartSessionBean.removeOrderLineItem(customer.getCustomerId(), lineItemId);
 
-        return Response.status(Response.Status.OK).build();
+            return Response.status(Response.Status.OK).build();
         }
         catch(InvalidLoginCredentialException ex)
         {

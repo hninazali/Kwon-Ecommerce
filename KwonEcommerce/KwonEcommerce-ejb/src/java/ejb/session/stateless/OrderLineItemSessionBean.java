@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.BundleEntity;
 import entity.CustomerEntity;
 import entity.GroupCartEntity;
 import entity.OrderLineItemEntity;
@@ -22,6 +23,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.BundleNotFoundException;
 import util.exception.CreateNewGroupCartException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CustomerNotFoundException;
@@ -31,6 +33,9 @@ import util.exception.ProductNotFoundException;
 
 @Stateless
 public class OrderLineItemSessionBean implements OrderLineItemSessionBeanLocal {
+
+    @EJB(name = "BundleEntitySessionBeanLocal")
+    private BundleEntitySessionBeanLocal bundleEntitySessionBeanLocal;
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
@@ -85,6 +90,14 @@ public class OrderLineItemSessionBean implements OrderLineItemSessionBeanLocal {
     {
         ProductEntity product = productSessionBeanLocal.retrieveProductByProductId(productId);
         OrderLineItemEntity lineItem = new OrderLineItemEntity(product, quantity, product.getUnitPrice(), product.getUnitPrice().multiply(new BigDecimal(quantity)));
+        return lineItem;
+    }
+    
+    @Override
+    public OrderLineItemEntity createLineItemForCartBundle(Long bundleId, Integer quantity) throws BundleNotFoundException
+    {
+        BundleEntity bundle = bundleEntitySessionBeanLocal.retrieveBundleByBundleId(bundleId);
+        OrderLineItemEntity lineItem = new OrderLineItemEntity(bundle, quantity, bundle.getUnitPrice(), bundle.getUnitPrice().multiply(new BigDecimal(quantity)));
         return lineItem;
     }
 

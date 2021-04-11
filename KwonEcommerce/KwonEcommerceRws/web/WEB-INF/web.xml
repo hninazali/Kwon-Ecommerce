@@ -17,4 +17,40 @@
         <local>ejb.session.stateless.BrandEntitySessionBeanLocal</local>
         <ejb-link>KwonEcommerce-ejb.jar#BrandEntitySessionBean</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>OrderLineItemSessionBeanLocal1</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.OrderLineItemSessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#OrderLineItemSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>CustomerSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.CustomerSessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#CustomerSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>CategoryEntitySessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.CategoryEntitySessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#CategoryEntitySessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>TagEntitySessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.TagEntitySessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#TagEntitySessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>OrderTransactionSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.OrderTransactionSessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#OrderTransactionSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>CustomerSessionBeanLocal1</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.CustomerSessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#CustomerSessionBean</ejb-link>
+    </ejb-local-ref>
 </web-app>

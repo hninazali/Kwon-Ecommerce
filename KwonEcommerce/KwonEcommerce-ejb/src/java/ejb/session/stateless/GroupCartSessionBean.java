@@ -5,10 +5,12 @@
  */
 package ejb.session.stateless;
 
+import entity.BundleEntity;
 import entity.CustomerEntity;
 import entity.GroupCartEntity;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
+import entity.ProductEntity;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +30,7 @@ import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CustomerExistInCartException;
 import util.exception.CustomerNotFoundException;
+import util.exception.GroupActivityDetectedException;
 import util.exception.GroupCartNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
@@ -58,33 +61,56 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
     }
 
     @Override
-    public GroupCartEntity createNewGroupCart(GroupCartEntity newGroupCartEntity) throws InputDataValidationException, CreateNewGroupCartException {
-        Set<ConstraintViolation<GroupCartEntity>> constraintViolations = validator.validate(newGroupCartEntity);
+    public GroupCartEntity createNewGroupCart(Long ownerId, String groupName, List<String> usernames) throws InputDataValidationException, CreateNewGroupCartException 
+    {
+        try {
+            GroupCartEntity groupCart = new GroupCartEntity();
+            groupCart.setName(groupName);
+            
+            CustomerEntity owner = customerSessionBeanLocal.retrieveCustomerById(ownerId);
+            owner.getGroupCartEntities().add(groupCart);
+            groupCart.setGroupOwner(owner);
+            
+            for (String username : usernames)
+            {
+                CustomerEntity tempCustomer = customerSessionBeanLocal.retrieveCustomerByUsername(username);
+                tempCustomer.getGroupCartEntities().add(groupCart);
+                groupCart.getCustomerEntities().add(tempCustomer);
+            }
+            
+            entityManager.persist(groupCart);
+            entityManager.flush();
 
-        if (constraintViolations.isEmpty()) {
-            try {
-
-                CustomerEntity owner = newGroupCartEntity.getGroupOwner();
-                owner.getGroupCartEntities().add(newGroupCartEntity);
-                newGroupCartEntity.getCustomerEntities().add(owner);
-                entityManager.persist(newGroupCartEntity);
-                entityManager.flush();
-
-                return newGroupCartEntity;
-            } catch (PersistenceException ex) {
-                if (ex.getCause() != null
-                        && ex.getCause().getCause() != null
-                        && ex.getCause().getCause().getClass().getSimpleName().equals("SQLIntegrityConstraintViolationException")) {
-                    throw new CreateNewGroupCartException("Group cart with the same ID already exist");
-                } else {
-                    throw new CreateNewGroupCartException("An unexpected error has occurred: " + ex.getMessage());
-                }
-            } catch (Exception ex) {
+            return groupCart;
+        } catch (PersistenceException ex) {
+            if (ex.getCause() != null
+                    && ex.getCause().getCause() != null
+                    && ex.getCause().getCause().getClass().getSimpleName().equals("SQLIntegrityConstraintViolationException")) {
+                throw new CreateNewGroupCartException("Group cart with the same ID already exist");
+            } else {
                 throw new CreateNewGroupCartException("An unexpected error has occurred: " + ex.getMessage());
             }
-        } else {
-            throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+        } catch (Exception ex) {
+            throw new CreateNewGroupCartException("An unexpected error has occurred: " + ex.getMessage());
         }
+    }
+    
+    @Override
+    public void leaveGroup(Long groupCartId, Long customerId) throws GroupCartNotFoundException, CustomerNotFoundException, GroupActivityDetectedException
+    {
+        GroupCartEntity groupCart = this.retrieveGroupCartById(groupCartId);
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        
+        for (OrderLineItemEntity lineItem : groupCart.getOrderLineItemEntities())
+        {
+            if (lineItem.getCustomerEntity().getUsername().equals(customer.getUsername()))
+            {
+                throw new GroupActivityDetectedException("Customer with ID : " + customerId + " already put some items in the group cart!!!");
+            }
+        }
+        
+        customer.getGroupCartEntities().remove(groupCart);
+        groupCart.getCustomerEntities().remove(customer);
     }
 
     @Override
@@ -209,6 +235,90 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
         lineItem.setCustomerEntity(null);
         customer.getOrderLineItemEntities().remove(lineItem);
         entityManager.remove(lineItem);
+    }
+    
+    @Override
+    public boolean isInsideCart(Long groupCartId, Long customerId, ProductEntity product) throws CustomerNotFoundException, GroupCartNotFoundException
+    {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        GroupCartEntity groupCart = this.retrieveGroupCartById(groupCartId);
+        boolean returnVal = false;
+        for (OrderLineItemEntity lineItem : groupCart.getOrderLineItemEntities())
+        {
+            if (lineItem.getProductEntity().getName().equals(product.getName()))
+            {
+                if (lineItem.getCustomerEntity().getUsername().equals(customer.getUsername()))
+                {
+                    returnVal = true;
+                    break;
+                }
+            }
+        }
+        return returnVal;
+    }
+    
+    @Override
+    public boolean bundleIsInsideCart(Long groupCartId, Long customerId, BundleEntity bundle) throws CustomerNotFoundException, GroupCartNotFoundException
+    {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        GroupCartEntity groupCart = this.retrieveGroupCartById(groupCartId);
+        boolean returnVal = false;
+        for (OrderLineItemEntity lineItem : groupCart.getOrderLineItemEntities())
+        {
+            if (lineItem.getBundleEntity().getName().equals(bundle.getName()))
+            {
+                if (lineItem.getCustomerEntity().getUsername().equals(customer.getUsername()))
+                {
+                    returnVal = true;
+                    break;
+                }
+            }
+        }
+        return returnVal;
+    }
+    
+    @Override
+    public OrderLineItemEntity addQuantity(Long groupCartId, Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException
+    {
+        OrderLineItemEntity returnLineItem = new OrderLineItemEntity();
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        GroupCartEntity groupCart = this.retrieveGroupCartById(groupCartId);
+        for (OrderLineItemEntity lineItem : groupCart.getOrderLineItemEntities())
+        {
+            if (lineItem.getProductEntity().getName().equals(product.getName()))
+            {
+                if (lineItem.getCustomerEntity().getUsername().equals(customer.getUsername()))
+                {
+                    Integer currentQty = lineItem.getQuantity();
+                    lineItem.setQuantity(currentQty + addedQty);
+                    returnLineItem = lineItem;
+                    break;
+                }
+            }
+        }
+        return returnLineItem;
+    }
+    
+    @Override
+    public OrderLineItemEntity addQuantityBundle(Long groupCartId, Long customerId, BundleEntity bundle, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException
+    {
+        OrderLineItemEntity returnLineItem = new OrderLineItemEntity();
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        GroupCartEntity groupCart = this.retrieveGroupCartById(groupCartId);
+        for (OrderLineItemEntity lineItem : groupCart.getOrderLineItemEntities())
+        {
+            if (lineItem.getBundleEntity().getName().equals(bundle.getName()))
+            {
+                if (lineItem.getCustomerEntity().getUsername().equals(customer.getUsername()))
+                {
+                    Integer currentQty = lineItem.getQuantity();
+                    lineItem.setQuantity(currentQty + addedQty);
+                    returnLineItem = lineItem;
+                    break;
+                }
+            }
+        }
+        return returnLineItem;
     }
 
     public void clearGroupCart(GroupCartEntity groupCartEntity) {

@@ -63,6 +63,13 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
     
     
     // Updated in v4.1
+    @Override
+    public List<OrderTransactionEntity> retrieveOrderTransactionsByCustomer(Long customerId) throws CustomerNotFoundException
+    {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        customer.getOrderTransactionEntities().size();
+        return customer.getOrderTransactionEntities();
+    }
     
     @Override
     public OrderTransactionEntity createNewOrderTransaction(Long staffId, OrderTransactionEntity newOrderTransaction) throws StaffNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException
