@@ -13,6 +13,7 @@ import entity.GroupCartEntity;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
 import entity.PersonalCartEntity;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +28,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -107,6 +110,56 @@ public class GroupCartResource
         }
     }
     
+    @Path("retrieveGroupMembers/{groupId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveAllGroupCarts(@QueryParam("username") String username, 
+                                @QueryParam("password") String password,
+                                    @PathParam("groupId") Long groupId)
+    {
+        if (groupId != null)
+        {
+            try
+            {
+                CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+                
+                GroupCartEntity groupCart = groupCartSessionBean.retrieveGroupCartById(groupId);
+                
+                List<CustomerEntity> tempMembers = groupCart.getCustomerEntities();
+                
+                List<CustomerEntity> members = new ArrayList<>();
+                members.add(groupCart.getGroupOwner());
+                
+                for (CustomerEntity member : tempMembers)
+                {
+                    member.getGroupCartEntities().clear();
+                    member.getOrderLineItemEntities().clear();
+                    member.getOrderTransactionEntities().clear();
+                    
+                    members.add(member);
+                }
+                
+                GenericEntity<List<CustomerEntity>> genericEntity = new GenericEntity<List<CustomerEntity>>(members){
+                };
+                
+                return Response.status(Response.Status.OK).entity(genericEntity).build();
+            }
+            catch(InvalidLoginCredentialException ex)
+            {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            }
+            catch (GroupCartNotFoundException ex)
+            {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+            }
+        }
+        else
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+        }
+        
+    }
+    
     @Path("retrieveGroupOrderLineItems")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -132,7 +185,7 @@ public class GroupCartResource
                 GenericEntity<List<OrderLineItemEntity>> genericEntity = new GenericEntity<List<OrderLineItemEntity>>(orderLineItems){
                 };
 
-                return Response.status(Response.Status.OK).entity(orderLineItems).build();
+                return Response.status(Response.Status.OK).entity(genericEntity).build();
             }
             catch(InvalidLoginCredentialException ex)
             {
