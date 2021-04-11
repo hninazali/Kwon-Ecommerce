@@ -308,21 +308,21 @@ public class BundleEntitySessionBean implements BundleEntitySessionBeanLocal {
                         }
                     }
                     
-                    for (CategoryEntity cat : bundleEntityToUpdate.getCategoryEntities())
-                    {
-                        CategoryEntity categoryEntityToUpdate = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(cat.getCategoryId());
-                        categoryEntityToUpdate.getBundleEntities().remove(bundleEntityToUpdate);
-                        bundleEntityToUpdate.getCategoryEntities().remove(cat);
-                    }
-                    for (BundleLineItemEntity lineItems : bundleEntityToUpdate.getBundleLineItems())
-                    {
-                        ProductEntity prod = lineItems.getProductEntity();
-                        
-                        CategoryEntity category = prod.getCategoryEntity();
-                        category.getBundleEntities().add(bundleEntityToUpdate);
-                        bundleEntityToUpdate.getCategoryEntities().add(category);
-                        price.add(lineItems.getSubTotal());
-                    }
+//                    for (CategoryEntity cat : bundleEntityToUpdate.getCategoryEntities())
+//                    {
+//                        CategoryEntity categoryEntityToUpdate = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(cat.getCategoryId());
+//                        categoryEntityToUpdate.getBundleEntities().remove(bundleEntityToUpdate);
+//                        bundleEntityToUpdate.getCategoryEntities().remove(cat);
+//                    }
+//                    for (BundleLineItemEntity lineItems : bundleEntityToUpdate.getBundleLineItems())
+//                    {
+//                        ProductEntity prod = lineItems.getProductEntity();
+//                        
+//                        CategoryEntity category = prod.getCategoryEntity();
+//                        category.getBundleEntities().add(bundleEntityToUpdate);
+//                        bundleEntityToUpdate.getCategoryEntities().add(category);
+//                        price.add(lineItems.getSubTotal());
+//                    }
 
                     if (tagIds != null) {
                         for (TagEntity tagEntity : bundleEntityToUpdate.getTagEntities()) {

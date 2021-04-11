@@ -209,7 +209,7 @@ public class BundleEntity implements Serializable {
      * @param skuCode the skuCode to set
      */
     public void setSkuCode(String skuCode) {
-        this.setSkuCode(skuCode);
+        this.skuCode = skuCode;
     }
 
     /**
@@ -223,7 +223,7 @@ public class BundleEntity implements Serializable {
      * @param name the name to set
      */
     public void setName(String name) {
-        this.setName(name);
+        this.name = name;
     }
 
     /**
@@ -237,7 +237,7 @@ public class BundleEntity implements Serializable {
      * @param description the description to set
      */
     public void setDescription(String description) {
-        this.setDescription(description);
+        this.description = description;
     }
 
     /**
@@ -251,7 +251,7 @@ public class BundleEntity implements Serializable {
      * @param unitPrice the unitPrice to set
      */
     public void setUnitPrice(BigDecimal unitPrice) {
-        this.setUnitPrice(unitPrice);
+        this.unitPrice = unitPrice;
     }
 
     /**
@@ -286,7 +286,7 @@ public class BundleEntity implements Serializable {
      * @param quantityOnHand the quantityOnHand to set
      */
     public void setQuantityOnHand(Integer quantityOnHand) {
-        this.setQuantityOnHand(quantityOnHand);
+        this.quantityOnHand = quantityOnHand;
     }
 
     public Integer getBundleRating() {
