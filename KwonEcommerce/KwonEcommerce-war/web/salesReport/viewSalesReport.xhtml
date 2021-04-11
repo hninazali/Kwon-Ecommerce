@@ -8,6 +8,8 @@
                 template="./../template/defaultTemplate.xhtml">
 
     <ui:define name="content">
+        <ez:Breadcrumb pageName="viewSalesReport" />
+           
         <div class="card">
             <h1>Sales in 2021</h1>
             <p:barChart model="#{salesReportManagedBean.barModelMonthly}" style="width: 100%; height: 500px;"/>
