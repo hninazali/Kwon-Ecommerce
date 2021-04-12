@@ -71,6 +71,7 @@ public class CustomerResource
             customerEntity.getOrderTransactionEntities().clear();
             customerEntity.getOrderLineItemEntities().clear();
             customerEntity.getGroupCartEntities().clear();
+            customerEntity.setPersonalCartEntity(null);
             
             return Response.status(Status.OK).entity(customerEntity).build();
         }

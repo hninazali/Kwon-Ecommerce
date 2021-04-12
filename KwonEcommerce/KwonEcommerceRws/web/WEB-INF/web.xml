@@ -53,4 +53,28 @@
         <local>ejb.session.stateless.CustomerSessionBeanLocal</local>
         <ejb-link>KwonEcommerce-ejb.jar#CustomerSessionBean</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>CustomerSessionBeanLocal2</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.CustomerSessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#CustomerSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>CustomerSessionBeanLocal3</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.CustomerSessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#CustomerSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>CustomerSessionBeanLocal4</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.CustomerSessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#CustomerSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>OrderTransactionSessionBeanLocal1</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.OrderTransactionSessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#OrderTransactionSessionBean</ejb-link>
+    </ejb-local-ref>
 </web-app>

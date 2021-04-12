@@ -7,9 +7,9 @@ package ws.rest;
 
 import ejb.session.stateless.CustomerSessionBeanLocal;
 import ejb.session.stateless.OrderLineItemSessionBeanLocal;
+import ejb.session.stateless.OrderTransactionSessionBeanLocal;
 import ejb.session.stateless.PersonalCartSessionBeanLocal;
 import entity.CustomerEntity;
-import static entity.CustomerEntity_.customerId;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
 import entity.PersonalCartEntity;
@@ -44,7 +44,6 @@ import util.exception.ProductNotFoundException;
 import ws.datamodel.AddBundleToPersonalCartReq;
 import ws.datamodel.AddItemToPersonalCartReq;
 import ws.datamodel.CheckoutPersonalCartReq;
-import ws.datamodel.RemoveOrderLineItemReq;
 import ws.datamodel.UpdateOrderLineItemReq;
 
 /**
@@ -55,6 +54,8 @@ import ws.datamodel.UpdateOrderLineItemReq;
 @Path("PersonalCart")
 public class PersonalCartResource 
 {
+
+    OrderTransactionSessionBeanLocal orderTransactionSessionBean = lookupOrderTransactionSessionBeanLocal();
 
     OrderLineItemSessionBeanLocal orderLineItemSessionBean = lookupOrderLineItemSessionBeanLocal();
 
@@ -106,6 +107,7 @@ public class PersonalCartResource
                 lineItem.getCustomerEntity().getOrderLineItemEntities().clear();
                 lineItem.getCustomerEntity().getOrderTransactionEntities().clear();
                 lineItem.getCustomerEntity().getGroupCartEntities().clear();
+                lineItem.getCustomerEntity().setPersonalCartEntity(null);
             }
             
             GenericEntity<List<OrderLineItemEntity>> genericEntity = new GenericEntity<List<OrderLineItemEntity>>(orderLineItems){
@@ -163,7 +165,7 @@ public class PersonalCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Add Item To Personal Cart request").build();
         }
     }
     
@@ -207,7 +209,7 @@ public class PersonalCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Add Bundle To Cart Request").build();
         }
     }
     
@@ -239,7 +241,7 @@ public class PersonalCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid update Order Line Item Request").build();
         }
     }
     
@@ -319,6 +321,16 @@ public class PersonalCartResource
         try {
             javax.naming.Context c = new InitialContext();
             return (OrderLineItemSessionBeanLocal) c.lookup("java:global/KwonEcommerce/KwonEcommerce-ejb/OrderLineItemSessionBean!ejb.session.stateless.OrderLineItemSessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private OrderTransactionSessionBeanLocal lookupOrderTransactionSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (OrderTransactionSessionBeanLocal) c.lookup("java:global/KwonEcommerce/KwonEcommerce-ejb/OrderTransactionSessionBean!ejb.session.stateless.OrderTransactionSessionBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

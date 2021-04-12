@@ -37,7 +37,7 @@ public interface OrderTransactionSessionBeanLocal {
 
     public OrderTransactionEntity retrieveOrderTransactionById(Long orderTransactionId) throws OrderTransactionNotFoundException;
 
-    public boolean refundOrder(long orderTransactionId) throws OrderTransactionNotFoundException, OrderTransactionAlreadyVoidedRefundedException;
+    public boolean refundOrder(Long customerId, Long orderTransactionId) throws OrderTransactionNotFoundException, OrderTransactionAlreadyVoidedRefundedException, CustomerNotFoundException;
 
     public void updateShippingStatus(long orderId, ShippingStatusEnum shippingStatus) throws OrderTransactionNotFoundException;
 

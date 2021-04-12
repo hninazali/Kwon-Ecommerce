@@ -52,27 +52,27 @@ public class RefundManagedBean implements Serializable
         setOrderTransactions(orderTransactionSessionBeanLocal.retrieveAllOrderTransactions());
     }
     
-    public void refundOrderTransaction(ActionEvent event)
-    {
-        setOrderTransaction((OrderTransactionEntity)event.getComponent().getAttributes().get("orderTransactionToRefund"));
-        try {
-            OrderTransactionEntity selectedOrder = getOrderTransactionSessionBeanLocal().retrieveOrderTransactionById(getOrderId());
-            
-            boolean refunded = getOrderTransactionSessionBeanLocal().refundOrder(getOrderId());
-            
-            if (refunded)
-            {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Refund Accepted", null));
-            }
-            else
-            {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Refund Rejected", null));
-            }
-        } catch (OrderTransactionNotFoundException | OrderTransactionAlreadyVoidedRefundedException ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error Occurred", null));
-        }
-        
-    }
+//    public void refundOrderTransaction(ActionEvent event)
+//    {
+//        setOrderTransaction((OrderTransactionEntity)event.getComponent().getAttributes().get("orderTransactionToRefund"));
+//        try {
+//            OrderTransactionEntity selectedOrder = getOrderTransactionSessionBeanLocal().retrieveOrderTransactionById(getOrderId());
+//            
+//            boolean refunded = getOrderTransactionSessionBeanLocal().refundOrder(getOrderId());
+//            
+//            if (refunded)
+//            {
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Refund Accepted", null));
+//            }
+//            else
+//            {
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Refund Rejected", null));
+//            }
+//        } catch (OrderTransactionNotFoundException | OrderTransactionAlreadyVoidedRefundedException ex) {
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error Occurred", null));
+//        }
+//        
+//    }
 
     public OrderTransactionSessionBeanLocal getOrderTransactionSessionBeanLocal() {
         return orderTransactionSessionBeanLocal;

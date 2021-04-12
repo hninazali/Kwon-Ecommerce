@@ -28,6 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import util.exception.CustomerNotFoundException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.OrderTransactionAlreadyVoidedRefundedException;
 import util.exception.OrderTransactionNotFoundException;
 import ws.datamodel.ViewOrderDetailsReq;
 
@@ -100,22 +101,32 @@ public class OrderTransactionResource
             {
                 CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
 
-                OrderTransactionEntity orderTransactions = orderTransactionSessionBean.retrieveOrderTransactionById(req.getOrderId());
+                OrderTransactionEntity orderTransaction = orderTransactionSessionBean.retrieveOrderTransactionById(req.getOrderId());
                 
-                List<OrderLineItemEntity> lineItems = orderTransactions.getOrderLineItemEntities();
-
-                
-                for (OrderLineItemEntity lineItem : lineItems)
+                for (OrderLineItemEntity lineItem : orderTransaction.getOrderLineItemEntities())
                 {
                     lineItem.getCustomerEntity().getOrderLineItemEntities().clear();
                     lineItem.getCustomerEntity().getOrderTransactionEntities().clear();
                     lineItem.getCustomerEntity().getGroupCartEntities().clear();
+                    if (lineItem.getBundleEntity() != null)
+                    {
+                        lineItem.getBundleEntity().getCategoryEntities().clear();
+                        lineItem.getBundleEntity().getTagEntities().clear();
+                    }
+                    else
+                    {
+                        lineItem.getProductEntity().setCategoryEntity(null);
+                        lineItem.getProductEntity().getTagEntities().clear();
+                        lineItem.getProductEntity().setBrandEntity(null);
+                    }
                 }
+                
+                orderTransaction.getCustomerEntity().getGroupCartEntities().clear();
+                orderTransaction.getCustomerEntity().getOrderLineItemEntities().clear();
+                orderTransaction.getCustomerEntity().getOrderTransactionEntities().clear();
+                orderTransaction.getCustomerEntity().setPersonalCartEntity(null);
 
-                GenericEntity<List<OrderLineItemEntity>> genericEntity = new GenericEntity<List<OrderLineItemEntity>>(lineItems) {
-                };
-
-                return Response.status(Response.Status.OK).entity(genericEntity).build();
+                return Response.status(Response.Status.OK).entity(orderTransaction).build();
             }
             catch(InvalidLoginCredentialException ex)
             {
@@ -129,6 +140,43 @@ public class OrderTransactionResource
         else
         {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+        }
+    }
+    
+    @Path("refundOrder")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response refundOrder(ViewOrderDetailsReq req)
+    {
+        if (req != null)
+        {
+            try
+            {
+                CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
+                boolean isRefunded = orderTransactionSessionBean.refundOrder(customer.getCustomerId(), req.getOrderId());
+                
+                if (isRefunded)
+                {
+                    return Response.status(Response.Status.OK).build();
+                }
+                else
+                {
+                    return Response.status(Response.Status.FORBIDDEN).build();
+                }
+            }
+            catch(InvalidLoginCredentialException ex)
+            {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            }
+            catch(OrderTransactionNotFoundException | OrderTransactionAlreadyVoidedRefundedException | CustomerNotFoundException  ex)
+            {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            }
+        }
+        else
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Void/Refund Order request").build();
         }
     }
 

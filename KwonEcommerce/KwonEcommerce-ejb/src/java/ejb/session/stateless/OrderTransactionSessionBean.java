@@ -304,9 +304,15 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
     */
     
     @Override
-    public boolean refundOrder(long orderTransactionId) throws OrderTransactionNotFoundException, OrderTransactionAlreadyVoidedRefundedException
+    public boolean refundOrder(Long customerId, Long orderTransactionId) throws OrderTransactionNotFoundException, OrderTransactionAlreadyVoidedRefundedException, CustomerNotFoundException
     {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
         OrderTransactionEntity orderTransaction = retrieveOrderTransactionById(orderTransactionId);
+        
+        if (!customer.getUsername().equals(orderTransaction.getCustomerEntity().getUsername()))
+        {
+            return false;
+        }
         //StaffEntity staff = staffEntitySessionBeanLocal.retrieveStaffByStaffId(staffId);
         Date oldDate = orderTransaction.getTransactionDateTime();
         
