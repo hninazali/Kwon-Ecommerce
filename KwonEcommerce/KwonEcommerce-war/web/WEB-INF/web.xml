@@ -26,6 +26,14 @@
         <filter-name>PrimeFaces FileUpload Filter</filter-name>
         <servlet-name>Faces Servlet</servlet-name>
     </filter-mapping>
+     <context-param>
+        <param-name>primefaces.UPLOADER</param-name>
+        <param-value>native</param-value>
+    </context-param>
+    <context-param>
+        <param-name>alternatedocroot_1</param-name>
+        <param-value>/Users/hninazali/Applications/glassfish-5.1.0-uploadedfiles/uploadedFiles</param-value>
+    </context-param>
     <listener>
         <description>ServletContextListener, HttpSessionListener</description>
         <listener-class>web.listener.DefaultListener</listener-class>

@@ -137,7 +137,7 @@
                                 <p:message for="name" />
                             </p:column>
                         </p:row>
-                        
+
                         <p:row>
                             <p:column>
                                 <p:outputLabel for="selBrand" value="Brand " style="font-weight: bold;" />
@@ -179,7 +179,10 @@
 
                         <p:row>
                             <div class="card">
-                                <h:form enctype="multipart/form-data">
+                                <h:form id="formFileUpload" enctype="multipart/form-data">
+<!--                                    <p:messages  redisplay="false">
+                                        <p:autoUpdate />
+                                    </p:messages>-->
                                     <p:fileUpload listener="#{fileUploadViewManagedBean.handleFileUpload}" mode="advanced" dragDropSupport="false"
                                                   update="messages" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
                                                   validateContentType="true" accept=".gif,.jpg,.jpeg,.png"/>
@@ -189,8 +192,8 @@
                             </div>
 
                         </p:row>
-                        
-                        
+
+
 
 
                         <p:row>
@@ -343,17 +346,17 @@
                             </p:column>
                         </p:row>
 
-<!--                        <p:row>
-                            <p:column>
-                                <p:outputLabel for="imageLink" value="Image Link " style="font-weight: bold;" />
-                            </p:column>
-                            <p:column>
-                                <p:inputText id="imageLink" value="" placeholder="https:// ..." required="true" requiredMessage="Image Link is required" />
-                            </p:column>
-                            <p:column>
-                                <p:message for="imageLink" />
-                            </p:column>
-                        </p:row>-->
+                        <!--                        <p:row>
+                                                    <p:column>
+                                                        <p:outputLabel for="imageLink" value="Image Link " style="font-weight: bold;" />
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:inputText id="imageLink" value="" placeholder="https:// ..." required="true" requiredMessage="Image Link is required" />
+                                                    </p:column>
+                                                    <p:column>
+                                                        <p:message for="imageLink" />
+                                                    </p:column>
+                                                </p:row>-->
 
                         <p:row>
                             <p:column>
