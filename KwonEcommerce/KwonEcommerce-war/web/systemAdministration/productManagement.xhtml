@@ -183,9 +183,8 @@
 <!--                                    <p:messages  redisplay="false">
                                         <p:autoUpdate />
                                     </p:messages>-->
-                                    <p:fileUpload listener="#{fileUploadViewManagedBean.handleFileUpload}" mode="advanced" dragDropSupport="false"
-                                                  update="messages" sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
-                                                  validateContentType="true" accept=".gif,.jpg,.jpeg,.png"/>
+                                    <p:fileUpload listener="#{fileUploadViewManagedBean.handleFileUpload}" 
+                                                  update="messages" />
 
                                     <p:growl id="messages" showDetail="true"/>
                                 </h:form>
