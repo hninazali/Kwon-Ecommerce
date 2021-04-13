@@ -123,15 +123,19 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
             try
             {
                 CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+                entityManager.persist(newOrderTransaction);
                 newOrderTransaction.setCustomerEntity(customer);
                 customer.getOrderTransactionEntities().add(newOrderTransaction);
 
-                entityManager.persist(newOrderTransaction);
+                //entityManager.persist(newOrderTransaction);
 
                 
-                for(OrderLineItemEntity orderLineItemEntity : newOrderTransaction.getOrderLineItemEntities())
+                for(OrderLineItemEntity orderLineItemEntity : customer.getPersonalCartEntity().getOrderLineItemEntities())
                 {
+                    newOrderTransaction.getOrderLineItemEntities().add(orderLineItemEntity);
                     productSessionBeanLocal.debitQuantityOnHand(orderLineItemEntity.getProductEntity().getProductId(), orderLineItemEntity.getQuantity());
+                    //orderLineItemEntity.setCustomerEntity(null);
+                    //customer.getPersonalCartEntity().getOrderLineItemEntities().remove(orderLineItemEntity);
                 }
                 
 
@@ -325,7 +329,7 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
         LocalDate localOldDate = convertToLocalDateViaInstant(oldDate);
         LocalDate localNewDate = localOldDate.plusDays(14);
         LocalDate nowDate = LocalDate.now();
-        if (nowDate.isAfter(localNewDate))
+        if (nowDate.isBefore(localNewDate))
         {
             this.voidRefundOrderTransaction(orderTransaction.getOrderTransactionId());
             return true;

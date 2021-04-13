@@ -140,6 +140,11 @@ public class GroupCartResource
                 List<CustomerEntity> members = new ArrayList<>();
                 members.add(groupCart.getGroupOwner());
                 
+                groupCart.getGroupOwner().getGroupCartEntities().clear();
+                groupCart.getGroupOwner().getOrderLineItemEntities().clear();
+                groupCart.getGroupOwner().getOrderTransactionEntities().clear();
+                groupCart.getGroupOwner().setPersonalCartEntity(null);
+                
                 for (CustomerEntity member : tempMembers)
                 {
                     member.getGroupCartEntities().clear();
@@ -192,6 +197,18 @@ public class GroupCartResource
                     lineItem.getCustomerEntity().getOrderTransactionEntities().clear();
                     lineItem.getCustomerEntity().getGroupCartEntities().clear();
                     lineItem.getCustomerEntity().setPersonalCartEntity(null);
+                    if (lineItem.getBundleEntity() != null)
+                    {
+                        lineItem.getBundleEntity().getCategoryEntities().clear();
+                        lineItem.getBundleEntity().getTagEntities().clear();
+                        lineItem.getBundleEntity().getBundleLineItems().clear();
+                    }
+                    else
+                    {
+                        lineItem.getProductEntity().setCategoryEntity(null);
+                        lineItem.getProductEntity().getTagEntities().clear();
+                        lineItem.getProductEntity().setBrandEntity(null);
+                    }
                 }
             
                 GenericEntity<List<OrderLineItemEntity>> genericEntity = new GenericEntity<List<OrderLineItemEntity>>(orderLineItems){

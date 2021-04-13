@@ -22,6 +22,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
@@ -143,6 +144,56 @@ public class OrderTransactionResource
         }
     }
     
+    @Path("viewOrderTransactionDetailsTemp/{orderId}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewOrderTransactionDetailsTemp(@PathParam("orderId") Long orderId)
+    {
+        if (orderId != null)
+        {
+            try
+            {
+                //CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
+
+                OrderTransactionEntity orderTransaction = orderTransactionSessionBean.retrieveOrderTransactionById(orderId);
+                System.out.println(orderTransaction.getOrderLineItemEntities().size());
+                
+                for (OrderLineItemEntity lineItem : orderTransaction.getOrderLineItemEntities())
+                {
+                    if (lineItem.getCustomerEntity().getOrderLineItemEntities() != null)
+                    {
+                        lineItem.getCustomerEntity().getOrderLineItemEntities().clear();
+                    }
+                    lineItem.getCustomerEntity().getOrderTransactionEntities().clear();
+                    lineItem.getCustomerEntity().getGroupCartEntities().clear();
+                    if (lineItem.getBundleEntity() != null)
+                    {
+                        lineItem.getBundleEntity().getCategoryEntities().clear();
+                        lineItem.getBundleEntity().getTagEntities().clear();
+                    }
+                    else
+                    {
+                        lineItem.getProductEntity().setCategoryEntity(null);
+                        lineItem.getProductEntity().getTagEntities().clear();
+                        lineItem.getProductEntity().setBrandEntity(null);
+                    }
+                }
+                
+                orderTransaction.setCustomerEntity(null);
+
+                return Response.status(Response.Status.OK).entity(orderTransaction).build();
+            }
+            catch(OrderTransactionNotFoundException ex)
+            {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            }
+        }
+        else
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+        }
+    }
+    
     @Path("refundOrder")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -158,11 +209,11 @@ public class OrderTransactionResource
                 
                 if (isRefunded)
                 {
-                    return Response.status(Response.Status.OK).build();
+                    return Response.status(Response.Status.OK).entity(true).build();
                 }
                 else
                 {
-                    return Response.status(Response.Status.FORBIDDEN).build();
+                    return Response.status(Response.Status.BAD_REQUEST).entity("SO BADDD!!!!!!!").build();
                 }
             }
             catch(InvalidLoginCredentialException ex)
@@ -171,7 +222,7 @@ public class OrderTransactionResource
             }
             catch(OrderTransactionNotFoundException | OrderTransactionAlreadyVoidedRefundedException | CustomerNotFoundException  ex)
             {
-                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity("WAHOOOOOO" + ex.getMessage()).build();
             }
         }
         else

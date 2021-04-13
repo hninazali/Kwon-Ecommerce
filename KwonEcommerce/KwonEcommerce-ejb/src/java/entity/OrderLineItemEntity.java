@@ -55,8 +55,8 @@ public class OrderLineItemEntity implements Serializable {
     @Digits(integer = 9, fraction = 2) // 11 - 2 digits to the left of the decimal point
     private BigDecimal subTotal;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true)
     private CustomerEntity customerEntity;
 
     public OrderLineItemEntity() {
