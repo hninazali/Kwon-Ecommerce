@@ -125,7 +125,7 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
                 customerEntity.getOrderTransactionEntities();
                 return customerEntity;
             } else {
-                throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+                throw new InvalidLoginCredentialException("Wrong Credentials!!!");
             }
         } catch (CustomerNotFoundException ex) {
             throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
