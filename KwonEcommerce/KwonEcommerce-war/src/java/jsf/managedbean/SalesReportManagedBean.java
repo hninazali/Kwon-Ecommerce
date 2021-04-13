@@ -12,6 +12,7 @@ import ejb.session.stateless.OrderTransactionSessionBeanLocal;
 import ejb.session.stateless.ProductEntitySessionBeanLocal;
 import entity.BrandEntity;
 import entity.BundleEntity;
+import entity.BundleLineItemEntity;
 import entity.CategoryEntity;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
@@ -80,7 +81,7 @@ public class SalesReportManagedBean implements Serializable{
     
     private List<OrderLineItemEntity> filteredByBrand;
     
-    private PieChartModel pieModel;
+    //private PieChartModel pieModel;
     private BarChartModel barModelBrand;
     private BarChartModel barModelCategory;
     private BarChartModel barModelProduct;
@@ -92,20 +93,26 @@ public class SalesReportManagedBean implements Serializable{
      * Creates a new instance of SalesReportManagedBean
      */
     public SalesReportManagedBean() {
+        lineItems = new ArrayList<>();
+        orderTransactions = new ArrayList<>();
+        categories = new ArrayList<>();
+        brands = new ArrayList<>();
+        products = new ArrayList<>();
     }
     
     @PostConstruct
     public void postConstruct()
     {
-        setOrderTransactions(getOrderTransactionSessionBeanLocal().retrieveAllOrderTransactions());
-        setCategories(getCategoryEntitySessionBeanLocal().retrieveAllCategories());
-        setBrands(getBrandEntitySessionBeanLocal().retrieveAllBrands());
-        setProducts(getProductEntitySessionBeanLocal().retrieveAllProducts());
+        orderTransactions = orderTransactionSessionBeanLocal.retrieveAllOrderTransactions();
+        categories = categoryEntitySessionBeanLocal.retrieveAllCategories();
+        brands = brandEntitySessionBeanLocal.retrieveAllBrands();
+        products = productEntitySessionBeanLocal.retrieveAllProducts();
         
-        this.createBrandBarModel();
-        this.createCategoryBarModel();
-        this.createMonthlyBarModel();
-        this.createProductBarModel();
+        createBrandBarModel();
+        createCategoryBarModel();
+        createMonthlyBarModel();
+        createProductBarModel();
+        System.out.println("Is this reachable????");
     }
     
     public void filterDate(Date startDate, Date endDate, List<OrderTransactionEntity> orders)
@@ -219,7 +226,7 @@ public class SalesReportManagedBean implements Serializable{
     }
     
     public void createBrandBarModel() {
-        setBarModelBrand(new BarChartModel());
+        barModelBrand = new BarChartModel();
         ChartData data = new ChartData();
 
         BarChartDataSet barDataSet = new BarChartDataSet();
@@ -229,27 +236,51 @@ public class SalesReportManagedBean implements Serializable{
         for (BrandEntity brand : this.getBrands()) {
             brandNames.add(brand.getName());
         }
-        List<Number> values = new ArrayList<>(brandNames.size());
-        for (int i = 0; i < values.size(); i++) {
-            values.set(i, 0);
+        List<Number> values = new ArrayList<>();
+        for (int i = 0; i < brandNames.size(); i++) {
+            values.add(0);
         }
         
+        String brandName = "";
+        BigDecimal sale;
+        Number currValue = 0;
+        Number newValue = 0;
+        int brandIndex = 0;
         for(OrderTransactionEntity order : this.getOrderTransactions()) {
             for (OrderLineItemEntity orderLineItem : order.getOrderLineItemEntities()) {
-                ProductEntity product = orderLineItem.getProductEntity();
-                String brandName = product.getBrandEntity().getName();
-                int brandIndex = brandNames.indexOf(brandName);
-                BigDecimal sale = orderLineItem.getSubTotal();
-                Number currValue = values.get(brandIndex);
-                Number newValue = currValue.doubleValue() + sale.doubleValue();
-                values.set(brandIndex, newValue);
+                if (orderLineItem.getProductEntity() != null)
+                {
+                    ProductEntity product = orderLineItem.getProductEntity();
+                    brandName = product.getBrandEntity().getName();
+                    //System.out.println(brandName);
+                    brandIndex = brandNames.indexOf(brandName);
+                    //System.out.println(brandIndex);
+                    sale = orderLineItem.getSubTotal();
+                    currValue = values.get(brandIndex);
+                    newValue = currValue.doubleValue() + sale.doubleValue();
+                    values.set(brandIndex, newValue);
+                }
+                else
+                {
+                    BundleEntity bundle = orderLineItem.getBundleEntity();
+                    for (BundleLineItemEntity lineItem : bundle.getBundleLineItems())
+                    {
+                        brandName = lineItem.getProductEntity().getBrandEntity().getName();
+                        brandIndex = brandNames.indexOf(brandName);
+                        sale = lineItem.getSubTotal();
+                        currValue = values.get(brandIndex);
+                        newValue = currValue.doubleValue() + sale.doubleValue();
+                        values.set(brandIndex, newValue);
+                    }
+                }
             }
         }
+        System.out.println("REACHABLE?");
         barDataSet.setData(values);
 
-        List<String> bgColor = new ArrayList<>(values.size());
+        List<String> bgColor = new ArrayList<>();
         boolean alternatingColor = true;
-        for (int j = 0; j < bgColor.size(); j++) {
+        for (int j = 0; j < values.size(); j++) {
             if (alternatingColor) {
                 bgColor.add("rgba(54, 162, 235, 0.2)");
             } else {
@@ -260,25 +291,26 @@ public class SalesReportManagedBean implements Serializable{
         barDataSet.setBackgroundColor(bgColor);
 
         alternatingColor = true;
-        List<String> borderColor = new ArrayList<>(bgColor.size());
-        for (int x = 0; x < borderColor.size(); x++) {
+        List<String> borderColor = new ArrayList<>();
+        for (int x = 0; x < values.size(); x++) {
             if (alternatingColor) {
                 borderColor.add("rgb(54, 162, 235)");
             } else {
                 borderColor.add("rgb(153, 102, 255)");
             }
+            alternatingColor = !alternatingColor;
         }
         barDataSet.setBorderColor(borderColor);
         barDataSet.setBorderWidth(1);
 
         data.addChartDataSet(barDataSet);
 
-        List<String> labels = new ArrayList<>(brandNames.size());
+        List<String> labels = new ArrayList<>();
         for (String name : brandNames) {
             labels.add(name);
         }
         data.setLabels(labels);
-        getBarModelBrand().setData(data);
+        barModelBrand.setData(data);
 
         //Options
         BarChartOptions options = new BarChartOptions();
@@ -313,11 +345,11 @@ public class SalesReportManagedBean implements Serializable{
         options.setAnimation(animation);
         */
 
-        getBarModelBrand().setOptions(options);
+        barModelBrand.setOptions(options);
     }
     
     public void createCategoryBarModel() {
-        setBarModelCategory(new BarChartModel());
+        barModelCategory = new BarChartModel();
         ChartData data = new ChartData();
 
         BarChartDataSet barDataSet = new BarChartDataSet();
@@ -327,27 +359,49 @@ public class SalesReportManagedBean implements Serializable{
         for (CategoryEntity category : this.getCategories()) {
             categoryNames.add(category.getName());
         }
-        List<Number> values = new ArrayList<>(categoryNames.size());
-        for (int i = 0; i < values.size(); i++) {
-            values.set(i, 0);
+        List<Number> values = new ArrayList<>();
+        for (int i = 0; i < categoryNames.size(); i++) {
+            values.add(0);
         }
         
+        String categoryName = "";
+        BigDecimal sale;
+        Number currValue = 0;
+        Number newValue = 0;
+        int categoryIndex = 0;
         for(OrderTransactionEntity order : this.getOrderTransactions()) {
             for (OrderLineItemEntity orderLineItem : order.getOrderLineItemEntities()) {
-                ProductEntity product = orderLineItem.getProductEntity();
-                String categoryName = product.getCategoryEntity().getName();
-                int categoryIndex = categoryNames.indexOf(categoryName);
-                BigDecimal sale = orderLineItem.getSubTotal();
-                Number currValue = values.get(categoryIndex);
-                Number newValue = currValue.doubleValue() + sale.doubleValue();
-                values.set(categoryIndex, newValue);
+                if (orderLineItem.getProductEntity() != null)
+                {
+                    ProductEntity product = orderLineItem.getProductEntity();
+                    categoryName = product.getCategoryEntity().getName();
+                    categoryIndex = categoryNames.indexOf(categoryName);
+                    sale = orderLineItem.getSubTotal();
+                    currValue = values.get(categoryIndex);
+                    newValue = currValue.doubleValue() + sale.doubleValue();
+                    values.set(categoryIndex, newValue);
+                }
+                else
+                {
+                    BundleEntity bundle = orderLineItem.getBundleEntity();
+                    for (BundleLineItemEntity lineItem : bundle.getBundleLineItems())
+                    {
+                        categoryName = lineItem.getProductEntity().getCategoryEntity().getName();
+                        categoryIndex = categoryNames.indexOf(categoryName);
+                        sale = lineItem.getSubTotal();
+                        currValue = values.get(categoryIndex);
+                        newValue = currValue.doubleValue() + sale.doubleValue();
+                        values.set(categoryIndex, newValue);
+                    }
+                }
             }
         }
+        System.out.println("REACHABLE REACHABLE?");
         barDataSet.setData(values);
 
-        List<String> bgColor = new ArrayList<>(values.size());
+        List<String> bgColor = new ArrayList<>();
         boolean alternatingColor = true;
-        for (int j = 0; j < bgColor.size(); j++) {
+        for (int j = 0; j < values.size(); j++) {
             if (alternatingColor) {
                 bgColor.add("rgba(54, 162, 235, 0.2)");
             } else {
@@ -358,25 +412,26 @@ public class SalesReportManagedBean implements Serializable{
         barDataSet.setBackgroundColor(bgColor);
 
         alternatingColor = true;
-        List<String> borderColor = new ArrayList<>(bgColor.size());
-        for (int x = 0; x < borderColor.size(); x++) {
+        List<String> borderColor = new ArrayList<>();
+        for (int x = 0; x < bgColor.size(); x++) {
             if (alternatingColor) {
                 borderColor.add("rgb(54, 162, 235)");
             } else {
                 borderColor.add("rgb(153, 102, 255)");
             }
+            alternatingColor = !alternatingColor;
         }
         barDataSet.setBorderColor(borderColor);
         barDataSet.setBorderWidth(1);
 
         data.addChartDataSet(barDataSet);
 
-        List<String> labels = new ArrayList<>(categoryNames.size());
+        List<String> labels = new ArrayList<>();
         for (String name : categoryNames) {
             labels.add(name);
         }
         data.setLabels(labels);
-        getBarModelCategory().setData(data);
+        barModelCategory.setData(data);
 
         //Options
         BarChartOptions options = new BarChartOptions();
@@ -411,11 +466,11 @@ public class SalesReportManagedBean implements Serializable{
         options.setAnimation(animation);
         */
 
-        getBarModelCategory().setOptions(options);
+        barModelCategory.setOptions(options);
     }
     
     public void createProductBarModel() {
-        setBarModelProduct(new BarChartModel());
+        barModelProduct = new BarChartModel();
         ChartData data = new ChartData();
 
         BarChartDataSet barDataSet = new BarChartDataSet();
@@ -426,26 +481,47 @@ public class SalesReportManagedBean implements Serializable{
             productNames.add(product.getName());
         }
         List<Number> values = new ArrayList<>(productNames.size());
-        for (int i = 0; i < values.size(); i++) {
-            values.set(i, 0);
+        for (int i = 0; i < productNames.size(); i++) {
+            values.add(0);
         }
-        
+        String productName = "";
+        BigDecimal sale;
+        Number currValue = 0;
+        Number newValue = 0;
+        int productIndex = 0;
         for(OrderTransactionEntity order : this.getOrderTransactions()) {
             for (OrderLineItemEntity orderLineItem : order.getOrderLineItemEntities()) {
-                ProductEntity product = orderLineItem.getProductEntity();
-                String categoryName = product.getCategoryEntity().getName();
-                int categoryIndex = productNames.indexOf(categoryName);
-                BigDecimal sale = orderLineItem.getSubTotal();
-                Number currValue = values.get(categoryIndex);
-                Number newValue = currValue.doubleValue() + sale.doubleValue();
-                values.set(categoryIndex, newValue);
+                if (orderLineItem.getProductEntity() != null)
+                {
+                    ProductEntity product = orderLineItem.getProductEntity();
+                    productName = product.getName();
+                    productIndex = productNames.indexOf(productName);
+                    sale = orderLineItem.getSubTotal();
+                    currValue = values.get(productIndex);
+                    newValue = currValue.doubleValue() + sale.doubleValue();
+                    values.set(productIndex, newValue);
+                }
+                else
+                {
+                    BundleEntity bundle = orderLineItem.getBundleEntity();
+                    for (BundleLineItemEntity lineItem : bundle.getBundleLineItems())
+                    {
+                        productName = lineItem.getProductEntity().getName();
+                        productIndex = productNames.indexOf(productName);
+                        sale = lineItem.getSubTotal();
+                        currValue = values.get(productIndex);
+                        newValue = currValue.doubleValue() + sale.doubleValue();
+                        values.set(productIndex, newValue);
+                    }
+                }
             }
         }
+        System.out.println("REACHABLE 2X?");
         barDataSet.setData(values);
 
-        List<String> bgColor = new ArrayList<>(values.size());
+        List<String> bgColor = new ArrayList<>();
         boolean alternatingColor = true;
-        for (int j = 0; j < bgColor.size(); j++) {
+        for (int j = 0; j < values.size(); j++) {
             if (alternatingColor) {
                 bgColor.add("rgba(54, 162, 235, 0.2)");
             } else {
@@ -456,25 +532,26 @@ public class SalesReportManagedBean implements Serializable{
         barDataSet.setBackgroundColor(bgColor);
 
         alternatingColor = true;
-        List<String> borderColor = new ArrayList<>(bgColor.size());
-        for (int x = 0; x < borderColor.size(); x++) {
+        List<String> borderColor = new ArrayList<>();
+        for (int x = 0; x < bgColor.size(); x++) {
             if (alternatingColor) {
                 borderColor.add("rgb(54, 162, 235)");
             } else {
                 borderColor.add("rgb(153, 102, 255)");
             }
+            alternatingColor = !alternatingColor;
         }
         barDataSet.setBorderColor(borderColor);
         barDataSet.setBorderWidth(1);
 
         data.addChartDataSet(barDataSet);
 
-        List<String> labels = new ArrayList<>(productNames.size());
+        List<String> labels = new ArrayList<>();
         for (String name : productNames) {
             labels.add(name);
         }
         data.setLabels(labels);
-        getBarModelProduct().setData(data);
+        barModelProduct.setData(data);
 
         //Options
         BarChartOptions options = new BarChartOptions();
@@ -509,11 +586,11 @@ public class SalesReportManagedBean implements Serializable{
         options.setAnimation(animation);
         */
 
-        getBarModelProduct().setOptions(options);
+        barModelProduct.setOptions(options);
     }
     
     public void createMonthlyBarModel() {
-        setBarModelMonthly(new BarChartModel());
+        barModelMonthly = new BarChartModel();
         ChartData data = new ChartData();
 
         BarChartDataSet barDataSet = new BarChartDataSet();
@@ -533,29 +610,47 @@ public class SalesReportManagedBean implements Serializable{
         months.add("November");
         months.add("December");
         
-        List<Number> values = new ArrayList<>(12);
-        for (int i = 0; i < values.size(); i++) {
-            values.set(i, 0);
+        List<Number> values = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            values.add(0);
         }
         
+        BigDecimal sale;
+        Number currValue = 0;
+        Number newValue = 0;
         for(OrderTransactionEntity order : this.getOrderTransactions()) {
             for (OrderLineItemEntity orderLineItem : order.getOrderLineItemEntities()) {
                 Date transactionDate = order.getTransactionDateTime();
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(transactionDate);
                 int transactionMonth = calendar.get(Calendar.MONTH);
-                ProductEntity product = orderLineItem.getProductEntity();
-                BigDecimal sale = orderLineItem.getSubTotal();
-                Number currValue = values.get(transactionMonth);
-                Number newValue = currValue.doubleValue() + sale.doubleValue();
-                values.set(transactionMonth, newValue);
+                if (orderLineItem.getProductEntity() != null)
+                {
+                    ProductEntity product = orderLineItem.getProductEntity();
+                    sale = orderLineItem.getSubTotal();
+                    currValue = values.get(transactionMonth);
+                    newValue = currValue.doubleValue() + sale.doubleValue();
+                    values.set(transactionMonth, newValue);
+                }
+                else
+                {
+                    BundleEntity bundle = orderLineItem.getBundleEntity();
+                    for (BundleLineItemEntity lineItem : bundle.getBundleLineItems())
+                    {
+                        sale = lineItem.getSubTotal();
+                        currValue = values.get(transactionMonth);
+                        newValue = currValue.doubleValue() + sale.doubleValue();
+                        values.set(transactionMonth, newValue);
+                    }
+                }
             }
         }
+        System.out.println("2X REACHABLE?");
         barDataSet.setData(values);
 
-        List<String> bgColor = new ArrayList<>(values.size());
+        List<String> bgColor = new ArrayList<>();
         boolean alternatingColor = true;
-        for (int j = 0; j < bgColor.size(); j++) {
+        for (int j = 0; j < 12; j++) {
             if (alternatingColor) {
                 bgColor.add("rgba(54, 162, 235, 0.2)");
             } else {
@@ -566,8 +661,8 @@ public class SalesReportManagedBean implements Serializable{
         barDataSet.setBackgroundColor(bgColor);
 
         alternatingColor = true;
-        List<String> borderColor = new ArrayList<>(bgColor.size());
-        for (int x = 0; x < borderColor.size(); x++) {
+        List<String> borderColor = new ArrayList<>();
+        for (int x = 0; x < 12; x++) {
             if (alternatingColor) {
                 borderColor.add("rgb(54, 162, 235)");
             } else {
@@ -579,12 +674,12 @@ public class SalesReportManagedBean implements Serializable{
 
         data.addChartDataSet(barDataSet);
 
-        List<String> labels = new ArrayList<>(months.size());
+        List<String> labels = new ArrayList<>();
         for (String month : months) {
             labels.add(month);
         }
         data.setLabels(labels);
-        getBarModelMonthly().setData(data);
+        barModelMonthly.setData(data);
 
         //Options
         BarChartOptions options = new BarChartOptions();
@@ -619,7 +714,7 @@ public class SalesReportManagedBean implements Serializable{
         options.setAnimation(animation);
         */
 
-        getBarModelMonthly().setOptions(options);
+        barModelMonthly.setOptions(options);
     }
 
     public OrderTransactionSessionBeanLocal getOrderTransactionSessionBeanLocal() {
@@ -758,13 +853,13 @@ public class SalesReportManagedBean implements Serializable{
         this.filteredByBrand = filteredByBrand;
     }
 
-    public PieChartModel getPieModel() {
-        return pieModel;
-    }
-
-    public void setPieModel(PieChartModel pieModel) {
-        this.pieModel = pieModel;
-    }
+//    public PieChartModel getPieModel() {
+//        return pieModel;
+//    }
+//
+//    public void setPieModel(PieChartModel pieModel) {
+//        this.pieModel = pieModel;
+//    }
 
     public BarChartModel getBarModelBrand() {
         return barModelBrand;
