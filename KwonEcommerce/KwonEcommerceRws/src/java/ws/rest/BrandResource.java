@@ -50,12 +50,11 @@ public class BrandResource
     @Path("retrieveAllBrands")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllBrands(@QueryParam("username") String username, 
-                                        @QueryParam("password") String password)
+    public Response retrieveAllBrands()
     {
         try
         {
-            CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+            //CustomerEntity customer = customerSessionBean.customerLogin(username, password);
             
             List<BrandEntity> brands = brandEntitySessionBean.retrieveAllBrands();
             for (BrandEntity brand : brands)
@@ -68,10 +67,10 @@ public class BrandResource
 
             return Response.status(Response.Status.OK).entity(genericEntity).build();
         }
-        catch(InvalidLoginCredentialException ex)
-        {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-        }
+//        catch(InvalidLoginCredentialException ex)
+//        {
+//            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+//        }
         catch (Exception ex)
         {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();

@@ -54,12 +54,11 @@ public class CategoryResource
     @Path("retrieveAllCategories")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllCategories(@QueryParam("username") String username, 
-                                        @QueryParam("password") String password)
+    public Response retrieveAllCategories()
     {
         try
         {
-            CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+            //CustomerEntity customer = customerSessionBean.customerLogin(username, password);
             List<CategoryEntity> categories = categoryEntitySessionBean.retrieveAllCategories();
             
             for (CategoryEntity category : categories)
@@ -83,10 +82,10 @@ public class CategoryResource
             
             return Response.status(Response.Status.OK).entity(genericEntity).build();
         }
-        catch(InvalidLoginCredentialException ex)
-        {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-        }
+//        catch(InvalidLoginCredentialException ex)
+//        {
+//            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+//        }
         catch (Exception ex)
         {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
