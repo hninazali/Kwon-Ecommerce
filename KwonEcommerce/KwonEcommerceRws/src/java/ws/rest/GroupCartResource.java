@@ -92,6 +92,7 @@ public class GroupCartResource
                     customer.getGroupCartEntities().clear();
                     customer.getOrderLineItemEntities().clear();
                     customer.getOrderTransactionEntities().clear();
+                    customer.setPersonalCartEntity(null);
                 }
             }
             
@@ -113,7 +114,7 @@ public class GroupCartResource
     @Path("retrieveGroupMembers/{groupId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllGroupCarts(@QueryParam("username") String username, 
+    public Response retrieveGroupMembers(@QueryParam("username") String username, 
                                 @QueryParam("password") String password,
                                     @PathParam("groupId") Long groupId)
     {
@@ -135,6 +136,7 @@ public class GroupCartResource
                     member.getGroupCartEntities().clear();
                     member.getOrderLineItemEntities().clear();
                     member.getOrderTransactionEntities().clear();
+                    member.setPersonalCartEntity(null);
                     
                     members.add(member);
                 }
@@ -155,7 +157,7 @@ public class GroupCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Retrieve Group Members request").build();
         }
         
     }
@@ -164,7 +166,7 @@ public class GroupCartResource
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllPersonalOrderLineItems(LeaveGroupCartReq req)
+    public Response retrieveGroupOrderLineItems(LeaveGroupCartReq req)
     {
         if (req != null)
         {
@@ -180,6 +182,7 @@ public class GroupCartResource
                     lineItem.getCustomerEntity().getOrderLineItemEntities().clear();
                     lineItem.getCustomerEntity().getOrderTransactionEntities().clear();
                     lineItem.getCustomerEntity().getGroupCartEntities().clear();
+                    lineItem.getCustomerEntity().setPersonalCartEntity(null);
                 }
             
                 GenericEntity<List<OrderLineItemEntity>> genericEntity = new GenericEntity<List<OrderLineItemEntity>>(orderLineItems){
@@ -198,7 +201,7 @@ public class GroupCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Retrieve Line Items request").build();
         }
     }
     
@@ -242,7 +245,7 @@ public class GroupCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Add Product request").build();
         }
     }
     
@@ -286,7 +289,7 @@ public class GroupCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Add Bundle request").build();
         }
     }
     
@@ -318,7 +321,7 @@ public class GroupCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Update Line Item request").build();
         }
     }
     
@@ -350,7 +353,7 @@ public class GroupCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Checkout request").build();
         }
     }
     
@@ -382,7 +385,7 @@ public class GroupCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Remove Line Item request").build();
         }
     }
     
@@ -390,7 +393,7 @@ public class GroupCartResource
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createGroupCart(CreateGroupCartReq req)
+    public Response createNewGroupCart(CreateGroupCartReq req)
     {
         if (req != null)
         {
@@ -400,12 +403,12 @@ public class GroupCartResource
                 
                 GroupCartEntity groupCart = groupCartSessionBean.createNewGroupCart(customer.getCustomerId(), req.getName(), req.getUsernames());
                 
-                for (CustomerEntity customerTemp : groupCart.getCustomerEntities())
-                {
-                    customerTemp.getGroupCartEntities().clear();
-                    customerTemp.getOrderLineItemEntities().clear();
-                    customerTemp.getOrderTransactionEntities().clear();
-                }
+//                for (CustomerEntity customerTemp : groupCart.getCustomerEntities())
+//                {
+//                    customerTemp.getGroupCartEntities().clear();
+//                    customerTemp.getOrderLineItemEntities().clear();
+//                    customerTemp.getOrderTransactionEntities().clear();
+//                }
                 
                 return Response.status(Response.Status.OK).entity(groupCart.getGroupCartId()).build();
             }
@@ -420,7 +423,7 @@ public class GroupCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new group cart request").build();
         }
     }
 
@@ -451,7 +454,7 @@ public class GroupCartResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Leave Group request").build();
         }
     }
     
