@@ -63,18 +63,21 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
     @Override
     public GroupCartEntity createNewGroupCart(Long ownerId, String groupName, List<String> usernames) throws CreateNewGroupCartException 
     {
+        CustomerEntity tempCustomer = new CustomerEntity();
         try {
             GroupCartEntity groupCart = new GroupCartEntity();
             groupCart.setName(groupName);
             
             CustomerEntity owner = customerSessionBeanLocal.retrieveCustomerById(ownerId);
-            owner.getGroupCartEntities().add(groupCart);
+            //owner.getGroupCartEntities().add(groupCart);
             groupCart.setGroupOwner(owner);
             entityManager.persist(groupCart);
             
+            owner.getGroupCartEntities().add(groupCart);
+            
             for (String username : usernames)
             {
-                CustomerEntity tempCustomer = customerSessionBeanLocal.retrieveCustomerByUsername(username);
+                tempCustomer = customerSessionBeanLocal.retrieveCustomerByUsername(username);
                 tempCustomer.getGroupCartEntities().add(groupCart);
                 groupCart.getCustomerEntities().add(tempCustomer);
             }
@@ -131,6 +134,7 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
     public List<GroupCartEntity> retrieveCustomerGroupCartEntities(Long customerId) throws CustomerNotFoundException {
         CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
 
+        customer.getGroupCartEntities().size();
         List<GroupCartEntity> groupCartEntities = customer.getGroupCartEntities();
         for(GroupCartEntity gc : groupCartEntities)
         {

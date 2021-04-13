@@ -88,13 +88,21 @@ public class GroupCartResource
             
             for (GroupCartEntity groupCart : groupCarts)
             {
-                for (CustomerEntity customer : groupCart.getCustomerEntities())
-                {
-                    customer.getGroupCartEntities().clear();
-                    customer.getOrderLineItemEntities().clear();
-                    customer.getOrderTransactionEntities().clear();
-                    customer.setPersonalCartEntity(null);
-                }
+//                for (CustomerEntity customer : groupCart.getCustomerEntities())
+//                {
+//                    customer.getGroupCartEntities().clear();
+//                    customer.getOrderLineItemEntities().clear();
+//                    customer.getOrderTransactionEntities().clear();
+//                    customer.setPersonalCartEntity(null);
+//                }
+//                groupCart.getCustomerEntities().clear();
+//                groupCart.getOrderLineItemEntities().clear();
+//                groupCart.getGroupOwner().getOrderLineItemEntities().clear();
+//                groupCart.getGroupOwner().getOrderTransactionEntities().clear();
+//                groupCart.getGroupOwner().getGroupCartEntities().clear();
+                groupCart.setCustomerEntities(null);
+                groupCart.setGroupOwner(null);
+                groupCart.getOrderLineItemEntities().clear();
             }
             
             //==================================================================================

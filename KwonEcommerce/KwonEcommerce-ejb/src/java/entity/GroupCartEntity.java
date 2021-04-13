@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
@@ -32,7 +33,7 @@ public class GroupCartEntity implements Serializable {
     @NotNull
     @Size(max = 32)
     private String name;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(nullable = false)
     private CustomerEntity groupOwner;
 
