@@ -61,7 +61,7 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
     }
 
     @Override
-    public GroupCartEntity createNewGroupCart(Long ownerId, String groupName, List<String> usernames) throws InputDataValidationException, CreateNewGroupCartException 
+    public GroupCartEntity createNewGroupCart(Long ownerId, String groupName, List<String> usernames) throws CreateNewGroupCartException 
     {
         try {
             GroupCartEntity groupCart = new GroupCartEntity();
@@ -70,6 +70,7 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
             CustomerEntity owner = customerSessionBeanLocal.retrieveCustomerById(ownerId);
             owner.getGroupCartEntities().add(groupCart);
             groupCart.setGroupOwner(owner);
+            entityManager.persist(groupCart);
             
             for (String username : usernames)
             {
@@ -78,7 +79,6 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
                 groupCart.getCustomerEntities().add(tempCustomer);
             }
             
-            entityManager.persist(groupCart);
             entityManager.flush();
 
             return groupCart;
@@ -88,9 +88,9 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
                     && ex.getCause().getCause().getClass().getSimpleName().equals("SQLIntegrityConstraintViolationException")) {
                 throw new CreateNewGroupCartException("Group cart with the same ID already exist");
             } else {
-                throw new CreateNewGroupCartException("An unexpected error has occurred: " + ex.getMessage());
+                throw new CreateNewGroupCartException("An unexpected error1 has occurred: " + ex.getMessage());
             }
-        } catch (Exception ex) {
+        } catch (CustomerNotFoundException ex) {
             throw new CreateNewGroupCartException("An unexpected error has occurred: " + ex.getMessage());
         }
     }

@@ -104,11 +104,12 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
     public CustomerEntity retrieveCustomerByUsername(String username) throws CustomerNotFoundException {
         Query query = entityManager.createQuery("SELECT c FROM CustomerEntity c WHERE c.username = :inUsername");
         query.setParameter("inUsername", username);
+        CustomerEntity customerEntity = (CustomerEntity) query.getSingleResult();
 
-        try {
-            return (CustomerEntity) query.getSingleResult();
-        } catch (NoResultException | NonUniqueResultException ex) {
-            throw new CustomerNotFoundException("Customer username " + username + " does not exist!");
+        if (customerEntity != null) {
+            return customerEntity;
+        } else {
+            throw new CustomerNotFoundException("Customer Username " + customerEntity.getUsername() + " does not exist!");
         }
     }
 

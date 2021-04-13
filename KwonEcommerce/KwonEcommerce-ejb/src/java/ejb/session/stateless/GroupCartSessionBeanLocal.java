@@ -25,7 +25,7 @@ import util.exception.OrderLineItemNotFoundException;
 @Local
 public interface GroupCartSessionBeanLocal {
 
-    public GroupCartEntity createNewGroupCart(Long ownerId, String groupName, List<String> usernames) throws InputDataValidationException, CreateNewGroupCartException;
+    public GroupCartEntity createNewGroupCart(Long ownerId, String groupName, List<String> usernames) throws CreateNewGroupCartException;
 
     List<GroupCartEntity> retrieveAllGroupCartEntities();
 

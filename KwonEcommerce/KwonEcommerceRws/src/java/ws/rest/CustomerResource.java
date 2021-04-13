@@ -109,6 +109,7 @@ public class CustomerResource
         }
     }
     
+    @Path("editCustomer")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -153,7 +154,7 @@ public class CustomerResource
 
                 CustomerEntity customerTemp = customerSessionBean.retrieveCustomerByUsername(req.getUsernameToCheck());
                 
-                Integer returnNum = customerTemp == null ? 1 : 0;
+                Integer returnNum = customerTemp == null ? 0 : 1;
                 
                 return Response.status(Response.Status.OK).entity(returnNum).build();
             }

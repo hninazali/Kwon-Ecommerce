@@ -76,14 +76,15 @@ public class GroupCartResource
     public GroupCartResource() {
     }
     
-    @Path("retrieveAllGroupCarts")
+    @Path("retrieveAllGroupCarts/{username}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllGroupCarts(Long customerId)
+    public Response retrieveAllGroupCarts(@PathParam("username") String username)
     {
         try
         {
-            List<GroupCartEntity> groupCarts = groupCartSessionBean.retrieveCustomerGroupCartEntities(customerId);
+            CustomerEntity customerTemp = customerSessionBean.retrieveCustomerByUsername(username);
+            List<GroupCartEntity> groupCarts = groupCartSessionBean.retrieveCustomerGroupCartEntities(customerTemp.getCustomerId());
             
             for (GroupCartEntity groupCart : groupCarts)
             {
@@ -416,7 +417,7 @@ public class GroupCartResource
             {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
-            catch (InputDataValidationException | CreateNewGroupCartException ex)
+            catch (CreateNewGroupCartException ex)
             {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }

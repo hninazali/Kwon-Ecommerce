@@ -104,10 +104,23 @@ public class PersonalCartResource
             
             for (OrderLineItemEntity lineItem : orderLineItems)
             {
-                lineItem.getCustomerEntity().getOrderLineItemEntities().clear();
-                lineItem.getCustomerEntity().getOrderTransactionEntities().clear();
-                lineItem.getCustomerEntity().getGroupCartEntities().clear();
-                lineItem.getCustomerEntity().setPersonalCartEntity(null);
+//                lineItem.getCustomerEntity().getOrderLineItemEntities().clear();
+//                lineItem.getCustomerEntity().getOrderTransactionEntities().clear();
+//                lineItem.getCustomerEntity().getGroupCartEntities().clear();
+//                lineItem.getCustomerEntity().setPersonalCartEntity(null);
+                lineItem.setCustomerEntity(null);
+                if (lineItem.getBundleEntity() != null)
+                {
+                    lineItem.getBundleEntity().getCategoryEntities().clear();
+                    lineItem.getBundleEntity().getTagEntities().clear();
+                    lineItem.getBundleEntity().getBundleLineItems().clear();
+                }
+                else
+                {
+                    lineItem.getProductEntity().setCategoryEntity(null);
+                    lineItem.getProductEntity().getTagEntities().clear();
+                    lineItem.getProductEntity().setBrandEntity(null);
+                }
             }
             
             GenericEntity<List<OrderLineItemEntity>> genericEntity = new GenericEntity<List<OrderLineItemEntity>>(orderLineItems){

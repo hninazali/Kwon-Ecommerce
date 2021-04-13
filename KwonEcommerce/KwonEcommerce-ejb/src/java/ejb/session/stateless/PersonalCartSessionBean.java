@@ -146,6 +146,8 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
         PersonalCartEntity personalCartEntity = customer.getPersonalCartEntity();
         personalCartEntity.getOrderLineItemEntities().add(lineItem);
         
+        entityManager.persist(lineItem);
+        
         return lineItem;
     }
     
@@ -197,6 +199,10 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
     {
         CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
         PersonalCartEntity personalCart = customer.getPersonalCartEntity();
+        if (personalCart.getOrderLineItemEntities().size() < 1)
+        {
+            return false;
+        }
         for (OrderLineItemEntity lineItem : personalCart.getOrderLineItemEntities())
         {
             if (lineItem.getProductEntity().getName().equals(product.getName()))

@@ -66,13 +66,16 @@ public class ProductResource
                 }
                 
                 productEntity.getCategoryEntity().getProductEntities().clear();
+                productEntity.getCategoryEntity().getBundleEntities().clear();
                 
                 for(TagEntity tagEntity:productEntity.getTagEntities())
                 {
                     tagEntity.getProductEntities().clear();
+                    tagEntity.getBundleEntities().clear();
                 }
                 
                 productEntity.getBrandEntity().getProductEntities().clear();
+                //productEntity.getBrandEntity().getBundleEntities().clear();
             }
             
             GenericEntity<List<ProductEntity>> genericEntity = new GenericEntity<List<ProductEntity>>(products){
@@ -103,13 +106,16 @@ public class ProductResource
                 }
                 
                 productEntity.getCategoryEntity().getProductEntities().clear();
+                productEntity.getCategoryEntity().getBundleEntities().clear();
                 
                 for(TagEntity tagEntity:productEntity.getTagEntities())
                 {
                     tagEntity.getProductEntities().clear();
+                    tagEntity.getBundleEntities().clear();
                 }
                 
                 productEntity.getBrandEntity().getProductEntities().clear();
+                //productEntity.getBrandEntity().getBundleEntities().clear();
             }
             
             GenericEntity<List<ProductEntity>> genericEntity = new GenericEntity<List<ProductEntity>>(products){
@@ -140,13 +146,16 @@ public class ProductResource
                 }
                 
                 productEntity.getCategoryEntity().getProductEntities().clear();
+                productEntity.getCategoryEntity().getBundleEntities().clear();
                 
                 for(TagEntity tagEntity:productEntity.getTagEntities())
                 {
                     tagEntity.getProductEntities().clear();
+                    tagEntity.getBundleEntities().clear();
                 }
                 
                 productEntity.getBrandEntity().getProductEntities().clear();
+                //productEntity.getBrandEntity().getBundleEntities().clear();
             }
             
             GenericEntity<List<ProductEntity>> genericEntity = new GenericEntity<List<ProductEntity>>(products){
@@ -177,13 +186,16 @@ public class ProductResource
                 }
                 
                 productEntity.getCategoryEntity().getProductEntities().clear();
+                productEntity.getCategoryEntity().getBundleEntities().clear();
                 
                 for(TagEntity tagEntity:productEntity.getTagEntities())
                 {
                     tagEntity.getProductEntities().clear();
+                    tagEntity.getBundleEntities().clear();
                 }
                 
                 productEntity.getBrandEntity().getProductEntities().clear();
+                //productEntity.getBrandEntity().getBundleEntities().clear();
             }
             
             GenericEntity<List<ProductEntity>> genericEntity = new GenericEntity<List<ProductEntity>>(products){
@@ -213,10 +225,12 @@ public class ProductResource
             }
 
             productEntity.getCategoryEntity().getProductEntities().clear();
+            productEntity.getCategoryEntity().getBundleEntities().clear();
 
             for(TagEntity tagEntity:productEntity.getTagEntities())
             {
                 tagEntity.getProductEntities().clear();
+                tagEntity.getBundleEntities().clear();
             }
             
             productEntity.getBrandEntity().getProductEntities().clear();
@@ -251,13 +265,16 @@ public class ProductResource
                 }
                 
                 productEntity.getCategoryEntity().getProductEntities().clear();
+                productEntity.getCategoryEntity().getBundleEntities().clear();
                 
                 for(TagEntity tagEntity:productEntity.getTagEntities())
                 {
                     tagEntity.getProductEntities().clear();
+                    tagEntity.getBundleEntities().clear();
                 }
                 
                 productEntity.getBrandEntity().getProductEntities().clear();
+                //productEntity.getBrandEntity().getBundleEntities().clear();
             }
             
             GenericEntity<List<ProductEntity>> genericEntity = new GenericEntity<List<ProductEntity>>(products){
