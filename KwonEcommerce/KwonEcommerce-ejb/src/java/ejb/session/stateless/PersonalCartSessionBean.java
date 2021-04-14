@@ -27,6 +27,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.BundleInsufficientQuantityOnHandException;
+import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CreateNewPersonalCartException;
@@ -35,6 +37,8 @@ import util.exception.GroupCartNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
 import util.exception.PersonalCartNotFoundException;
+import util.exception.ProductInsufficientQuantityOnHandException;
+import util.exception.ProductNotFoundException;
 
 @Stateless
 public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
@@ -174,7 +178,7 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
     }
 
     @Override
-    public OrderTransactionEntity checkOutCart(Long customerId, Long personalCartId) throws PersonalCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException {
+    public OrderTransactionEntity checkOutCart(Long customerId, Long personalCartId) throws PersonalCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException {
         //PersonalCartEntity personalCartEntity = retrievePersonalCartByIdEager(personalCartId);
         CustomerEntity customerEntity = customerSessionBeanLocal.retrieveCustomerById(customerId);
         PersonalCartEntity personalCartEntity = customerEntity.getPersonalCartEntity();

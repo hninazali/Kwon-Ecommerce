@@ -12,6 +12,8 @@ import entity.PersonalCartEntity;
 import entity.ProductEntity;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.BundleInsufficientQuantityOnHandException;
+import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CreateNewPersonalCartException;
@@ -19,6 +21,8 @@ import util.exception.CustomerNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
 import util.exception.PersonalCartNotFoundException;
+import util.exception.ProductInsufficientQuantityOnHandException;
+import util.exception.ProductNotFoundException;
 
 @Local
 public interface PersonalCartSessionBeanLocal {
@@ -31,7 +35,7 @@ public interface PersonalCartSessionBeanLocal {
 
     void addOrderLineItemToCart(Long personalCartId, OrderLineItemEntity orderLineItemEntity) throws PersonalCartNotFoundException;
 
-    public OrderTransactionEntity checkOutCart(Long customerId, Long personalCartId) throws PersonalCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException;
+    public OrderTransactionEntity checkOutCart(Long customerId, Long personalCartId) throws PersonalCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException;
 
     public PersonalCartEntity retrievePersonalCartEntity(Long customerId) throws CustomerNotFoundException;
 
