@@ -162,8 +162,8 @@ public class ProductResource
                     productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
                 }
                 System.out.println("!!!!!!!!!ADDED!!!!!");
-                //productEntity.getCategoryEntity().getProductEntities().clear();
-                //productEntity.getCategoryEntity().getBundleEntities().clear();
+                productEntity.getCategoryEntity().getProductEntities().clear();
+                productEntity.getCategoryEntity().getBundleEntities().clear();
                 products.add(productEntity);
                 System.out.println("ADDED!!!!!");
 //                productEntity.getCategoryEntity().setParentCategoryEntity(null);
