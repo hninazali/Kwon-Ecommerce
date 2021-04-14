@@ -53,6 +53,7 @@ public class StaffEntitySessionBean implements StaffEntitySessionBeanLocal {
                 entityManager.flush();
 
                 return newStaffEntity.getStaffId();
+                
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
                     if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {

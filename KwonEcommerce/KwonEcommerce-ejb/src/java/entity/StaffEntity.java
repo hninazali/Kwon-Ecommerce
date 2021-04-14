@@ -38,10 +38,10 @@ public class StaffEntity implements Serializable {
     @NotNull
     @Size(max = 32)
     private String lastName;
-    @Column(nullable = false, unique = true, length = 32)
-    @NotNull
-    @Size(max = 32)
-    private String fullName;
+//    @Column(nullable = false, unique = true, length = 32)
+//    @NotNull
+//    @Size(max = 32)
+//    private String fullName;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @NotNull
@@ -58,6 +58,7 @@ public class StaffEntity implements Serializable {
 
     @OneToMany(mappedBy = "staffEntity", fetch = FetchType.LAZY)
     private List<OrderTransactionEntity> orderTransactionEntities;
+    
     public StaffEntity() {
         this.salt = CryptographicHelper.getInstance().generateRandomString(32);
 
@@ -71,9 +72,11 @@ public class StaffEntity implements Serializable {
         this.lastName = lastName;
         this.accessRightEnum = accessRightEnum;
         this.username = username;
-        this.fullName = firstName + " " + lastName;
+//        this.fullName = firstName + " " + lastName;
+        
+        this.password = password;
 
-        setPassword(password);
+//        setPassword(password);
     }
 
     @Override
@@ -171,4 +174,18 @@ public class StaffEntity implements Serializable {
     public void setOrderTransactionEntities(List<OrderTransactionEntity> orderTransactionEntities) {
         this.orderTransactionEntities = orderTransactionEntities;
     }
+
+//    /**
+//     * @return the fullName
+//     */
+//    public String getFullName() {
+//        return fullName;
+//    }
+//
+//    /**
+//     * @param fullName the fullName to set
+//     */
+//    public void setFullName(String fullName) {
+//        this.fullName = fullName;
+//    }
 }
