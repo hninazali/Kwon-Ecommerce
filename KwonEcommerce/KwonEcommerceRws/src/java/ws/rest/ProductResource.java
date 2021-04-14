@@ -103,16 +103,15 @@ public class ProductResource
             
             for(ProductEntity productEntity : products)
             {
-                productEntity.setCategoryEntity(null);
                 productEntity.getTagEntities().clear();
                 productEntity.setBrandEntity(null);
-//                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
-//                {
-//                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
-//                }
-//                
-//                productEntity.getCategoryEntity().getProductEntities().clear();
-//                productEntity.getCategoryEntity().getBundleEntities().clear();
+                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
+                {
+                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
+                }
+                
+                productEntity.getCategoryEntity().getProductEntities().clear();
+                productEntity.getCategoryEntity().getBundleEntities().clear();
 //                
 //                for(TagEntity tagEntity:productEntity.getTagEntities())
 //                {
@@ -188,16 +187,16 @@ public class ProductResource
             
             for(ProductEntity productEntity : products)
             {
-                productEntity.setCategoryEntity(null);
+                //productEntity.setCategoryEntity(null);
                 productEntity.getTagEntities().clear();
                 productEntity.setBrandEntity(null);
-//                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
-//                {
-//                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
-//                }
-//                
-//                productEntity.getCategoryEntity().getProductEntities().clear();
-//                productEntity.getCategoryEntity().getBundleEntities().clear();
+                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
+                {
+                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
+                }
+                
+                productEntity.getCategoryEntity().getProductEntities().clear();
+                productEntity.getCategoryEntity().getBundleEntities().clear();
 //                
 //                for(TagEntity tagEntity:productEntity.getTagEntities())
 //                {
