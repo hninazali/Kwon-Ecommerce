@@ -33,6 +33,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import util.exception.BundleInsufficientQuantityOnHandException;
 import util.exception.BundleNotFoundException;
 import util.exception.CreateNewGroupCartException;
 import util.exception.CreateNewOrderLineItemException;
@@ -43,6 +44,7 @@ import util.exception.GroupCartNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.OrderLineItemNotFoundException;
+import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
 import ws.datamodel.AddBundleToGroupCartReq;
 import ws.datamodel.AddItemToGroupCartReq;
@@ -372,7 +374,7 @@ public class GroupCartResource
             {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
-            catch(GroupCartNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException  ex)
+            catch(GroupCartNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException | BundleNotFoundException | BundleInsufficientQuantityOnHandException | ProductNotFoundException | ProductInsufficientQuantityOnHandException  ex)
             {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }
@@ -396,7 +398,7 @@ public class GroupCartResource
                 
                 CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
 
-                groupCartSessionBean.removeOrderLineItem(customer.getCustomerId(), req.getGroupCart().getGroupCartId(), req.getLineItem());
+                groupCartSessionBean.removeOrderLineItem(customer.getCustomerId(), req.getGroupCartId(), req.getLineItem());
 
                 return Response.status(Response.Status.OK).build();
             }
