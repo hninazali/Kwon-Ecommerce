@@ -191,7 +191,7 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
 
     @Override
     public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException {
-        GroupCartEntity groupCartEntity = retrieveGroupCartByIdEager(groupCartId);
+        GroupCartEntity groupCartEntity = retrieveGroupCartById(groupCartId);
         Integer totalQty = 0;
         BigDecimal totalAmount = BigDecimal.ZERO;
         Integer totalLineItem = groupCartEntity.getOrderLineItemEntities().size();
