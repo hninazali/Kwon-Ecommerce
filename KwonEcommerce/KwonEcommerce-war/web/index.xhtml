@@ -29,7 +29,7 @@
                             <p:outputLabel value="First Name: " />
                         </p:column>
                         <p:column>
-                            <p:inputText id="firstName" value="#{accountManagementManagedBean.newAccountEntity.firstName}" required="true" requiredMessage="First Name is required!" />
+                            <p:inputText id="firstName" value="#{staffManagementManagedBean.newStaffEntity.firstName}" required="true" requiredMessage="First Name is required!" />
                         </p:column>
                         <p:column>
                             <p:message for="firstName" />
@@ -41,31 +41,20 @@
                             <p:outputLabel value="Last Name: " />
                         </p:column>
                         <p:column>
-                            <p:inputText id="lastName" value="#{accountManagementManagedBean.newAccountEntity.lastName}" required="true" requiredMessage="Last Name is required!" />
+                            <p:inputText id="lastName" value="#{staffManagementManagedBean.newStaffEntity.lastName}" required="true" requiredMessage="Last Name is required!" />
                         </p:column>
                         <p:column>
                             <p:message for="lastName" />
                         </p:column>
                     </p:row>
 
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel value="Email: " />
-                        </p:column>
-                        <p:column>
-                            <p:inputText id="email" value="#{accountManagementManagedBean.newAccountEntity.email}" required="true" requiredMessage="Email is required!" />
-                        </p:column>
-                        <p:column>
-                            <p:message for="email" />
-                        </p:column>
-                    </p:row>
 
                     <p:row>
                         <p:column>
                             <p:outputLabel value="Username: " />
                         </p:column>
                         <p:column>
-                            <p:inputText id="username" value="#{accountManagementManagedBean.newAccountEntity.username}" required="true" requiredMessage="Username is required!" />
+                            <p:inputText id="username" value="#{staffManagementManagedBean.newStaffEntity.username}" required="true" requiredMessage="Username is required!" />
                         </p:column>
                         <p:column>
                             <p:message for="username" />
@@ -77,7 +66,8 @@
                             <p:outputLabel value="Password: " />
                         </p:column>
                         <p:column>
-                            <p:password id="password" value="#{accountManagementManagedBean.newAccountEntity.password}" required="true" requiredMessage="Password is required!" />
+                            <p:password id="password" value="#{staffManagementManagedBean.newStaffEntity.password}" required="true" requiredMessage="Password is required!" />
+
                         </p:column>
                         <p:column>
                             <p:message for="password" />
@@ -87,7 +77,7 @@
                     <p:row>
                         <p:column colspan="3">
                             <p:commandButton type="reset" value="Clear" />
-                            <p:commandButton type="submit" value="Register" actionListener="#{accountManagementManagedBean.createNewAccount}" update="@form" oncomplete="PF('registerAccountDialog').hide();"/>&nbsp;
+                            <p:commandButton type="submit" value="Register" actionListener="#{staffManagementManagedBean.createNewStaff}" update="@form" oncomplete="PF('registerAccountDialog').hide();"/>&nbsp;
                         </p:column>
                     </p:row>
                 </p:panelGrid>
