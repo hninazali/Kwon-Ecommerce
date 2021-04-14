@@ -6,6 +6,7 @@
 package ws.rest;
 
 import ejb.session.stateless.ProductEntitySessionBeanLocal;
+import entity.CategoryEntity;
 import entity.ProductEntity;
 import entity.TagEntity;
 import java.util.ArrayList;
@@ -142,28 +143,35 @@ public class ProductResource
     {
         try
         {
-            List<ProductEntity> productEntities = productEntitySessionBean.filterProductsByCategory(categoryId);
-            //System.out.println("++++++++++++++   " + products.size());
+            List<ProductEntity> productEntities1 = productEntitySessionBean.filterProductsByCategory(categoryId);
+            ArrayList<ProductEntity> productEntities = new ArrayList<>();
+            productEntities.addAll(productEntities1);
+            System.out.println("++++++++++++++   " + productEntities.size());
             ProductEntity productEntity = new ProductEntity();
+            Integer temp = productEntities.size();
             //System.out.println("TESTING   " + products.get(1).getName());
             List<ProductEntity> products = new ArrayList<>();
             
-            for(int i = 0; i < productEntities.size(); i++)
+            for(int i = 0; i < temp; i++)
             {
-                System.out.println("AAAAAAAAAA");
+                //System.out.println("AAAAAAAAAA");
                 productEntity = productEntities.get(i);
+                System.out.println(productEntity.getName() + "   11111111");
                 //System.out.println(productEntity.getName() + "  BBBBBBBBBBBBBB");
                 //productEntity.setCategoryEntity(null);
-                productEntity.getTagEntities().clear();
-                productEntity.setBrandEntity(null);
-                System.out.println("ADDED!!!!!+++++++++++");
+                //productEntity.getTagEntities().clear();
+                //productEntity.setBrandEntity(null);
+                //String categoryName = productEntity.getCategoryEntity().getName();
+                //System.out.println("ADDED!!!!!+++++++++++");
                 if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
                 {
                     productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
                 }
-                System.out.println("!!!!!!!!!ADDED!!!!!");
+                //System.out.println("!!!!!!!!!ADDED!!!!!");
                 productEntity.getCategoryEntity().getProductEntities().clear();
                 productEntity.getCategoryEntity().getBundleEntities().clear();
+//                productEntity.setCategoryEntity(new CategoryEntity());
+//                productEntity.getCategoryEntity().setName(categoryName);
                 products.add(productEntity);
                 System.out.println("ADDED!!!!!");
 //                productEntity.getCategoryEntity().setParentCategoryEntity(null);
@@ -171,14 +179,15 @@ public class ProductResource
 //                productEntity.getCategoryEntity().getProductEntities().clear();
 //                productEntity.getCategoryEntity().getBundleEntities().clear();
 //                productEntity.setCategoryEntity(null);
-//                    productEntity.getBrandEntity().getProductEntities().clear();
-//                    for(TagEntity tagEntity:productEntity.getTagEntities())
-//                    {
-//                        tagEntity.getProductEntities().clear();
-//                        tagEntity.getBundleEntities().clear();
-//                    }
+                productEntity.getBrandEntity().getProductEntities().clear();
+                for(TagEntity tagEntity:productEntity.getTagEntities())
+                {
+                    tagEntity.getProductEntities().clear();
+                    tagEntity.getBundleEntities().clear();
+                }
 //                productEntity.getBrandEntity().getBundleEntities().clear();
             }
+            System.out.println("$$$$$$$   " + productEntities.size());
             
             GenericEntity<List<ProductEntity>> genericEntity = new GenericEntity<List<ProductEntity>>(products){
             };
