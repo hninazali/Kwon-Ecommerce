@@ -205,19 +205,19 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
         List<ProductEntity> productEntities = new ArrayList<>();
         CategoryEntity categoryEntity = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(categoryId);
         
-//        if(categoryEntity.getSubCategoryEntities().isEmpty())
-//        {
-//            productEntities = categoryEntity.getProductEntities(); 
-//        }
-//        else
-//        {
-//            for(CategoryEntity subCategoryEntity:categoryEntity.getSubCategoryEntities())
-//            {
-//                productEntities.addAll(addSubCategoryProducts(subCategoryEntity));
-//            }
-//        }
+        if(categoryEntity.getSubCategoryEntities().isEmpty())
+        {
+            productEntities = categoryEntity.getProductEntities(); 
+        }
+        else
+        {
+            for(CategoryEntity subCategoryEntity:categoryEntity.getSubCategoryEntities())
+            {
+                productEntities.addAll(addSubCategoryProducts(subCategoryEntity));
+            }
+        }
 
-        productEntities = categoryEntity.getProductEntities(); 
+        //roductEntities = categoryEntity.getProductEntities(); 
         
         for(ProductEntity productEntity:productEntities)
         {

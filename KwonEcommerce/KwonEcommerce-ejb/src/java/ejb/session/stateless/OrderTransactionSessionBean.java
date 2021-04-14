@@ -2,6 +2,7 @@ package ejb.session.stateless;
 
 //import entity.CustomerEntity;
 import entity.CustomerEntity;
+import entity.GroupCartEntity;
 import entity.OrderTransactionEntity;
 import entity.OrderLineItemEntity;
 import entity.StaffEntity;
@@ -116,7 +117,7 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
     }
     
     @Override
-    public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction) throws CustomerNotFoundException, CreateNewOrderTransactionException
+    public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException
     {
         if(newOrderTransaction != null)
         {
@@ -133,7 +134,62 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
                 for(OrderLineItemEntity orderLineItemEntity : customer.getPersonalCartEntity().getOrderLineItemEntities())
                 {
                     newOrderTransaction.getOrderLineItemEntities().add(orderLineItemEntity);
-                    productSessionBeanLocal.debitQuantityOnHand(orderLineItemEntity.getProductEntity().getProductId(), orderLineItemEntity.getQuantity());
+                    if (orderLineItemEntity.getProductEntity() != null)
+                    {
+                        productSessionBeanLocal.debitQuantityOnHand(orderLineItemEntity.getProductEntity().getProductId(), orderLineItemEntity.getQuantity());
+                    } 
+                    else
+                    {
+                        bundleEntitySessionBeanLocal.debitQuantityOnHand(orderLineItemEntity.getBundleEntity().getBundleId(), orderLineItemEntity.getQuantity());
+                    }
+                    //orderLineItemEntity.setCustomerEntity(null);
+                    //customer.getPersonalCartEntity().getOrderLineItemEntities().remove(orderLineItemEntity);
+                }
+                
+
+                entityManager.flush();
+
+                return newOrderTransaction;
+            }
+            catch(ProductNotFoundException | ProductInsufficientQuantityOnHandException ex)
+            {
+                // The line below rolls back all changes made to the database.
+                eJBContext.setRollbackOnly();
+                throw new CreateNewOrderTransactionException(ex.getMessage());
+            }
+        }
+        else
+        {
+            throw new CreateNewOrderTransactionException("Order transaction information not provided");
+        }
+    }
+    
+    @Override
+    public OrderTransactionEntity createNewOrderTransactionForGroup(Long customerId, OrderTransactionEntity newOrderTransaction, GroupCartEntity groupCart) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException
+    {
+        if(newOrderTransaction != null)
+        {
+            try
+            {
+                CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+                entityManager.persist(newOrderTransaction);
+                newOrderTransaction.setCustomerEntity(customer);
+                customer.getOrderTransactionEntities().add(newOrderTransaction);
+
+                //entityManager.persist(newOrderTransaction);
+
+                
+                for(OrderLineItemEntity orderLineItemEntity : groupCart.getOrderLineItemEntities())
+                {
+                    newOrderTransaction.getOrderLineItemEntities().add(orderLineItemEntity);
+                    if (orderLineItemEntity.getProductEntity() != null)
+                    {
+                        productSessionBeanLocal.debitQuantityOnHand(orderLineItemEntity.getProductEntity().getProductId(), orderLineItemEntity.getQuantity());
+                    } 
+                    else
+                    {
+                        bundleEntitySessionBeanLocal.debitQuantityOnHand(orderLineItemEntity.getBundleEntity().getBundleId(), orderLineItemEntity.getQuantity());
+                    }
                     //orderLineItemEntity.setCustomerEntity(null);
                     //customer.getPersonalCartEntity().getOrderLineItemEntities().remove(orderLineItemEntity);
                 }

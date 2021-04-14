@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.CustomerEntity;
+import entity.PersonalCartEntity;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Stateless;
@@ -51,6 +52,8 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
 
         if (constraintViolations.isEmpty()) {
             try {
+                PersonalCartEntity pc = new PersonalCartEntity();
+                newCustomerEntity.setPersonalCartEntity(pc);
                 entityManager.persist(newCustomerEntity);
                 entityManager.flush();
                 System.out.println("Customer created");

@@ -8,6 +8,7 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -65,7 +66,7 @@ public class CustomerEntity implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Boolean banned;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(nullable = false)
     private PersonalCartEntity personalCartEntity;
 

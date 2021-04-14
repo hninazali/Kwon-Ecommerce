@@ -25,6 +25,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.BundleInsufficientQuantityOnHandException;
+import util.exception.BundleNotFoundException;
 import util.exception.CreateNewGroupCartException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
@@ -34,6 +36,8 @@ import util.exception.GroupActivityDetectedException;
 import util.exception.GroupCartNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
+import util.exception.ProductInsufficientQuantityOnHandException;
+import util.exception.ProductNotFoundException;
 
 @Stateless
 public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
@@ -190,8 +194,13 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
     }
 
     @Override
+<<<<<<< HEAD
     public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException {
         GroupCartEntity groupCartEntity = retrieveGroupCartById(groupCartId);
+=======
+    public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException {
+        GroupCartEntity groupCartEntity = retrieveGroupCartByIdEager(groupCartId);
+>>>>>>> master
         Integer totalQty = 0;
         BigDecimal totalAmount = BigDecimal.ZERO;
         Integer totalLineItem = groupCartEntity.getOrderLineItemEntities().size();
@@ -203,7 +212,7 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
         }
 
         OrderTransactionEntity orderTransactionEntity = new OrderTransactionEntity(totalLineItem, totalQty, totalAmount, new Date(), groupCartEntity.getOrderLineItemEntities(),false);
-        OrderTransactionEntity afterCheckout = orderTransactionSessionBeanLocal.createNewOrderTransactionForCustomer(customerId, orderTransactionEntity);
+        OrderTransactionEntity afterCheckout = orderTransactionSessionBeanLocal.createNewOrderTransactionForGroup(customerId, orderTransactionEntity, groupCartEntity);
         clearGroupCart(groupCartEntity);
         
         return afterCheckout;

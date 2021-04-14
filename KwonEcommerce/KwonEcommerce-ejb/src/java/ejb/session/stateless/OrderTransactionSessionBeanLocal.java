@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.GroupCartEntity;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
 import java.util.List;
@@ -16,6 +17,8 @@ import util.exception.CreateNewOrderTransactionException;
 import util.exception.CustomerNotFoundException;
 import util.exception.OrderTransactionAlreadyVoidedRefundedException;
 import util.exception.OrderTransactionNotFoundException;
+import util.exception.ProductInsufficientQuantityOnHandException;
+import util.exception.ProductNotFoundException;
 import util.exception.StaffNotFoundException;
 
 /**
@@ -43,8 +46,10 @@ public interface OrderTransactionSessionBeanLocal {
 
     public List<OrderLineItemEntity> retrieveOrderLineItemsByProductId(Long productId);
 
-    public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction) throws CustomerNotFoundException, CreateNewOrderTransactionException;
+    public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException;
 
     public List<OrderTransactionEntity> retrieveOrderTransactionsByCustomer(Long customerId) throws CustomerNotFoundException;
+
+    public OrderTransactionEntity createNewOrderTransactionForGroup(Long customerId, OrderTransactionEntity newOrderTransaction, GroupCartEntity groupCart) throws CustomerNotFoundException, CreateNewOrderTransactionException,BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException;
     
 }

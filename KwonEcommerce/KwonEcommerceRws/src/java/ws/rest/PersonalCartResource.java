@@ -32,6 +32,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import util.exception.BundleInsufficientQuantityOnHandException;
 import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
@@ -40,6 +41,7 @@ import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.OrderLineItemNotFoundException;
 import util.exception.PersonalCartNotFoundException;
+import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
 import ws.datamodel.AddBundleToPersonalCartReq;
 import ws.datamodel.AddItemToPersonalCartReq;
@@ -277,7 +279,7 @@ public class PersonalCartResource
         {
             return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
         }
-        catch(PersonalCartNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException  ex)
+        catch(PersonalCartNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException | BundleNotFoundException | BundleInsufficientQuantityOnHandException | ProductNotFoundException | ProductInsufficientQuantityOnHandException ex)
         {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }

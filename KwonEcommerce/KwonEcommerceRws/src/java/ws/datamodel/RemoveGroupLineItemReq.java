@@ -17,16 +17,16 @@ public class RemoveGroupLineItemReq
     private String username;
     private String password;
     private OrderLineItemEntity lineItem;
-    private GroupCartEntity groupCart;
+    private Long groupCartId;
 
     public RemoveGroupLineItemReq() {
     }
 
-    public RemoveGroupLineItemReq(String username, String password, OrderLineItemEntity lineItem, GroupCartEntity groupCart) {
+    public RemoveGroupLineItemReq(String username, String password, OrderLineItemEntity lineItem, Long groupCartId) {
         this.username = username;
         this.password = password;
         this.lineItem = lineItem;
-        this.groupCart = groupCart;
+        this.groupCartId = groupCartId;
     }
 
     public String getUsername() {
@@ -53,12 +53,12 @@ public class RemoveGroupLineItemReq
         this.lineItem = lineItem;
     }
 
-    public GroupCartEntity getGroupCart() {
-        return groupCart;
+    public Long getGroupCartId() {
+        return groupCartId;
     }
 
-    public void setGroupCart(GroupCartEntity groupCart) {
-        this.groupCart = groupCart;
+    public void setGroupCartId(Long groupCart) {
+        this.groupCartId = groupCart;
     }
     
     
