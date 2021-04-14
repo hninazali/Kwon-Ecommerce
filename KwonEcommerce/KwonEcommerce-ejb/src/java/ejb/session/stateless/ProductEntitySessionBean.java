@@ -205,31 +205,33 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
         List<ProductEntity> productEntities = new ArrayList<>();
         CategoryEntity categoryEntity = categoryEntitySessionBeanLocal.retrieveCategoryByCategoryId(categoryId);
         
-        if(categoryEntity.getSubCategoryEntities().isEmpty())
-        {
-            productEntities = categoryEntity.getProductEntities();            
-        }
-        else
-        {
-            for(CategoryEntity subCategoryEntity:categoryEntity.getSubCategoryEntities())
-            {
-                productEntities.addAll(addSubCategoryProducts(subCategoryEntity));
-            }
-        }
+//        if(categoryEntity.getSubCategoryEntities().isEmpty())
+//        {
+//            productEntities = categoryEntity.getProductEntities(); 
+//        }
+//        else
+//        {
+//            for(CategoryEntity subCategoryEntity:categoryEntity.getSubCategoryEntities())
+//            {
+//                productEntities.addAll(addSubCategoryProducts(subCategoryEntity));
+//            }
+//        }
+
+        productEntities = categoryEntity.getProductEntities(); 
         
         for(ProductEntity productEntity:productEntities)
         {
             productEntity.getCategoryEntity();
-            productEntity.getTagEntities().size();
             productEntity.getBrandEntity();
+            productEntity.getTagEntities().size();
         }
         
-        Collections.sort(productEntities, new Comparator<ProductEntity>()
-            {
-                public int compare(ProductEntity pe1, ProductEntity pe2) {
-                    return pe1.getSkuCode().compareTo(pe2.getSkuCode());
-                }
-            });
+//        Collections.sort(productEntities, new Comparator<ProductEntity>()
+//            {
+//                public int compare(ProductEntity pe1, ProductEntity pe2) {
+//                    return pe1.getSkuCode().compareTo(pe2.getSkuCode());
+//                }
+//            });
 
         return productEntities;
     }
@@ -249,12 +251,12 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
             productEntity.getBrandEntity();
         }
         
-        Collections.sort(productEntities, new Comparator<ProductEntity>()
-            {
-                public int compare(ProductEntity pe1, ProductEntity pe2) {
-                    return pe1.getSkuCode().compareTo(pe2.getSkuCode());
-                }
-            });
+//        Collections.sort(productEntities, new Comparator<ProductEntity>()
+//            {
+//                public int compare(ProductEntity pe1, ProductEntity pe2) {
+//                    return pe1.getSkuCode().compareTo(pe2.getSkuCode());
+//                }
+//            });
 
         return productEntities;
     }
@@ -338,12 +340,12 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
             productEntity.getTagEntities().size();
         }
         
-        Collections.sort(productEntities, new Comparator<ProductEntity>()
-            {
-                public int compare(ProductEntity pe1, ProductEntity pe2) {
-                    return pe1.getSkuCode().compareTo(pe2.getSkuCode());
-                }
-            });
+//        Collections.sort(productEntities, new Comparator<ProductEntity>()
+//            {
+//                public int compare(ProductEntity pe1, ProductEntity pe2) {
+//                    return pe1.getSkuCode().compareTo(pe2.getSkuCode());
+//                }
+//            });
 
         return productEntities;
     }

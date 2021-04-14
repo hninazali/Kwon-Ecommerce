@@ -8,6 +8,7 @@ package ws.rest;
 import ejb.session.stateless.ProductEntitySessionBeanLocal;
 import entity.ProductEntity;
 import entity.TagEntity;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +26,8 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import util.exception.BrandNotFoundException;
+import util.exception.CategoryNotFoundException;
 import util.exception.ProductNotFoundException;
 import ws.datamodel.FilterProductsByTagsReq;
 
@@ -100,21 +103,24 @@ public class ProductResource
             
             for(ProductEntity productEntity : products)
             {
-                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
-                {
-                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
-                }
-                
-                productEntity.getCategoryEntity().getProductEntities().clear();
-                productEntity.getCategoryEntity().getBundleEntities().clear();
-                
-                for(TagEntity tagEntity:productEntity.getTagEntities())
-                {
-                    tagEntity.getProductEntities().clear();
-                    tagEntity.getBundleEntities().clear();
-                }
-                
-                productEntity.getBrandEntity().getProductEntities().clear();
+                productEntity.setCategoryEntity(null);
+                productEntity.getTagEntities().clear();
+                productEntity.setBrandEntity(null);
+//                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
+//                {
+//                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
+//                }
+//                
+//                productEntity.getCategoryEntity().getProductEntities().clear();
+//                productEntity.getCategoryEntity().getBundleEntities().clear();
+//                
+//                for(TagEntity tagEntity:productEntity.getTagEntities())
+//                {
+//                    tagEntity.getProductEntities().clear();
+//                    tagEntity.getBundleEntities().clear();
+//                }
+//                
+//                productEntity.getBrandEntity().getProductEntities().clear();
                 //productEntity.getBrandEntity().getBundleEntities().clear();
             }
             
@@ -123,9 +129,9 @@ public class ProductResource
             
             return Response.status(Status.OK).entity(genericEntity).build();
         }
-        catch (Exception ex)
+        catch (BrandNotFoundException ex)
         {
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
     
@@ -140,32 +146,34 @@ public class ProductResource
             
             for(ProductEntity productEntity : products)
             {
-                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
-                {
-                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
-                }
-                
-                productEntity.getCategoryEntity().getProductEntities().clear();
-                productEntity.getCategoryEntity().getBundleEntities().clear();
-                
-                for(TagEntity tagEntity:productEntity.getTagEntities())
-                {
-                    tagEntity.getProductEntities().clear();
-                    tagEntity.getBundleEntities().clear();
-                }
-                
-                productEntity.getBrandEntity().getProductEntities().clear();
-                //productEntity.getBrandEntity().getBundleEntities().clear();
+                productEntity.setCategoryEntity(null);
+                productEntity.getTagEntities().clear();
+                productEntity.setBrandEntity(null);
+//                    if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
+//                    {
+//                        productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
+//                    }
+//                    productEntity.getCategoryEntity().getProductEntities().clear();
+//                    productEntity.getCategoryEntity().getBundleEntities().clear();
+//                    productEntity.getBrandEntity().getProductEntities().clear();
+//                    for(TagEntity tagEntity:productEntity.getTagEntities())
+//                    {
+//                        tagEntity.getProductEntities().clear();
+//                        tagEntity.getBundleEntities().clear();
+//                    }
+//                productEntity.getBrandEntity().getBundleEntities().clear();
             }
             
             GenericEntity<List<ProductEntity>> genericEntity = new GenericEntity<List<ProductEntity>>(products){
             };
             
+            System.out.println("REACHABLE JUGA");
+            
             return Response.status(Status.OK).entity(genericEntity).build();
         }
-        catch (Exception ex)
+        catch (CategoryNotFoundException ex)
         {
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+            return Response.status(Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
     
@@ -180,21 +188,24 @@ public class ProductResource
             
             for(ProductEntity productEntity : products)
             {
-                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
-                {
-                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
-                }
-                
-                productEntity.getCategoryEntity().getProductEntities().clear();
-                productEntity.getCategoryEntity().getBundleEntities().clear();
-                
-                for(TagEntity tagEntity:productEntity.getTagEntities())
-                {
-                    tagEntity.getProductEntities().clear();
-                    tagEntity.getBundleEntities().clear();
-                }
-                
-                productEntity.getBrandEntity().getProductEntities().clear();
+                productEntity.setCategoryEntity(null);
+                productEntity.getTagEntities().clear();
+                productEntity.setBrandEntity(null);
+//                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
+//                {
+//                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
+//                }
+//                
+//                productEntity.getCategoryEntity().getProductEntities().clear();
+//                productEntity.getCategoryEntity().getBundleEntities().clear();
+//                
+//                for(TagEntity tagEntity:productEntity.getTagEntities())
+//                {
+//                    tagEntity.getProductEntities().clear();
+//                    tagEntity.getBundleEntities().clear();
+//                }
+//                
+//                productEntity.getBrandEntity().getProductEntities().clear();
                 //productEntity.getBrandEntity().getBundleEntities().clear();
             }
             
