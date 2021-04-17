@@ -83,4 +83,16 @@
         <local>ejb.session.stateless.CustomerSessionBeanLocal</local>
         <ejb-link>KwonEcommerce-ejb.jar#CustomerSessionBean</ejb-link>
     </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>CustomerSessionBeanLocal6</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.CustomerSessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#CustomerSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>CreditCardSessionBeanLocal</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.session.stateless.CreditCardSessionBeanLocal</local>
+        <ejb-link>KwonEcommerce-ejb.jar#CreditCardSessionBean</ejb-link>
+    </ejb-local-ref>
 </web-app>

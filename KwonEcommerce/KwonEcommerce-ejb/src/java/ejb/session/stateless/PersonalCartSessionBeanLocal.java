@@ -17,6 +17,7 @@ import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CreateNewPersonalCartException;
+import util.exception.CreditCardNotFoundException;
 import util.exception.CustomerNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
@@ -35,7 +36,7 @@ public interface PersonalCartSessionBeanLocal {
 
     void addOrderLineItemToCart(Long personalCartId, OrderLineItemEntity orderLineItemEntity) throws PersonalCartNotFoundException;
 
-    public OrderTransactionEntity checkOutCart(Long customerId, Long personalCartId) throws PersonalCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException;
+    public OrderTransactionEntity checkOutCart(Long customerId, Long personalCartId, Long creditCardId) throws PersonalCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException, CreditCardNotFoundException;
 
     public PersonalCartEntity retrievePersonalCartEntity(Long customerId) throws CustomerNotFoundException;
 

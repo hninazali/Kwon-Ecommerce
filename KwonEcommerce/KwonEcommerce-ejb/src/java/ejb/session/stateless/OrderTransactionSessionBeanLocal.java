@@ -14,6 +14,7 @@ import util.enumeration.ShippingStatusEnum;
 import util.exception.BundleInsufficientQuantityOnHandException;
 import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderTransactionException;
+import util.exception.CreditCardNotFoundException;
 import util.exception.CustomerNotFoundException;
 import util.exception.NeedStaffPermissionException;
 import util.exception.OrderTransactionAlreadyVoidedRefundedException;
@@ -47,11 +48,11 @@ public interface OrderTransactionSessionBeanLocal {
 
     public List<OrderLineItemEntity> retrieveOrderLineItemsByProductId(Long productId);
 
-    public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException;
+    public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction, Long creditCardId) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException, CreditCardNotFoundException;
 
     public List<OrderTransactionEntity> retrieveOrderTransactionsByCustomer(Long customerId) throws CustomerNotFoundException;
 
-    public OrderTransactionEntity createNewOrderTransactionForGroup(Long customerId, OrderTransactionEntity newOrderTransaction, GroupCartEntity groupCart) throws CustomerNotFoundException, CreateNewOrderTransactionException,BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException;
+    public OrderTransactionEntity createNewOrderTransactionForGroup(Long customerId, OrderTransactionEntity newOrderTransaction, GroupCartEntity groupCart, Long creditCardId) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, CreditCardNotFoundException, ProductInsufficientQuantityOnHandException;
 
     public void updateShippingStatus(OrderTransactionEntity order) throws OrderTransactionNotFoundException;
 

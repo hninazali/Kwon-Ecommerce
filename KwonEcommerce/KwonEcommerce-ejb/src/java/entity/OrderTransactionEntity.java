@@ -69,6 +69,10 @@ public class OrderTransactionEntity implements Serializable
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(nullable = true)
     private CustomerEntity customerEntity;
+    
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private CreditCardEntity creditCard;
 
     
     
@@ -278,5 +282,13 @@ public class OrderTransactionEntity implements Serializable
 
     public void setCustomerEntity(CustomerEntity customerEntity) {
         this.customerEntity = customerEntity;
+    }
+
+    public CreditCardEntity getCreditCard() {
+        return creditCard;
+    }
+
+    public void setCreditCard(CreditCardEntity creditCard) {
+        this.creditCard = creditCard;
     }
 }

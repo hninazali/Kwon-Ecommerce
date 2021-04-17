@@ -38,6 +38,7 @@ import util.exception.BundleNotFoundException;
 import util.exception.CreateNewGroupCartException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
+import util.exception.CreditCardNotFoundException;
 import util.exception.CustomerNotFoundException;
 import util.exception.GroupActivityDetectedException;
 import util.exception.GroupCartNotFoundException;
@@ -358,7 +359,7 @@ public class GroupCartResource
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkOutCart(LeaveGroupCartReq req)
+    public Response checkOutCart(CheckoutGroupCartReq req)
     {
         if (req != null)
         {
@@ -367,7 +368,7 @@ public class GroupCartResource
                 
                 CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
 
-                OrderTransactionEntity orderTransaction = groupCartSessionBean.checkOutCart(customer.getCustomerId(), req.getGroupCartId());
+                OrderTransactionEntity orderTransaction = groupCartSessionBean.checkOutCart(customer.getCustomerId(), req.getGroupCartId(), req.getCreditCardId());
                 
                 if (orderTransaction != null)
                 {
@@ -382,7 +383,7 @@ public class GroupCartResource
             {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
-            catch(GroupCartNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException | BundleNotFoundException | BundleInsufficientQuantityOnHandException | ProductNotFoundException | ProductInsufficientQuantityOnHandException  ex)
+            catch(GroupCartNotFoundException | CreditCardNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException | BundleNotFoundException | BundleInsufficientQuantityOnHandException | ProductNotFoundException | ProductInsufficientQuantityOnHandException  ex)
             {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }

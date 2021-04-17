@@ -30,6 +30,7 @@ import util.exception.BundleNotFoundException;
 import util.exception.CreateNewGroupCartException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
+import util.exception.CreditCardNotFoundException;
 import util.exception.CustomerExistInCartException;
 import util.exception.CustomerNotFoundException;
 import util.exception.GroupActivityDetectedException;
@@ -194,7 +195,7 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
     }
 
     @Override
-    public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException {
+    public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId, Long creditCardId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException, CreditCardNotFoundException {
         GroupCartEntity groupCartEntity = retrieveGroupCartById(groupCartId);
         CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
         if (groupCartEntity.getGroupOwner().getUsername().equals(customer.getUsername()))
@@ -211,7 +212,7 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
        
 
             OrderTransactionEntity orderTransactionEntity = new OrderTransactionEntity(totalLineItem, totalQty, totalAmount, new Date(), groupCartEntity.getOrderLineItemEntities(),false);
-            OrderTransactionEntity afterCheckout = orderTransactionSessionBeanLocal.createNewOrderTransactionForGroup(customerId, orderTransactionEntity, groupCartEntity);
+            OrderTransactionEntity afterCheckout = orderTransactionSessionBeanLocal.createNewOrderTransactionForGroup(customerId, orderTransactionEntity, groupCartEntity, creditCardId);
             clearGroupCart(groupCartEntity);
 
             return afterCheckout;

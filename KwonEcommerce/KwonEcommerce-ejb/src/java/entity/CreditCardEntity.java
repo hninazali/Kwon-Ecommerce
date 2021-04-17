@@ -24,25 +24,21 @@ public class CreditCardEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long creditCardId;
-    @Column(nullable = false, unique = true, length = 64)
+    @Column(nullable = false, unique = true)
     @NotNull
     @Size(min = 16, max = 16)
-    private Long number;
+    private String cardNumber;
     @Column(nullable = false, length = 64)
     @NotNull
     @Size(max = 64)
     private String name;
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private CustomerEntity customerEntity;
 
     public CreditCardEntity() {
     }
 
-    public CreditCardEntity(Long number, String name, CustomerEntity customerEntity) {
-        this.number = number;
+    public CreditCardEntity(String cardNumber, String name) {
+        this.cardNumber = cardNumber;
         this.name = name;
-        this.customerEntity = customerEntity;
     }
     
     public Long getCreditCardId() {
@@ -78,14 +74,6 @@ public class CreditCardEntity implements Serializable {
         return "entity.CreditCardEntity[ id=" + creditCardId + " ]";
     }
 
-        public Long getNumber() {
-        return number;
-    }
-
-    public void setNumber(Long number) {
-        this.number = number;
-    }
-
     public String getName() {
         return name;
     }
@@ -94,12 +82,11 @@ public class CreditCardEntity implements Serializable {
         this.name = name;
     }
 
-    public CustomerEntity getCustomerEntity() {
-        return customerEntity;
+    public String getCardNumber() {
+        return cardNumber;
     }
 
-    public void setCustomerEntity(CustomerEntity customerEntity) {
-        this.customerEntity = customerEntity;
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
-    
 }

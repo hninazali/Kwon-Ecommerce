@@ -5,25 +5,25 @@
  */
 package ws.datamodel;
 
-import entity.PersonalCartEntity;
+import entity.CreditCardEntity;
 
 /**
  *
  * @author User
  */
-public class CheckoutPersonalCartReq 
+public class AddNewCardReq 
 {
     private String username;
     private String password;
-    private Long creditCardId;
+    private CreditCardEntity creditCard;
 
-    public CheckoutPersonalCartReq() {
-    }
-
-    public CheckoutPersonalCartReq(String username, String password, Long creditCardId) {
+    public AddNewCardReq(String username, String password, CreditCardEntity creditCard) {
         this.username = username;
         this.password = password;
-        this.creditCardId = creditCardId;
+        this.creditCard = creditCard;
+    }
+
+    public AddNewCardReq() {
     }
 
     public String getUsername() {
@@ -42,12 +42,12 @@ public class CheckoutPersonalCartReq
         this.password = password;
     }
 
-    public Long getCreditCardId() {
-        return creditCardId;
+    public CreditCardEntity getCreditCard() {
+        return creditCard;
     }
 
-    public void setCreditCardId(Long creditCardId) {
-        this.creditCardId = creditCardId;
+    public void setCreditCard(CreditCardEntity creditCard) {
+        this.creditCard = creditCard;
     }
     
 }

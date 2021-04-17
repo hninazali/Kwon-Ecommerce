@@ -15,15 +15,17 @@ public class CheckoutGroupCartReq
 {
     private String username;
     private String password;
-    private GroupCartEntity groupCart;
+    private Long groupCartId;
+    private Long creditCardId;
 
     public CheckoutGroupCartReq() {
     }
 
-    public CheckoutGroupCartReq(String username, String password, GroupCartEntity groupCart) {
+    public CheckoutGroupCartReq(String username, String password, Long groupCartId, Long creditCardId) {
         this.username = username;
         this.password = password;
-        this.groupCart = groupCart;
+        this.groupCartId = groupCartId;
+        this.creditCardId = creditCardId;
     }
 
     public String getUsername() {
@@ -42,12 +44,20 @@ public class CheckoutGroupCartReq
         this.password = password;
     }
 
-    public GroupCartEntity getGroupCart() {
-        return groupCart;
+    public Long getGroupCartId() {
+        return groupCartId;
     }
 
-    public void setGroupCart(GroupCartEntity groupCart) {
-        this.groupCart = groupCart;
+    public void setGroupCartId(Long groupCartId) {
+        this.groupCartId = groupCartId;
+    }
+
+    public Long getCreditCardId() {
+        return creditCardId;
+    }
+
+    public void setCreditCardId(Long creditCardId) {
+        this.creditCardId = creditCardId;
     }
     
 }

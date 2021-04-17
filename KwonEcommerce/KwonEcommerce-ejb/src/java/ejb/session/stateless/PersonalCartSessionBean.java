@@ -32,6 +32,7 @@ import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CreateNewPersonalCartException;
+import util.exception.CreditCardNotFoundException;
 import util.exception.CustomerNotFoundException;
 import util.exception.GroupCartNotFoundException;
 import util.exception.InputDataValidationException;
@@ -178,7 +179,8 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
     }
 
     @Override
-    public OrderTransactionEntity checkOutCart(Long customerId, Long personalCartId) throws PersonalCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException {
+    public OrderTransactionEntity checkOutCart(Long customerId, Long personalCartId, Long creditCardId) throws PersonalCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException, CreditCardNotFoundException 
+    {
         //PersonalCartEntity personalCartEntity = retrievePersonalCartByIdEager(personalCartId);
         CustomerEntity customerEntity = customerSessionBeanLocal.retrieveCustomerById(customerId);
         PersonalCartEntity personalCartEntity = customerEntity.getPersonalCartEntity();
@@ -193,7 +195,7 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
         }
 
         OrderTransactionEntity orderTransactionEntity = new OrderTransactionEntity(totalLineItem, totalQty, totalAmount, new Date(), false);
-        OrderTransactionEntity afterCheckout = orderTransactionSessionBeanLocal.createNewOrderTransactionForCustomer(customerId, orderTransactionEntity);
+        OrderTransactionEntity afterCheckout = orderTransactionSessionBeanLocal.createNewOrderTransactionForCustomer(customerId, orderTransactionEntity, creditCardId);
         clearPersonalCart(personalCartEntity, customerEntity);
         
         return afterCheckout;

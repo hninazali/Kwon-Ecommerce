@@ -1,6 +1,7 @@
 package ejb.session.stateless;
 
 //import entity.CustomerEntity;
+import entity.CreditCardEntity;
 import entity.CustomerEntity;
 import entity.GroupCartEntity;
 import entity.OrderTransactionEntity;
@@ -24,6 +25,7 @@ import util.enumeration.ShippingStatusEnum;
 import util.exception.BundleInsufficientQuantityOnHandException;
 import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderTransactionException;
+import util.exception.CreditCardNotFoundException;
 import util.exception.CustomerNotFoundException;
 import util.exception.NeedStaffPermissionException;
 import util.exception.ProductInsufficientQuantityOnHandException;
@@ -38,6 +40,9 @@ import util.exception.StaffNotFoundException;
 
 public class OrderTransactionSessionBean implements OrderTransactionSessionBeanLocal
 {   
+
+    @EJB(name = "CreditCardSessionBeanLocal")
+    private CreditCardSessionBeanLocal creditCardSessionBeanLocal;
 
     @EJB(name = "BundleEntitySessionBeanLocal")
     private BundleEntitySessionBeanLocal bundleEntitySessionBeanLocal;
@@ -138,15 +143,18 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
     }
     
     @Override
-    public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException
+    public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction, Long creditCardId) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException, CreditCardNotFoundException
     {
         if(newOrderTransaction != null)
         {
             try
             {
                 CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+                CreditCardEntity ccard = creditCardSessionBeanLocal.retrieveCreditCartById(creditCardId);
+                
                 entityManager.persist(newOrderTransaction);
                 newOrderTransaction.setCustomerEntity(customer);
+                newOrderTransaction.setCreditCard(ccard);
                 customer.getOrderTransactionEntities().add(newOrderTransaction);
 
                 //entityManager.persist(newOrderTransaction);
@@ -186,15 +194,19 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
     }
     
     @Override
-    public OrderTransactionEntity createNewOrderTransactionForGroup(Long customerId, OrderTransactionEntity newOrderTransaction, GroupCartEntity groupCart) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException
+    public OrderTransactionEntity createNewOrderTransactionForGroup(Long customerId, OrderTransactionEntity newOrderTransaction, GroupCartEntity groupCart, Long creditCardId) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, CreditCardNotFoundException, ProductInsufficientQuantityOnHandException
     {
         if(newOrderTransaction != null)
         {
             try
             {
                 CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+                CreditCardEntity ccard = creditCardSessionBeanLocal.retrieveCreditCartById(creditCardId);
+                
                 entityManager.persist(newOrderTransaction);
                 newOrderTransaction.setCustomerEntity(customer);
+                newOrderTransaction.setCreditCard(ccard);
+                
                 customer.getOrderTransactionEntities().add(newOrderTransaction);
                 ArrayList<OrderLineItemEntity> tempItems = new ArrayList<>();
                 tempItems.addAll(groupCart.getOrderLineItemEntities());

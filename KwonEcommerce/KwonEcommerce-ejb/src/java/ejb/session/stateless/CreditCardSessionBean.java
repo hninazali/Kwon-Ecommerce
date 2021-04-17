@@ -7,7 +7,9 @@ package ejb.session.stateless;
 
 import entity.CreditCardEntity;
 import entity.CustomerEntity;
+import java.util.List;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -21,10 +23,15 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.CreateNewCreditCardException;
 import util.exception.CreditCardNotFoundException;
+import util.exception.CustomerNotFoundException;
 import util.exception.InputDataValidationException;
 
 @Stateless
-public class CreditCardSessionBean implements CreditCardSessionBeanLocal {
+public class CreditCardSessionBean implements CreditCardSessionBeanLocal 
+{
+
+    @EJB(name = "CustomerSessionBeanLocal")
+    private CustomerSessionBeanLocal customerSessionBeanLocal;
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
@@ -46,7 +53,35 @@ public class CreditCardSessionBean implements CreditCardSessionBeanLocal {
         if (constraintViolations.isEmpty()) {
             try {
 
-                CustomerEntity ce = newCreditCardEntity.getCustomerEntity();
+//                CustomerEntity ce = newCreditCardEntity.getCustomerEntity();
+//                ce.getCreditCardEntities().add(newCreditCardEntity);
+                entityManager.persist(newCreditCardEntity);
+                entityManager.flush();
+                return newCreditCardEntity;
+            } catch (PersistenceException ex) {
+                if (ex.getCause() != null
+                        && ex.getCause().getCause() != null
+                        && ex.getCause().getCause().getClass().getSimpleName().equals("SQLIntegrityConstraintViolationException")) {
+                    throw new CreateNewCreditCardException("Credit card with same number already exist");
+                } else {
+                    throw new CreateNewCreditCardException("An unexpected error has occurred: " + ex.getMessage());
+                }
+            } catch (Exception ex) {
+                throw new CreateNewCreditCardException("An unexpected error has occurred: " + ex.getMessage());
+            }
+        } else {
+            throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+        }
+    }
+    
+    @Override
+    public CreditCardEntity createCreditCard(Long customerId, CreditCardEntity newCreditCardEntity) throws InputDataValidationException, CreateNewCreditCardException {
+        Set<ConstraintViolation<CreditCardEntity>> constraintViolations = validator.validate(newCreditCardEntity);
+
+        if (constraintViolations.isEmpty()) {
+            try {
+
+                CustomerEntity ce = customerSessionBeanLocal.retrieveCustomerById(customerId);
                 ce.getCreditCardEntities().add(newCreditCardEntity);
                 entityManager.persist(newCreditCardEntity);
                 entityManager.flush();
@@ -65,6 +100,15 @@ public class CreditCardSessionBean implements CreditCardSessionBeanLocal {
         } else {
             throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
         }
+    }
+    
+    @Override
+    public List<CreditCardEntity> retrieveCustomerCreditCard(Long customerId) throws CustomerNotFoundException
+    {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        customer.getCreditCardEntities().size();
+        
+        return customer.getCreditCardEntities();
     }
 
     @Override

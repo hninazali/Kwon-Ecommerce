@@ -36,6 +36,7 @@ import util.exception.BundleInsufficientQuantityOnHandException;
 import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderLineItemException;
 import util.exception.CreateNewOrderTransactionException;
+import util.exception.CreditCardNotFoundException;
 import util.exception.CustomerNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
@@ -272,7 +273,7 @@ public class PersonalCartResource
 
             CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
 
-            OrderTransactionEntity orderTransaction = personalCartSessionBean.checkOutCart(customer.getCustomerId(), customer.getPersonalCartEntity().getPersonalCartId());
+            OrderTransactionEntity orderTransaction = personalCartSessionBean.checkOutCart(customer.getCustomerId(), customer.getPersonalCartEntity().getPersonalCartId(), req.getCreditCardId());
 
             return Response.status(Response.Status.OK).entity(orderTransaction.getOrderTransactionId()).build();
         }
@@ -280,7 +281,7 @@ public class PersonalCartResource
         {
             return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
         }
-        catch(PersonalCartNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException | BundleNotFoundException | BundleInsufficientQuantityOnHandException | ProductNotFoundException | ProductInsufficientQuantityOnHandException ex)
+        catch(PersonalCartNotFoundException | CreditCardNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException | BundleNotFoundException | BundleInsufficientQuantityOnHandException | ProductNotFoundException | ProductInsufficientQuantityOnHandException ex)
         {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
