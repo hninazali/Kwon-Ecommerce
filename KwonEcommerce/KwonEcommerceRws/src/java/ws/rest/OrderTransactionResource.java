@@ -18,6 +18,7 @@ import javax.naming.NamingException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -228,6 +229,33 @@ public class OrderTransactionResource
         else
         {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Void/Refund Order request").build();
+        }
+    }
+    
+    @Path("{orderId}")
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateOrderArrived(@QueryParam("username") String username, 
+                                        @QueryParam("password") String password,
+                                        @PathParam("orderId") Long orderId)
+    {
+        try
+        {
+
+            CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+
+            orderTransactionSessionBean.updateOrderArrived(orderId);
+
+            return Response.status(Response.Status.OK).build();
+        }
+        catch(InvalidLoginCredentialException ex)
+        {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+        }
+        catch(OrderTransactionNotFoundException  ex)
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
     }
 

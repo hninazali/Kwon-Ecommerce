@@ -123,6 +123,13 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
     }
     
     @Override
+    public void updateOrderArrived(Long orderId) throws OrderTransactionNotFoundException
+    {
+        OrderTransactionEntity order = this.retrieveOrderTransactionById(orderId);
+        order.setShippingStatus(ShippingStatusEnum.DELIVERED);
+    }
+    
+    @Override
     public OrderTransactionEntity createNewOrderTransactionForCustomer(Long customerId, OrderTransactionEntity newOrderTransaction) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException
     {
         if(newOrderTransaction != null)
