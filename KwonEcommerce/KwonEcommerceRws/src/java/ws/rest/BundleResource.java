@@ -111,7 +111,7 @@ public class BundleResource
     }
     
     @Path("retrieveBundleDetails/{bundleId}")
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response retrieveBundleDetails(@PathParam("bundleId") Long bundleId)
     {
