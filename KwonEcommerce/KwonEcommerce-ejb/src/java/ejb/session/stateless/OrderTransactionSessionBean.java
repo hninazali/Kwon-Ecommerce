@@ -25,6 +25,7 @@ import util.exception.BundleInsufficientQuantityOnHandException;
 import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CustomerNotFoundException;
+import util.exception.NeedStaffPermissionException;
 import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
 import util.exception.OrderTransactionAlreadyVoidedRefundedException;
@@ -123,10 +124,17 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
     }
     
     @Override
-    public void updateOrderArrived(Long orderId) throws OrderTransactionNotFoundException
+    public void updateOrderArrived(Long orderId) throws OrderTransactionNotFoundException, NeedStaffPermissionException
     {
         OrderTransactionEntity order = this.retrieveOrderTransactionById(orderId);
-        order.setShippingStatus(ShippingStatusEnum.DELIVERED);
+        if (order.getShippingStatus() == ShippingStatusEnum.CURRENTLY_SHIPPING)
+        {
+            order.setShippingStatus(ShippingStatusEnum.DELIVERED);
+        }
+        else
+        {
+            throw new NeedStaffPermissionException("The order has not been dispatched by the staff!!!");
+        }
     }
     
     @Override

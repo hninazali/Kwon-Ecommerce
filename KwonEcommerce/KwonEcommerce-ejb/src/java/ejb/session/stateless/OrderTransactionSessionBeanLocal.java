@@ -15,6 +15,7 @@ import util.exception.BundleInsufficientQuantityOnHandException;
 import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CustomerNotFoundException;
+import util.exception.NeedStaffPermissionException;
 import util.exception.OrderTransactionAlreadyVoidedRefundedException;
 import util.exception.OrderTransactionNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
@@ -54,6 +55,6 @@ public interface OrderTransactionSessionBeanLocal {
 
     public void updateShippingStatus(OrderTransactionEntity order) throws OrderTransactionNotFoundException;
 
-    public void updateOrderArrived(Long orderId) throws OrderTransactionNotFoundException;
+    public void updateOrderArrived(Long orderId) throws OrderTransactionNotFoundException, NeedStaffPermissionException;
     
 }

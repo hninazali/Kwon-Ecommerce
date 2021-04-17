@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import util.exception.CustomerNotFoundException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.NeedStaffPermissionException;
 import util.exception.OrderTransactionAlreadyVoidedRefundedException;
 import util.exception.OrderTransactionNotFoundException;
 import ws.datamodel.ViewOrderDetailsReq;
@@ -253,7 +254,7 @@ public class OrderTransactionResource
         {
             return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
         }
-        catch(OrderTransactionNotFoundException  ex)
+        catch(OrderTransactionNotFoundException | NeedStaffPermissionException ex)
         {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
         }
