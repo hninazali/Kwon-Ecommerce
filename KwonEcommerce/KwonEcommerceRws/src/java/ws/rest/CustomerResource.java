@@ -140,6 +140,39 @@ public class CustomerResource
         }
     }
     
+    @Path("changePassword/{password}")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changePassword(UpdateCustomerReq req,
+                                    @QueryParam ("oldPassword") String oldPassword,
+                                    @PathParam ("password") String password)
+    {
+        if (req != null)
+        {
+            try
+            {
+                CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
+                
+                customerSessionBean.updatePassword(customer, password, oldPassword);
+                
+                return Response.status(Response.Status.OK).build();
+            }
+            catch(InvalidLoginCredentialException ex)
+            {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            }
+            catch (UpdateCustomerException | CustomerNotFoundException | InputDataValidationException ex)
+            {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            }
+        }
+        else
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
+        }
+    }
+    
     @Path("isValid")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

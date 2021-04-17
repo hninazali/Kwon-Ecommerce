@@ -35,5 +35,7 @@ public interface CustomerSessionBeanLocal {
     void deleteCustomer(Long customerId) throws CustomerNotFoundException, DeleteCustomerException;
     
     void banCustomer(Long customerId) throws BanCustomerException, CustomerNotFoundException;
+
+    public void updatePassword(CustomerEntity customerEntity, String password, String oldPassword) throws CustomerNotFoundException, UpdateCustomerException, InputDataValidationException, InvalidLoginCredentialException;
     
 }

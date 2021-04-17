@@ -149,12 +149,43 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
                     customerEntityToUpdate.setLastName(customerEntity.getLastName());
                     customerEntityToUpdate.setAddress(customerEntity.getAddress());
                     customerEntityToUpdate.setPostalCode(customerEntity.getPostalCode());
-                    customerEntityToUpdate.setPassword(customerEntity.getPassword());
+                    //System.out.println(customerEntityToUpdate.getPassword());
                 } else {
                     throw new UpdateCustomerException("Email of customer record to be updated does not match the existing record");
                 }
             } else {
                 throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+            }
+        } else {
+            throw new CustomerNotFoundException("Staff ID not provided for staff to be updated");
+        }
+    }
+    
+    @Override
+    public void updatePassword(CustomerEntity customerEntity, String password, String oldPassword) throws CustomerNotFoundException, UpdateCustomerException, InputDataValidationException, InvalidLoginCredentialException {
+        if (customerEntity != null && customerEntity.getCustomerId() != null) {
+            Set<ConstraintViolation<CustomerEntity>> constraintViolations = validator.validate(customerEntity);
+            
+            CustomerEntity customerTemp = this.retrieveCustomerById(customerEntity.getCustomerId());
+            System.out.println(password + "   *******");
+            
+            if (customerTemp != null)
+            {
+                if (constraintViolations.isEmpty()) {
+                    CustomerEntity customerEntityToUpdate = retrieveCustomerById(customerEntity.getCustomerId());
+
+                    if (customerEntityToUpdate.getUsername().equals(customerEntity.getUsername())) {
+                        customerEntityToUpdate.setPassword(password);
+                    } else {
+                        throw new UpdateCustomerException("Email of customer record to be updated does not match the existing record");
+                    }
+                } else {
+                    throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+                }
+            }
+            else
+            {
+                throw new InvalidLoginCredentialException("Old Password is incorrect!!!");
             }
         } else {
             throw new CustomerNotFoundException("Staff ID not provided for staff to be updated");

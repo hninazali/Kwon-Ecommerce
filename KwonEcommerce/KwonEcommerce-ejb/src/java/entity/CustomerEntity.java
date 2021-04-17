@@ -205,6 +205,11 @@ public class CustomerEntity implements Serializable {
             this.password = null;
         }
     }
+    
+    public void setPasswordCustom(String password)
+    {
+        this.password = password;
+    }
 
     public PersonalCartEntity getPersonalCartEntity() {
         return personalCartEntity;
