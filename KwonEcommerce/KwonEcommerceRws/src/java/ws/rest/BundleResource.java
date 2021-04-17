@@ -8,6 +8,7 @@ package ws.rest;
 import ejb.session.stateless.BundleEntitySessionBeanLocal;
 import entity.BundleEntity;
 import entity.BundleLineItemEntity;
+import entity.CategoryEntity;
 import entity.ProductEntity;
 import entity.TagEntity;
 import java.util.List;
@@ -55,6 +56,43 @@ public class BundleResource
         try
         {
             List<BundleEntity> bundles = bundleEntitySessionBean.retrieveAllBundles();
+            for (BundleEntity bundle : bundles)
+            {
+                for (BundleLineItemEntity lineItem : bundle.getBundleLineItems())
+                {
+                    ProductEntity product = lineItem.getProductEntity();
+                    if(product.getCategoryEntity().getParentCategoryEntity() != null)
+                    {
+                        product.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
+                    }
+
+                    product.getCategoryEntity().getProductEntities().clear();
+                    product.getCategoryEntity().getBundleEntities().clear();
+
+                    for(TagEntity tagEntity:product.getTagEntities())
+                    {
+                        tagEntity.getProductEntities().clear();
+                        tagEntity.getBundleEntities().clear();
+                    }
+
+                    product.getBrandEntity().getProductEntities().clear();
+                }
+                for (CategoryEntity category : bundle.getCategoryEntities())
+                {
+                    if (category.getParentCategoryEntity() != null)
+                    {
+                        category.getParentCategoryEntity().getSubCategoryEntities().clear();
+                    }
+                    category.getProductEntities().clear();
+                    category.getBundleEntities().clear();
+                }
+                
+                for (TagEntity tag : bundle.getTagEntities())
+                {
+                    tag.getProductEntities().clear();
+                    tag.getBundleEntities().clear();
+                }
+            }
             
             GenericEntity<List<BundleEntity>> genericEntity = new GenericEntity<List<BundleEntity>>(bundles){
             };
@@ -93,10 +131,12 @@ public class BundleResource
                 }
                 
                 product.getCategoryEntity().getProductEntities().clear();
+                product.getCategoryEntity().getBundleEntities().clear();
                 
                 for(TagEntity tagEntity:product.getTagEntities())
                 {
                     tagEntity.getProductEntities().clear();
+                    tagEntity.getBundleEntities().clear();
                 }
                 
                 product.getBrandEntity().getProductEntities().clear();
