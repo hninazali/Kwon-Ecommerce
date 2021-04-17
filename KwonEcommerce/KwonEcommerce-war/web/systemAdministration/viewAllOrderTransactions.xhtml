@@ -45,6 +45,10 @@
                     <p:column headerText="Shipping Status" sortBy="#{order.shippingStatus}" filterBy="#{order.shippingStatus}" filterMatchMode="contains">
                         <h:outputText value="#{order.shippingStatus}" />
                     </p:column>   
+                    
+                    <p:column headerText="Credit Card" sortBy="#{order.creditCard.cardNumber}" filterBy="#{order.creditCard.cardNumber}" filterMatchMode="contains">
+                        <h:outputText value="#{order.creditCard.cardNumber}" />
+                    </p:column> 
 
                     <p:column headerText="Action" >
                         <p:commandButton action="#{orderTransactionManagedBean.setSelectedOrder(order)}" actionListener="#{orderTransactionManagedBean.updateShippingStatus}" update="@form formAllOrders:dataTableAllOrders" icon="pi pi-globe" value="DISPATCH" title="Dispatch">
