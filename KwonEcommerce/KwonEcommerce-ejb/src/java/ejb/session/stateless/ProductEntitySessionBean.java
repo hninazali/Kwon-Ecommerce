@@ -5,6 +5,7 @@ import entity.ProductEntity;
 import entity.SaleTransactionLineItemEntity;
 import entity.TagEntity;
 import entity.BrandEntity;
+import entity.CustomerEntity;
 import entity.OrderLineItemEntity;
 import entity.OrderRequestEntity;
 import entity.SupplierEntity;
@@ -32,6 +33,7 @@ import util.exception.CreateNewProductException;
 import util.exception.DeleteProductException;
 import util.exception.CreateNewBrandException;
 import util.exception.CreateNewProductException;
+import util.exception.CustomerNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderRequestNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
@@ -47,6 +49,9 @@ import util.exception.UpdateProductException;
 
 public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
 {
+
+    @EJB(name = "CustomerSessionBeanLocal")
+    private CustomerSessionBeanLocal customerSessionBeanLocal;
     @PersistenceContext(unitName = "KwonEcommerce-ejbPU")
     private EntityManager entityManager;
     
@@ -172,6 +177,36 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
         }
         
         return productEntities;
+    }
+    
+    @Override
+    public List<ProductEntity> retrieveRecommendations(Long customerId) throws CustomerNotFoundException, CategoryNotFoundException
+    {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        List<OrderLineItemEntity> lineItems = customer.getOrderLineItemEntities();
+        List<ProductEntity> products = new ArrayList<>();
+        CategoryEntity tempCategory = new CategoryEntity();
+        
+        for (OrderLineItemEntity tempLineItem : lineItems)
+        {
+            if (tempLineItem.getProductEntity() != null)
+            {
+                tempCategory = tempLineItem.getProductEntity().getCategoryEntity();
+                
+                products.addAll(this.filterProductsByCategory(tempCategory.getCategoryId()));
+            }
+            else
+            {
+                for (CategoryEntity category : tempLineItem.getBundleEntity().getCategoryEntities())
+                {
+                    tempCategory = category;
+                    
+                    products.addAll(this.filterProductsByCategory(tempCategory.getCategoryId()));
+                }
+            }
+        }
+        
+        return products;
     }
     
     

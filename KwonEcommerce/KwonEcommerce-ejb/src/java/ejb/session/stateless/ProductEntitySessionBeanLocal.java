@@ -8,6 +8,7 @@ import util.exception.BrandNotFoundException;
 import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewBrandException;
 import util.exception.CreateNewProductException;
+import util.exception.CustomerNotFoundException;
 import util.exception.DeleteProductException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderRequestNotFoundException;
@@ -55,4 +56,6 @@ public interface ProductEntitySessionBeanLocal
     public void approveOrder(long requestId) throws OrderRequestNotFoundException, ProductNotFoundException;
 
     public List<ProductEntity> filterProductsByTag(Long tagId) throws TagNotFoundException;
+
+    public List<ProductEntity> retrieveRecommendations(Long customerId) throws CustomerNotFoundException, CategoryNotFoundException;
 }

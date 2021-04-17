@@ -5,8 +5,10 @@
  */
 package ws.rest;
 
+import ejb.session.stateless.CustomerSessionBeanLocal;
 import ejb.session.stateless.ProductEntitySessionBeanLocal;
 import entity.CategoryEntity;
+import entity.CustomerEntity;
 import entity.ProductEntity;
 import entity.TagEntity;
 import java.util.ArrayList;
@@ -24,12 +26,15 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import util.exception.BrandNotFoundException;
 import util.exception.CategoryNotFoundException;
+import util.exception.CustomerNotFoundException;
+import util.exception.InvalidLoginCredentialException;
 import util.exception.ProductNotFoundException;
 import ws.datamodel.FilterProductsByTagsReq;
 
@@ -41,6 +46,8 @@ import ws.datamodel.FilterProductsByTagsReq;
 @Path("Product")
 public class ProductResource 
 {
+
+    CustomerSessionBeanLocal customerSessionBean = lookupCustomerSessionBeanLocal();
 
     ProductEntitySessionBeanLocal productEntitySessionBean = lookupProductEntitySessionBeanLocal();
     
@@ -144,6 +151,57 @@ public class ProductResource
         }
     }
     
+    @Path("getRecommendations")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRecommendations(@QueryParam("username") String username, 
+                                        @QueryParam("password") String password)
+    {
+        try
+        {
+            CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+            
+            List<ProductEntity> productEntities1 = productEntitySessionBean.retrieveRecommendations(customer.getCustomerId());
+            
+            ArrayList<ProductEntity> productEntities = new ArrayList<>();
+            productEntities.addAll(productEntities1);
+            ProductEntity productEntity = new ProductEntity();
+            Integer temp = productEntities.size();
+            List<ProductEntity> products = new ArrayList<>();
+            
+            for(int i = 0; i < temp; i++)
+            {
+                productEntity = productEntities.get(i);
+                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
+                {
+                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
+                }
+                productEntity.getCategoryEntity().getProductEntities().clear();
+                productEntity.getCategoryEntity().getBundleEntities().clear();
+                products.add(productEntity);
+                productEntity.getBrandEntity().getProductEntities().clear();
+                for(TagEntity tagEntity:productEntity.getTagEntities())
+                {
+                    tagEntity.getProductEntities().clear();
+                    tagEntity.getBundleEntities().clear();
+                }
+            }
+            
+            GenericEntity<List<ProductEntity>> genericEntity = new GenericEntity<List<ProductEntity>>(products){
+            };
+            
+            return Response.status(Status.OK).entity(genericEntity).build();
+        }
+        catch(InvalidLoginCredentialException ex)
+        {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+        }
+        catch(CustomerNotFoundException | CategoryNotFoundException ex)
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        }
+    }
+    
     @Path("filterProductsByCategory/{categoryId}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -154,7 +212,7 @@ public class ProductResource
             List<ProductEntity> productEntities1 = productEntitySessionBean.filterProductsByCategory(categoryId);
             ArrayList<ProductEntity> productEntities = new ArrayList<>();
             productEntities.addAll(productEntities1);
-            System.out.println("++++++++++++++   " + productEntities.size());
+            //System.out.println("++++++++++++++   " + productEntities.size());
             ProductEntity productEntity = new ProductEntity();
             Integer temp = productEntities.size();
             //System.out.println("TESTING   " + products.get(1).getName());
@@ -164,13 +222,7 @@ public class ProductResource
             {
                 //System.out.println("AAAAAAAAAA");
                 productEntity = productEntities.get(i);
-                System.out.println(productEntity.getName() + "   11111111");
-                //System.out.println(productEntity.getName() + "  BBBBBBBBBBBBBB");
-                //productEntity.setCategoryEntity(null);
-                //productEntity.getTagEntities().clear();
-                //productEntity.setBrandEntity(null);
-                //String categoryName = productEntity.getCategoryEntity().getName();
-                //System.out.println("ADDED!!!!!+++++++++++");
+                //System.out.println(productEntity.getName() + "   11111111");
                 if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
                 {
                     productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
@@ -178,15 +230,8 @@ public class ProductResource
                 //System.out.println("!!!!!!!!!ADDED!!!!!");
                 productEntity.getCategoryEntity().getProductEntities().clear();
                 productEntity.getCategoryEntity().getBundleEntities().clear();
-//                productEntity.setCategoryEntity(new CategoryEntity());
-//                productEntity.getCategoryEntity().setName(categoryName);
                 products.add(productEntity);
-                System.out.println("ADDED!!!!!");
-//                productEntity.getCategoryEntity().setParentCategoryEntity(null);
-//                productEntity.getCategoryEntity().getSubCategoryEntities().clear();
-//                productEntity.getCategoryEntity().getProductEntities().clear();
-//                productEntity.getCategoryEntity().getBundleEntities().clear();
-//                productEntity.setCategoryEntity(null);
+                //System.out.println("ADDED!!!!!");
                 productEntity.getBrandEntity().getProductEntities().clear();
                 for(TagEntity tagEntity:productEntity.getTagEntities())
                 {
@@ -195,12 +240,10 @@ public class ProductResource
                 }
 //                productEntity.getBrandEntity().getBundleEntities().clear();
             }
-            System.out.println("$$$$$$$   " + productEntities.size());
+            //System.out.println("$$$$$$$   " + productEntities.size());
             
             GenericEntity<List<ProductEntity>> genericEntity = new GenericEntity<List<ProductEntity>>(products){
             };
-            
-            System.out.println("REACHABLE JUGA");
             
             return Response.status(Status.OK).entity(genericEntity).build();
         }
@@ -336,6 +379,16 @@ public class ProductResource
         try {
             javax.naming.Context c = new InitialContext();
             return (ProductEntitySessionBeanLocal) c.lookup("java:global/KwonEcommerce/KwonEcommerce-ejb/ProductEntitySessionBean!ejb.session.stateless.ProductEntitySessionBeanLocal");
+        } catch (NamingException ne) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
+            throw new RuntimeException(ne);
+        }
+    }
+
+    private CustomerSessionBeanLocal lookupCustomerSessionBeanLocal() {
+        try {
+            javax.naming.Context c = new InitialContext();
+            return (CustomerSessionBeanLocal) c.lookup("java:global/KwonEcommerce/KwonEcommerce-ejb/CustomerSessionBean!ejb.session.stateless.CustomerSessionBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);
