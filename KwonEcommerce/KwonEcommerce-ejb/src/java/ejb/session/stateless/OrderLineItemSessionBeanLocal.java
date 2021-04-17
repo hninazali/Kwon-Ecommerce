@@ -14,6 +14,7 @@ import util.exception.CustomerNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
 import util.exception.ProductNotFoundException;
+import util.exception.TooMuchQuantityException;
 
 /**
  *
@@ -34,7 +35,7 @@ public interface OrderLineItemSessionBeanLocal {
 
     public OrderLineItemEntity updateOrderLineItemEntityQty(Long lineItemId, Integer quantity) throws OrderLineItemNotFoundException;
 
-    public OrderLineItemEntity createLineItemForCart(Long productId, Integer quantity) throws ProductNotFoundException;
+    public OrderLineItemEntity createLineItemForCart(Long productId, Integer quantity) throws ProductNotFoundException, TooMuchQuantityException;
 
-    public OrderLineItemEntity createLineItemForCartBundle(Long bundleId, Integer quantity) throws BundleNotFoundException;
+    public OrderLineItemEntity createLineItemForCartBundle(Long bundleId, Integer quantity) throws BundleNotFoundException, TooMuchQuantityException;
 }

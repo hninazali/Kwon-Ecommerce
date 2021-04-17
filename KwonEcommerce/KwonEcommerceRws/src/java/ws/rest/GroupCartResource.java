@@ -46,6 +46,7 @@ import util.exception.InvalidLoginCredentialException;
 import util.exception.OrderLineItemNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
+import util.exception.TooMuchQuantityException;
 import ws.datamodel.AddBundleToGroupCartReq;
 import ws.datamodel.AddItemToGroupCartReq;
 import ws.datamodel.CheckoutGroupCartReq;
@@ -266,7 +267,7 @@ public class GroupCartResource
             {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
-            catch(CreateNewOrderLineItemException | ProductNotFoundException | CustomerNotFoundException | InputDataValidationException | GroupCartNotFoundException ex)
+            catch(CreateNewOrderLineItemException | TooMuchQuantityException | ProductNotFoundException | CustomerNotFoundException | InputDataValidationException | GroupCartNotFoundException ex)
             {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }
@@ -310,7 +311,7 @@ public class GroupCartResource
             {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
-            catch(CreateNewOrderLineItemException | BundleNotFoundException | CustomerNotFoundException | InputDataValidationException | GroupCartNotFoundException ex)
+            catch(CreateNewOrderLineItemException | TooMuchQuantityException | BundleNotFoundException | CustomerNotFoundException | InputDataValidationException | GroupCartNotFoundException ex)
             {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }
