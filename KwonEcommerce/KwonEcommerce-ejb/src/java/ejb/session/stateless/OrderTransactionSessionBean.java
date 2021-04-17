@@ -9,6 +9,7 @@ import entity.StaffEntity;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -175,11 +176,13 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
                 entityManager.persist(newOrderTransaction);
                 newOrderTransaction.setCustomerEntity(customer);
                 customer.getOrderTransactionEntities().add(newOrderTransaction);
+                ArrayList<OrderLineItemEntity> tempItems = new ArrayList<>();
+                tempItems.addAll(groupCart.getOrderLineItemEntities());
 
                 //entityManager.persist(newOrderTransaction);
 
                 
-                for(OrderLineItemEntity orderLineItemEntity : groupCart.getOrderLineItemEntities())
+                for(OrderLineItemEntity orderLineItemEntity : tempItems)
                 {
                     newOrderTransaction.getOrderLineItemEntities().add(orderLineItemEntity);
                     if (orderLineItemEntity.getProductEntity() != null)
@@ -192,7 +195,9 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
                     }
                     //orderLineItemEntity.setCustomerEntity(null);
                     //customer.getPersonalCartEntity().getOrderLineItemEntities().remove(orderLineItemEntity);
+                    
                 }
+                groupCart.getOrderLineItemEntities().clear();
                 
 
                 entityManager.flush();

@@ -194,28 +194,32 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
     }
 
     @Override
-<<<<<<< HEAD
-    public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException {
-        GroupCartEntity groupCartEntity = retrieveGroupCartById(groupCartId);
-=======
     public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException {
-        GroupCartEntity groupCartEntity = retrieveGroupCartByIdEager(groupCartId);
->>>>>>> master
-        Integer totalQty = 0;
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        Integer totalLineItem = groupCartEntity.getOrderLineItemEntities().size();
-        for (OrderLineItemEntity ol : groupCartEntity.getOrderLineItemEntities()) {
-            Integer itemQuantity = ol.getQuantity();
-            totalQty += itemQuantity;
-            BigDecimal price = ol.getUnitPrice();
-            totalAmount.add(price.multiply(BigDecimal.valueOf(itemQuantity)));
-        }
+        GroupCartEntity groupCartEntity = retrieveGroupCartById(groupCartId);
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        if (groupCartEntity.getGroupOwner().getUsername().equals(customer.getUsername()))
+        {
+            Integer totalQty = 0;
+            BigDecimal totalAmount = BigDecimal.ZERO;
+            Integer totalLineItem = groupCartEntity.getOrderLineItemEntities().size();
+            for (OrderLineItemEntity ol : groupCartEntity.getOrderLineItemEntities()) {
+                Integer itemQuantity = ol.getQuantity();
+                totalQty += itemQuantity;
+                BigDecimal price = ol.getUnitPrice();
+                totalAmount = totalAmount.add(ol.getSubTotal());
+            }
+       
 
-        OrderTransactionEntity orderTransactionEntity = new OrderTransactionEntity(totalLineItem, totalQty, totalAmount, new Date(), groupCartEntity.getOrderLineItemEntities(),false);
-        OrderTransactionEntity afterCheckout = orderTransactionSessionBeanLocal.createNewOrderTransactionForGroup(customerId, orderTransactionEntity, groupCartEntity);
-        clearGroupCart(groupCartEntity);
-        
-        return afterCheckout;
+            OrderTransactionEntity orderTransactionEntity = new OrderTransactionEntity(totalLineItem, totalQty, totalAmount, new Date(), groupCartEntity.getOrderLineItemEntities(),false);
+            OrderTransactionEntity afterCheckout = orderTransactionSessionBeanLocal.createNewOrderTransactionForGroup(customerId, orderTransactionEntity, groupCartEntity);
+            clearGroupCart(groupCartEntity);
+
+            return afterCheckout;
+        }
+        else
+        {
+            return null;
+        }
     }
     
     @Override

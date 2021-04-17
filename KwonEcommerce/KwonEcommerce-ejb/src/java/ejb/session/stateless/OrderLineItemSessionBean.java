@@ -131,6 +131,20 @@ public class OrderLineItemSessionBean implements OrderLineItemSessionBeanLocal {
         OrderLineItemEntity lineItem = this.retrieveOrderLineItemById(lineItemId);
         
         lineItem.setQuantity(quantity);
+        if (lineItem.getProductEntity() != null)
+        {
+            ProductEntity product = lineItem.getProductEntity();
+            BigDecimal price = product.getUnitPrice();
+            BigDecimal newPrice = price.multiply(new BigDecimal(lineItem.getQuantity()));
+            lineItem.setSubTotal(newPrice);
+        }
+        else
+        {
+            BundleEntity bundle = lineItem.getBundleEntity();
+            BigDecimal price2 = bundle.getUnitPrice();
+            BigDecimal newPrice2 = price2.multiply(new BigDecimal(lineItem.getQuantity()));
+            lineItem.setSubTotal(newPrice2);
+        }
         
         return lineItem;
     }

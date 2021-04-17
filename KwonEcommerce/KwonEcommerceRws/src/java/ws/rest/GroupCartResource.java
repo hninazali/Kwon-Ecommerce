@@ -357,7 +357,7 @@ public class GroupCartResource
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkOutCart(CheckoutGroupCartReq req)
+    public Response checkOutCart(LeaveGroupCartReq req)
     {
         if (req != null)
         {
@@ -366,9 +366,16 @@ public class GroupCartResource
                 
                 CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
 
-                OrderTransactionEntity orderTransaction = groupCartSessionBean.checkOutCart(customer.getCustomerId(), req.getGroupCart().getGroupCartId());
-
-                return Response.status(Response.Status.OK).entity(orderTransaction.getOrderTransactionId()).build();
+                OrderTransactionEntity orderTransaction = groupCartSessionBean.checkOutCart(customer.getCustomerId(), req.getGroupCartId());
+                
+                if (orderTransaction != null)
+                {
+                    return Response.status(Response.Status.OK).entity(orderTransaction.getOrderTransactionId()).build();
+                }
+                else
+                {
+                    return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Checkout request").build();
+                }
             }
             catch(InvalidLoginCredentialException ex)
             {
