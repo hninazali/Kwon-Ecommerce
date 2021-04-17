@@ -104,10 +104,14 @@ public class StaffEntitySessionBean implements StaffEntitySessionBeanLocal {
     public StaffEntity staffLogin(String username, String password) throws InvalidLoginCredentialException {
         try {
             StaffEntity staffEntity = retrieveStaffByUsername(username);
+            System.out.println("Staff retrieved!!!");
             String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + staffEntity.getSalt()));
 
+            System.out.println(passwordHash);
+            System.out.println(staffEntity.getPassword() + "   &&&&&&&&&");
             if (staffEntity.getPassword().equals(passwordHash)) {
-//                staffEntity.getSaleTransactionEntities().size();                
+//                staffEntity.getSaleTransactionEntities().size();  
+                System.out.println("Password correct!!!");
                 return staffEntity;
             } else {
                 throw new InvalidLoginCredentialException("Username does not exist or invalid password!");

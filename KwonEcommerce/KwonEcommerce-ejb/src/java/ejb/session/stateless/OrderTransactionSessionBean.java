@@ -62,7 +62,12 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
     {
     }
     
-    
+    @Override
+    public void updateShippingStatus(OrderTransactionEntity order) throws OrderTransactionNotFoundException
+    {
+        OrderTransactionEntity tempOrder = this.retrieveOrderTransactionById(order.getOrderTransactionId());
+        tempOrder.setShippingStatus(ShippingStatusEnum.CURRENTLY_SHIPPING);
+    }
     
     // Updated in v4.1
     @Override

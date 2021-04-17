@@ -74,9 +74,9 @@ public class StaffEntity implements Serializable {
         this.username = username;
 //        this.fullName = firstName + " " + lastName;
         
-        this.password = password;
+        //this.password = password;
 
-//        setPassword(password);
+        setPassword(password);
     }
 
     @Override

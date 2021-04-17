@@ -37,6 +37,8 @@ public class StaffLoginManagedBean implements Serializable {
     {
         try
         {
+            System.out.println(username);
+            System.out.println(password);
             StaffEntity staffEntity = staffEntitySessionBeanLocal.staffLogin(username, password);
             FacesContext.getCurrentInstance().getExternalContext().getSession(true);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("isLogin", true);

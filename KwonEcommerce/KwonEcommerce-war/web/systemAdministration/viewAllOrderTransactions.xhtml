@@ -1,10 +1,75 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../template/defaultTemplate.xhtml">
+                template="./../template/defaultTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp"
+                xmlns:p="http://primefaces.org/ui">
 
     <ui:define name="content">
-        content
+        <!--<ez:Breadcrumb pageName="bundleManagement" />-->
+
+        <div>
+            <h3>Order Transaction Management</h3>
+
+            <h:form id="formAllOrders">
+
+                <p:messages id="messages" redisplay="false" closable="true" />
+
+                <p:dataTable id="dataTableAllOrders" widgetVar="dataTableAllOrders" value="#{orderTransactionManagedBean.orders}" var="order" rowKey="#{order.orderTransactionId}" rowIndexVar="row"
+                             rows="10" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,50">
+
+                    <p:column style="width:2rem">
+                        <p:rowToggler/>
+                    </p:column>
+
+                    <p:column headerText="Order ID" sortBy="#{order.orderTransactionId}" filterBy="#{order.orderTransactionId}" filterMatchMode="contains">
+                        <h:outputText value="#{order.orderTransactionId}" />
+                    </p:column>    
+
+                    <p:column headerText="Transaction Date Time" sortBy="#{order.transactionDateTime}" filterBy="#{order.transactionDateTime}" filterMatchMode="contains">
+                        <h:outputText value="#{order.transactionDateTime}" />
+                    </p:column>                
+
+                    <p:column headerText="Total Items" sortBy="#{order.totalQuantity}" filterBy="#{order.totalQuantity}" filterMatchMode="contains">
+                        <h:outputText value="#{order.totalQuantity}" />
+                    </p:column>
+
+                    <p:column headerText="Total Amount" sortBy="#{order.totalAmount}" filterBy="#{order.totalAmount}" filterMatchMode="contains" style="text-align: right;">
+                        <h:outputText value="#{order.totalAmount}">
+                            <f:convertNumber minFractionDigits="2" maxFractionDigits="2" type="currency" currencyCode="SGD" />
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Shipping Status" sortBy="#{order.shippingStatus}" filterBy="#{order.shippingStatus}" filterMatchMode="contains">
+                        <h:outputText value="#{order.shippingStatus}" />
+                    </p:column>   
+
+                    <p:column headerText="Action" >
+                        <p:commandButton action="#{orderTransactionManagedBean.setSelectedOrder(order)}" actionListener="#{orderTransactionManagedBean.updateShippingStatus}" update="@form formAllOrders:dataTableAllOrders" icon="pi pi-globe" value="DISPATCH" title="Dispatch">
+                            <f:attribute name="orderToUpdate" value="#{order}" />
+                        </p:commandButton>
+                    </p:column>
+                    
+                    <p:rowExpansion>
+                        <p:repeat value="#{order.orderLineItemEntities}" var="lineItem">
+                            <div class="orderDetail">
+                                <hr/>
+                                <div>
+                                    <div class="product-name">Product : #{lineItem.productEntity.name}</div>
+                                    <div class="product-description">Quantity : #{lineItem.quantity}</div>
+                                    <div class="product-description">Subtotal : #{lineItem.subTotal}</div>
+                                </div>
+                                <hr/>
+                            </div>
+                        </p:repeat>
+                    </p:rowExpansion>
+
+                </p:dataTable>
+
+            </h:form>
+        </div>
     </ui:define>
 
 </ui:composition>

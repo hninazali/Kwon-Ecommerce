@@ -51,5 +51,7 @@ public interface OrderTransactionSessionBeanLocal {
     public List<OrderTransactionEntity> retrieveOrderTransactionsByCustomer(Long customerId) throws CustomerNotFoundException;
 
     public OrderTransactionEntity createNewOrderTransactionForGroup(Long customerId, OrderTransactionEntity newOrderTransaction, GroupCartEntity groupCart) throws CustomerNotFoundException, CreateNewOrderTransactionException,BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException;
+
+    public void updateShippingStatus(OrderTransactionEntity order) throws OrderTransactionNotFoundException;
     
 }

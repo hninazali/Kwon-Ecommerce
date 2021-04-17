@@ -276,7 +276,7 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
         for (OrderLineItemEntity lineItem : personalCartEntity.getOrderLineItemEntities())
         {
             //customer.getOrderLineItemEntities().remove(lineItem);
-            lineItem.setCustomerEntity(null);
+            //lineItem.setCustomerEntity(null);
         }
         personalCartEntity.getOrderLineItemEntities().clear();
 

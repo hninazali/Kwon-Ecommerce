@@ -344,7 +344,7 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
         {
             temp = lineItem.getCustomerEntity();
             //temp.getOrderLineItemEntities().remove(lineItem);
-            lineItem.setCustomerEntity(null);
+            //lineItem.setCustomerEntity(null);
         }
         groupCartEntity.getOrderLineItemEntities().clear();
     }
