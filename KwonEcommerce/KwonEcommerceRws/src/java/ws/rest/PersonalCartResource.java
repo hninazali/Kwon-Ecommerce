@@ -43,6 +43,7 @@ import util.exception.OrderLineItemNotFoundException;
 import util.exception.PersonalCartNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
+import util.exception.TooMuchQuantityException;
 import ws.datamodel.AddBundleToPersonalCartReq;
 import ws.datamodel.AddItemToPersonalCartReq;
 import ws.datamodel.CheckoutPersonalCartReq;
@@ -173,7 +174,7 @@ public class PersonalCartResource
             {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
-            catch(CreateNewOrderLineItemException | CustomerNotFoundException | InputDataValidationException | ProductNotFoundException ex)
+            catch(CreateNewOrderLineItemException | TooMuchQuantityException | CustomerNotFoundException | InputDataValidationException | ProductNotFoundException ex)
             {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }
@@ -217,7 +218,7 @@ public class PersonalCartResource
             {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
-            catch(CreateNewOrderLineItemException | CustomerNotFoundException | InputDataValidationException | BundleNotFoundException ex)
+            catch(CreateNewOrderLineItemException | TooMuchQuantityException | CustomerNotFoundException | InputDataValidationException | BundleNotFoundException ex)
             {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }

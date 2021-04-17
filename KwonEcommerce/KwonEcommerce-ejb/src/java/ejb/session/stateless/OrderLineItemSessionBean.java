@@ -30,6 +30,7 @@ import util.exception.CustomerNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
 import util.exception.ProductNotFoundException;
+import util.exception.TooMuchQuantityException;
 
 @Stateless
 public class OrderLineItemSessionBean implements OrderLineItemSessionBeanLocal {
@@ -86,18 +87,30 @@ public class OrderLineItemSessionBean implements OrderLineItemSessionBeanLocal {
     }
     
     @Override
-    public OrderLineItemEntity createLineItemForCart(Long productId, Integer quantity) throws ProductNotFoundException
+    public OrderLineItemEntity createLineItemForCart(Long productId, Integer quantity) throws ProductNotFoundException, TooMuchQuantityException
     {
         ProductEntity product = productSessionBeanLocal.retrieveProductByProductId(productId);
         OrderLineItemEntity lineItem = new OrderLineItemEntity(product, quantity, product.getUnitPrice(), product.getUnitPrice().multiply(new BigDecimal(quantity)));
+        
+        if (product.getQuantityOnHand() < quantity)
+        {
+            throw new TooMuchQuantityException("Quantity added exceeds the quantity on hand");
+        }
+        
         return lineItem;
     }
     
     @Override
-    public OrderLineItemEntity createLineItemForCartBundle(Long bundleId, Integer quantity) throws BundleNotFoundException
+    public OrderLineItemEntity createLineItemForCartBundle(Long bundleId, Integer quantity) throws BundleNotFoundException, TooMuchQuantityException
     {
         BundleEntity bundle = bundleEntitySessionBeanLocal.retrieveBundleByBundleId(bundleId);
         OrderLineItemEntity lineItem = new OrderLineItemEntity(bundle, quantity, bundle.getUnitPrice(), bundle.getUnitPrice().multiply(new BigDecimal(quantity)));
+        
+        if (bundle.getQuantityOnHand() < quantity)
+        {
+            throw new TooMuchQuantityException("Quantity added exceeds the quantity on hand");
+        }
+        
         return lineItem;
     }
 
