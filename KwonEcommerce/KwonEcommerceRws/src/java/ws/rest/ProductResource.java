@@ -108,17 +108,41 @@ public class ProductResource
     {
         try
         {
-            List<ProductEntity> productEntities1 = productEntitySessionBean.filterProductsByBrand(brandId);
-            ArrayList<ProductEntity> productEntities = new ArrayList<>();
-            productEntities.addAll(productEntities1);
-            ProductEntity productEntity = new ProductEntity();
-            Integer temp = productEntities.size();
-            //System.out.println("TESTING   " + products.get(1).getName());
-            List<ProductEntity> products = new ArrayList<>();
+            List<ProductEntity> products = productEntitySessionBean.filterProductsByBrand(brandId);
+//            ArrayList<ProductEntity> productEntities = new ArrayList<>();
+//            productEntities.addAll(productEntities1);
+//            ProductEntity productEntity = new ProductEntity();
+//            Integer temp = productEntities.size();
+//            //System.out.println("TESTING   " + products.get(1).getName());
+//            List<ProductEntity> products = new ArrayList<>();
             
-            for(int i = 0; i < temp; i++)
+//            for(int i = 0; i < temp; i++)
+//            {
+//                productEntity = productEntities.get(i);
+//                productEntity.getTagEntities().clear();
+//                productEntity.setBrandEntity(null);
+//                if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
+//                {
+//                    productEntity.getCategoryEntity().getParentCategoryEntity().getSubCategoryEntities().clear();
+//                }
+//                
+//                productEntity.getCategoryEntity().getProductEntities().clear();
+//                productEntity.getCategoryEntity().getBundleEntities().clear();
+//                products.add(productEntity);
+////                
+////                for(TagEntity tagEntity:productEntity.getTagEntities())
+////                {
+////                    tagEntity.getProductEntities().clear();
+////                    tagEntity.getBundleEntities().clear();
+////                }
+////                
+////                productEntity.getBrandEntity().getProductEntities().clear();
+//                //productEntity.getBrandEntity().getBundleEntities().clear();
+//            }
+            
+            for(ProductEntity productEntity : products)
             {
-                productEntity = productEntities.get(i);
+                //productEntity.setCategoryEntity(null);
                 productEntity.getTagEntities().clear();
                 productEntity.setBrandEntity(null);
                 if(productEntity.getCategoryEntity().getParentCategoryEntity() != null)
@@ -128,7 +152,6 @@ public class ProductResource
                 
                 productEntity.getCategoryEntity().getProductEntities().clear();
                 productEntity.getCategoryEntity().getBundleEntities().clear();
-                products.add(productEntity);
 //                
 //                for(TagEntity tagEntity:productEntity.getTagEntities())
 //                {
