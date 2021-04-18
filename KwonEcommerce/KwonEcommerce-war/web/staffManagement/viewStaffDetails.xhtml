@@ -204,6 +204,22 @@
                                 <p:message for="password" />
                             </p:column>
                         </p:row>
+                        
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel value="Access Right" for="accessRight" styleClass="label" />
+                            </p:column>
+                            <p:column>
+                                <h:selectOneMenu id="accessRight" value="#{staffManagementManagedBean.newStaffEntity.accessRightEnum}" required="true">
+                                    <f:selectItem itemValue="null" itemLabel="[Select]" noSelectionOption="true" />
+                                    <f:selectItems value="#{utilManagedBean.accessRightEnumValues}" />
+                                    <f:ajax event="change" execute="@this" />
+                                </h:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <h:message for="accessRight" infoClass="info" warnClass="warn" errorClass="error" />
+                            </p:column>
+                        </p:row>
 
                         <p:row>
                             <p:column colspan="3">
