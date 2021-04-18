@@ -58,10 +58,20 @@
                     
                     <p:rowExpansion>
                         <p:repeat value="#{order.orderLineItemEntities}" var="lineItem">
-                            <div class="orderDetail">
+                            <div class="orderDetail" rendered="#{lineItem.bundleEntity == null}">
                                 <hr/>
                                 <div>
                                     <div class="product-name">Product : #{lineItem.productEntity.name}</div>
+                                    <div class="product-description">Quantity : #{lineItem.quantity}</div>
+                                    <div class="product-description">Subtotal : #{lineItem.subTotal}</div>
+                                </div>
+                                <hr/>
+                            </div>
+                            
+                            <div class="orderDetail" rendered="#{lineItem.productEntity == null}">
+                                <hr/>
+                                <div>
+                                    <div class="product-name">Bundle : #{lineItem.bundleEntity.name}</div>
                                     <div class="product-description">Quantity : #{lineItem.quantity}</div>
                                     <div class="product-description">Subtotal : #{lineItem.subTotal}</div>
                                 </div>
