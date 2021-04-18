@@ -40,11 +40,9 @@ import ws.datamodel.UpdateCustomerReq;
  * @author User
  */
 @Path("Customer")
-public class CustomerResource 
-{
+public class CustomerResource {
 
     CustomerSessionBeanLocal customerSessionBean = lookupCustomerSessionBeanLocal();
-    
 
     @Context
     private UriInfo context;
@@ -54,16 +52,14 @@ public class CustomerResource
      */
     public CustomerResource() {
     }
-    
+
     @Path("customerLogin")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response customerLogin(@QueryParam("username") String username, 
-                                @QueryParam("password") String password)
-    {
-        try
-        {
+    public Response customerLogin(@QueryParam("username") String username,
+            @QueryParam("password") String password) {
+        try {
             CustomerEntity customerEntity = customerSessionBean.customerLogin(username, password);
 
             customerEntity.setPassword(null);
@@ -72,141 +68,103 @@ public class CustomerResource
             customerEntity.getOrderLineItemEntities().clear();
             customerEntity.getGroupCartEntities().clear();
             customerEntity.setPersonalCartEntity(null);
-            
+
             return Response.status(Status.OK).entity(customerEntity).build();
-        }
-        catch(InvalidLoginCredentialException ex)
-        {
+        } catch (InvalidLoginCredentialException ex) {
             return Response.status(Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
         }
     }
-    
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response registerCustomer(CustomerEntity customer)
-    {
-        if (customer != null)
-        {
-            try
-            {
+    public Response registerCustomer(CustomerEntity customer) {
+        if (customer != null) {
+            try {
                 Long customerId = customerSessionBean.createNewCustomer(customer);
-                
+
                 return Response.status(Response.Status.OK).entity(customerId).build();
-            }
-            catch (CustomerUsernameExistException | UnknownPersistenceException | InputDataValidationException ex)
-            {
+            } catch (CustomerUsernameExistException | UnknownPersistenceException | InputDataValidationException ex) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }
-        }
-        else
-        {
+        } else {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
         }
     }
-    
+
     @Path("editCustomer")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editCustomer(UpdateCustomerReq req)
-    {
-        if (req != null)
-        {
-            try
-            {
+    public Response editCustomer(UpdateCustomerReq req) {
+        if (req != null) {
+            try {
                 CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
-                
+
                 customerSessionBean.updateCustomer(req.getUpdatedCustomer());
-                
+
                 return Response.status(Response.Status.OK).build();
-            }
-            catch(InvalidLoginCredentialException ex)
-            {
+            } catch (InvalidLoginCredentialException ex) {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-            }
-            catch (UpdateCustomerException | CustomerNotFoundException | InputDataValidationException ex)
-            {
+            } catch (UpdateCustomerException | CustomerNotFoundException | InputDataValidationException ex) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }
-        }
-        else
-        {
+        } else {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
         }
     }
-    
+
     @Path("changePassword/{password}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response changePassword(UpdateCustomerReq req,
-                                    @QueryParam ("oldPassword") String oldPassword,
-                                    @PathParam ("password") String password)
-    {
-        if (req != null)
-        {
-            try
-            {
+            @QueryParam("oldPassword") String oldPassword,
+            @PathParam("password") String password) {
+        if (req != null) {
+            try {
                 CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
-                
+
                 customerSessionBean.updatePassword(customer, password, oldPassword);
-                
+
                 return Response.status(Response.Status.OK).build();
-            }
-            catch(InvalidLoginCredentialException ex)
-            {
+            } catch (InvalidLoginCredentialException ex) {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-            }
-            catch (UpdateCustomerException | CustomerNotFoundException | InputDataValidationException ex)
-            {
+            } catch (UpdateCustomerException | CustomerNotFoundException | InputDataValidationException ex) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }
-        }
-        else
-        {
+        } else {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
         }
     }
-    
+
     @Path("isValid")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response isValid(CheckUsernameReq req)
-    {
-        if (req != null)
-        {
-            try
-            {
+    public Response isValid(CheckUsernameReq req) {
+        if (req != null) {
+            try {
                 CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
-                
-                if (customer.getUsername().equals(req.getUsernameToCheck()))
-                {
+
+                if (customer.getUsername().equals(req.getUsernameToCheck())) {
                     return Response.status(Response.Status.OK).entity(0).build();
+                } else {
+                    CustomerEntity customerTemp = customerSessionBean.retrieveCustomerByUsername(req.getUsernameToCheck());
+
+                    Integer returnNum = customerTemp == null ? 0 : 1;
+
+                    return Response.status(Response.Status.OK).entity(returnNum).build();
                 }
 
-                CustomerEntity customerTemp = customerSessionBean.retrieveCustomerByUsername(req.getUsernameToCheck());
-                
-                Integer returnNum = customerTemp == null ? 0 : 1;
-                
-                return Response.status(Response.Status.OK).entity(returnNum).build();
-            }
-            catch(InvalidLoginCredentialException ex)
-            {
+            } catch (InvalidLoginCredentialException ex) {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
-            }
-            catch (CustomerNotFoundException ex)
-            {
+            } catch (CustomerNotFoundException ex) {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }
-        }
-        else
-        {
+        } else {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid create new product request").build();
         }
     }
