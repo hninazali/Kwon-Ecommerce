@@ -139,23 +139,23 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
     @Override
     public void updateCustomer(CustomerEntity customerEntity) throws CustomerNotFoundException, UpdateCustomerException, InputDataValidationException {
         if (customerEntity != null && customerEntity.getCustomerId() != null) {
-            Set<ConstraintViolation<CustomerEntity>> constraintViolations = validator.validate(customerEntity);
+//            Set<ConstraintViolation<CustomerEntity>> constraintViolations = validator.validate(customerEntity);
+//
+//            if (constraintViolations.isEmpty()) {
+            CustomerEntity customerEntityToUpdate = retrieveCustomerById(customerEntity.getCustomerId());
 
-            if (constraintViolations.isEmpty()) {
-                CustomerEntity customerEntityToUpdate = retrieveCustomerById(customerEntity.getCustomerId());
-
-                if (customerEntityToUpdate.getUsername().equals(customerEntity.getUsername())) {
-                    customerEntityToUpdate.setFirstName(customerEntity.getFirstName());
-                    customerEntityToUpdate.setLastName(customerEntity.getLastName());
-                    customerEntityToUpdate.setAddress(customerEntity.getAddress());
-                    customerEntityToUpdate.setPostalCode(customerEntity.getPostalCode());
-                    //System.out.println(customerEntityToUpdate.getPassword());
-                } else {
-                    throw new UpdateCustomerException("Email of customer record to be updated does not match the existing record");
-                }
+            if (customerEntityToUpdate.getUsername().equals(customerEntity.getUsername())) {
+                customerEntityToUpdate.setFirstName(customerEntity.getFirstName());
+                customerEntityToUpdate.setLastName(customerEntity.getLastName());
+                customerEntityToUpdate.setAddress(customerEntity.getAddress());
+                customerEntityToUpdate.setPostalCode(customerEntity.getPostalCode());
+                //System.out.println(customerEntityToUpdate.getPassword());
             } else {
-                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+                throw new UpdateCustomerException("Email of customer record to be updated does not match the existing record");
             }
+//            } else {
+//                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
+//            }
         } else {
             throw new CustomerNotFoundException("Staff ID not provided for staff to be updated");
         }
