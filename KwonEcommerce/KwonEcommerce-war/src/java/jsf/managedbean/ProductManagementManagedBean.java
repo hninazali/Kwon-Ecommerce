@@ -69,6 +69,7 @@ public class ProductManagementManagedBean implements Serializable {
     private Long categoryIdNew;
     private List<Long> tagIdsNew;
     private Long brandIdNew;
+    private String newName;
     
     private List<CategoryEntity> categoryEntities;
     private List<TagEntity> tagEntities;   
@@ -184,7 +185,10 @@ public class ProductManagementManagedBean implements Serializable {
         }
     }
     
-    
+    public void doUploadFile(ActionEvent event)
+    {
+        newName = (String) event.getComponent().getAttributes().get("productName");
+    }
     
     public void doUpdateProduct(ActionEvent event)
     {
@@ -290,7 +294,7 @@ public class ProductManagementManagedBean implements Serializable {
     {
         try
         {
-            String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator") + this.newProductEntity.getName() + ".jpg";
+            String newFilePath = FacesContext.getCurrentInstance().getExternalContext().getInitParameter("alternatedocroot_1") + System.getProperty("file.separator") + this.newName + ".jpg";
 
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): File name: " + event.getFile().getFileName());
             System.err.println("********** Demo03ManagedBean.handleFileUpload(): newFilePath: " + newFilePath);
@@ -319,6 +323,8 @@ public class ProductManagementManagedBean implements Serializable {
 
             fileOutputStream.close();
             inputStream.close();
+            
+            this.createNewProductTemp();
             
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,  "File uploaded successfully", ""));
         }
@@ -460,6 +466,14 @@ public class ProductManagementManagedBean implements Serializable {
      */
     public void setBrandIdNew(Long brandIdNew) {
         this.brandIdNew = brandIdNew;
+    }
+
+    public String getNewName() {
+        return newName;
+    }
+
+    public void setNewName(String newName) {
+        this.newName = newName;
     }
     
     
