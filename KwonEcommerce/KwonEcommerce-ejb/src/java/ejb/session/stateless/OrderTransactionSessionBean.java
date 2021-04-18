@@ -27,7 +27,9 @@ import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CreditCardNotFoundException;
 import util.exception.CustomerNotFoundException;
+import util.exception.GroupCartNotFoundException;
 import util.exception.NeedStaffPermissionException;
+import util.exception.OrderLineItemNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
 import util.exception.OrderTransactionAlreadyVoidedRefundedException;
@@ -40,6 +42,12 @@ import util.exception.StaffNotFoundException;
 
 public class OrderTransactionSessionBean implements OrderTransactionSessionBeanLocal
 {   
+
+    @EJB(name = "GroupCartSessionBeanLocal")
+    private GroupCartSessionBeanLocal groupCartSessionBeanLocal;
+
+    @EJB(name = "OrderLineItemSessionBeanLocal")
+    private OrderLineItemSessionBeanLocal orderLineItemSessionBeanLocal;
 
     @EJB(name = "CreditCardSessionBeanLocal")
     private CreditCardSessionBeanLocal creditCardSessionBeanLocal;
@@ -194,7 +202,7 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
     }
     
     @Override
-    public OrderTransactionEntity createNewOrderTransactionForGroup(Long customerId, OrderTransactionEntity newOrderTransaction, GroupCartEntity groupCart, Long creditCardId) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, CreditCardNotFoundException, ProductInsufficientQuantityOnHandException
+    public OrderTransactionEntity createNewOrderTransactionForGroup(Long customerId, OrderTransactionEntity newOrderTransaction, GroupCartEntity groupCart, Long creditCardId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, CreditCardNotFoundException, ProductInsufficientQuantityOnHandException, OrderLineItemNotFoundException
     {
         if(newOrderTransaction != null)
         {
@@ -202,20 +210,27 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
             {
                 CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
                 CreditCardEntity ccard = creditCardSessionBeanLocal.retrieveCreditCartById(creditCardId);
+                GroupCartEntity cart = groupCartSessionBeanLocal.retrieveGroupCartById(groupCart.getGroupCartId());
                 
                 entityManager.persist(newOrderTransaction);
                 newOrderTransaction.setCustomerEntity(customer);
                 newOrderTransaction.setCreditCard(ccard);
                 
                 customer.getOrderTransactionEntities().add(newOrderTransaction);
-                ArrayList<OrderLineItemEntity> tempItems = new ArrayList<>();
-                tempItems.addAll(groupCart.getOrderLineItemEntities());
+                System.out.println(cart.getOrderLineItemEntities().size());
+                List<OrderLineItemEntity> tempItems = cart.getOrderLineItemEntities();
+                int size = cart.getOrderLineItemEntities().size();
+                //OrderLineItemEntity orderLineItemEntity = new OrderLineItemEntity();
+                //tempItems.addAll(groupCart.getOrderLineItemEntities());
 
                 //entityManager.persist(newOrderTransaction);
 
                 
-                for(OrderLineItemEntity orderLineItemEntity : tempItems)
+                for(OrderLineItemEntity orderLineItemEntity : cart.getOrderLineItemEntities())
                 {
+//                    OrderLineItemEntity temp = tempItems.get(i);
+//                    orderLineItemEntity = orderLineItemSessionBeanLocal.retrieveOrderLineItemById(temp.getOrderLineItemId());
+//                    System.out.println(orderLineItemEntity.getOrderLineItemId() + "    ******");
                     newOrderTransaction.getOrderLineItemEntities().add(orderLineItemEntity);
                     if (orderLineItemEntity.getProductEntity() != null)
                     {

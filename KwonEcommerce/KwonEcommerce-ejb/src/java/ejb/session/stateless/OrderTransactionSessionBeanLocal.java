@@ -16,7 +16,9 @@ import util.exception.BundleNotFoundException;
 import util.exception.CreateNewOrderTransactionException;
 import util.exception.CreditCardNotFoundException;
 import util.exception.CustomerNotFoundException;
+import util.exception.GroupCartNotFoundException;
 import util.exception.NeedStaffPermissionException;
+import util.exception.OrderLineItemNotFoundException;
 import util.exception.OrderTransactionAlreadyVoidedRefundedException;
 import util.exception.OrderTransactionNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
@@ -52,7 +54,7 @@ public interface OrderTransactionSessionBeanLocal {
 
     public List<OrderTransactionEntity> retrieveOrderTransactionsByCustomer(Long customerId) throws CustomerNotFoundException;
 
-    public OrderTransactionEntity createNewOrderTransactionForGroup(Long customerId, OrderTransactionEntity newOrderTransaction, GroupCartEntity groupCart, Long creditCardId) throws CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, CreditCardNotFoundException, ProductInsufficientQuantityOnHandException;
+    public OrderTransactionEntity createNewOrderTransactionForGroup(Long customerId, OrderTransactionEntity newOrderTransaction, GroupCartEntity groupCart, Long creditCardId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, CreditCardNotFoundException, ProductInsufficientQuantityOnHandException, OrderLineItemNotFoundException;
 
     public void updateShippingStatus(OrderTransactionEntity order) throws OrderTransactionNotFoundException;
 

@@ -156,7 +156,10 @@ public class GroupCartResource
                     member.getOrderTransactionEntities().clear();
                     member.setPersonalCartEntity(null);
                     
-                    members.add(member);
+                    if (! member.getUsername().equals(groupCart.getGroupOwner().getUsername()))
+                    {
+                        members.add(member);
+                    }
                 }
                 
                 GenericEntity<List<CustomerEntity>> genericEntity = new GenericEntity<List<CustomerEntity>>(members){
@@ -383,7 +386,7 @@ public class GroupCartResource
             {
                 return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
             }
-            catch(GroupCartNotFoundException | CreditCardNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException | BundleNotFoundException | BundleInsufficientQuantityOnHandException | ProductNotFoundException | ProductInsufficientQuantityOnHandException  ex)
+            catch(GroupCartNotFoundException | OrderLineItemNotFoundException | CreditCardNotFoundException | CreateNewOrderTransactionException | CustomerNotFoundException | BundleNotFoundException | BundleInsufficientQuantityOnHandException | ProductNotFoundException | ProductInsufficientQuantityOnHandException  ex)
             {
                 return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
             }

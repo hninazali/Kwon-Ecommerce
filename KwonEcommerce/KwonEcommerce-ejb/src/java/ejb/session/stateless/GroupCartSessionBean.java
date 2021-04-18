@@ -79,6 +79,7 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
             entityManager.persist(groupCart);
             
             owner.getGroupCartEntities().add(groupCart);
+            groupCart.getCustomerEntities().add(owner);
             
             for (String username : usernames)
             {
@@ -195,7 +196,8 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
     }
 
     @Override
-    public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId, Long creditCardId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException, CreditCardNotFoundException {
+    public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId, Long creditCardId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException, CreditCardNotFoundException, OrderLineItemNotFoundException
+    {
         GroupCartEntity groupCartEntity = retrieveGroupCartById(groupCartId);
         CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
         if (groupCartEntity.getGroupOwner().getUsername().equals(customer.getUsername()))
@@ -211,7 +213,7 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
             }
        
 
-            OrderTransactionEntity orderTransactionEntity = new OrderTransactionEntity(totalLineItem, totalQty, totalAmount, new Date(), groupCartEntity.getOrderLineItemEntities(),false);
+            OrderTransactionEntity orderTransactionEntity = new OrderTransactionEntity(totalLineItem, totalQty, totalAmount, new Date(), false);
             OrderTransactionEntity afterCheckout = orderTransactionSessionBeanLocal.createNewOrderTransactionForGroup(customerId, orderTransactionEntity, groupCartEntity, creditCardId);
             clearGroupCart(groupCartEntity);
 

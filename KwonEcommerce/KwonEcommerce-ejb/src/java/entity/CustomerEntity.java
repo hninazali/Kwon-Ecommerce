@@ -69,8 +69,6 @@ public class CustomerEntity implements Serializable {
     @OneToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(nullable = false)
     private PersonalCartEntity personalCartEntity;
-    
-    
 
     @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY)
     private List<OrderLineItemEntity> orderLineItemEntities;
@@ -81,7 +79,7 @@ public class CustomerEntity implements Serializable {
     @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY)
     private List<OrderTransactionEntity> orderTransactionEntities;
 
-    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<CreditCardEntity> creditCardEntities;
 
     public CustomerEntity() {

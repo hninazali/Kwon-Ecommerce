@@ -215,34 +215,34 @@ public class DataInitSessionBean {
             PersonalCartEntity pc2 = personalCartSessionBeanLocal.createPersonalCartEntity(new PersonalCartEntity());
             PersonalCartEntity pc3 = personalCartSessionBeanLocal.createPersonalCartEntity(new PersonalCartEntity());
             
-            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "One", "CustomerOne", "customerone@gmail.com", "password", "NUS RVRC RVR F #07-722", "119081", pc1, false));
-            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Two", "CustomerTwo", "customertwo@gmail.com", "password", "NUS Cinnamon #09-344", "138593", pc2, false));
-            customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Three", "CustomerThree", "customerthree@gmail.com", "password", "NUS Tembusu #05-233", "138598", pc3, false));
+            Long customer1 = customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "One", "CustomerOne", "customerone@gmail.com", "password", "NUS RVRC RVR F #07-722", "119081", pc1, false));
+            Long customer2 = customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Two", "CustomerTwo", "customertwo@gmail.com", "password", "NUS Cinnamon #09-344", "138593", pc2, false));
+            Long customer3 = customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Three", "CustomerThree", "customerthree@gmail.com", "password", "NUS Tembusu #05-233", "138598", pc3, false));
             
             CreditCardEntity cc1 = new CreditCardEntity("1000000000000001", "Personal DBS Card");
-            creditCardSessionBeanLocal.createNewCreditCard(cc1);
+            creditCardSessionBeanLocal.createCreditCard(customer1, cc1);
             //to add credit card to customer...
             //will need createNewCustomer method to return the customerEntity instead of the ID.This will only affect two files : Data Init SB and Customer Resource in RWS.
             
              
             CreditCardEntity cc2 = new CreditCardEntity("1000000000000002", "Personal DBS Card");
-            creditCardSessionBeanLocal.createNewCreditCard(cc2);
+            creditCardSessionBeanLocal.createCreditCard(customer1, cc2);
             
              
             CreditCardEntity cc3 = new CreditCardEntity("1000000000000003", "Personal DBS Card");
-            creditCardSessionBeanLocal.createNewCreditCard(cc3);
+            creditCardSessionBeanLocal.createCreditCard(customer2, cc3);
             
              
             CreditCardEntity cc4 = new CreditCardEntity("1000000000000004", "Personal DBS Card");
-            creditCardSessionBeanLocal.createNewCreditCard(cc4);
+            creditCardSessionBeanLocal.createCreditCard(customer2, cc4);
             
              
             CreditCardEntity cc5 = new CreditCardEntity("1000000000000005", "Personal DBS Card");
-            creditCardSessionBeanLocal.createNewCreditCard(cc5);
+            creditCardSessionBeanLocal.createCreditCard(customer3, cc5);
             
              
             CreditCardEntity cc6 = new CreditCardEntity("1000000000000006", "Personal DBS Card");
-            creditCardSessionBeanLocal.createNewCreditCard(cc6);
+            creditCardSessionBeanLocal.createCreditCard(customer3, cc6);
             
             
             

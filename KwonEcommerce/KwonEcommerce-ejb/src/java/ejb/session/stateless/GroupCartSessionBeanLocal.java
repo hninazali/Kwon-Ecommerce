@@ -50,7 +50,7 @@ public interface GroupCartSessionBeanLocal {
 
     public GroupCartEntity retrieveGroupCartByIdEager(Long groupCartId) throws GroupCartNotFoundException;
 
-    public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId, Long creditCardId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException, CreditCardNotFoundException;
+    public OrderTransactionEntity checkOutCart(Long customerId, Long groupCartId, Long creditCardId) throws GroupCartNotFoundException, CustomerNotFoundException, CreateNewOrderTransactionException, BundleNotFoundException, BundleInsufficientQuantityOnHandException, ProductNotFoundException, ProductInsufficientQuantityOnHandException, CreditCardNotFoundException, OrderLineItemNotFoundException;
 
     public boolean isInsideCart(Long groupCartId, Long customerId, ProductEntity product) throws CustomerNotFoundException, GroupCartNotFoundException;
 
