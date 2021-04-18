@@ -20,6 +20,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import util.enumeration.ShippingStatusEnum;
 import util.exception.EntityInstanceExistsInCollectionException;
 import util.exception.EntityInstanceMissingInCollectionException;
@@ -52,6 +53,10 @@ public class OrderTransactionEntity implements Serializable
     @Column(nullable = false)
     @NotNull
     private Date transactionDateTime;    
+    @Column(nullable = false, unique = true)
+    @NotNull
+    @Size(min = 16, max = 16)
+    private String cardNumber;
     @OneToMany(fetch = FetchType.LAZY)
     private List<OrderLineItemEntity> orderLineItemEntities;    
     @Column(nullable = false)
@@ -69,10 +74,6 @@ public class OrderTransactionEntity implements Serializable
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(nullable = true)
     private CustomerEntity customerEntity;
-    
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private CreditCardEntity creditCard;
 
     
     
@@ -284,11 +285,11 @@ public class OrderTransactionEntity implements Serializable
         this.customerEntity = customerEntity;
     }
 
-    public CreditCardEntity getCreditCard() {
-        return creditCard;
+    public String getCardNumber() {
+        return cardNumber;
     }
 
-    public void setCreditCard(CreditCardEntity creditCard) {
-        this.creditCard = creditCard;
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 }

@@ -15,17 +15,21 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import util.exception.CreateNewCreditCardException;
+import util.exception.CreditCardNotFoundException;
+import util.exception.CustomerNotFoundException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import ws.datamodel.AddNewCardReq;
@@ -110,7 +114,41 @@ public class CreditCardResource
         }
         else
         {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Retrieve Line Items request").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid add new credit card request").build();
+        }
+    }
+    
+    @Path("{creditCardId}")
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCreditCard(@QueryParam("username") String username, 
+                                        @QueryParam("password") String password,
+                                        @PathParam("creditCardId") Long creditCardId)
+    {
+        if (creditCardId != null)
+        {
+            try
+            {
+
+                CustomerEntity customer = customerSessionBean.customerLogin(username, password);
+
+                creditCardSessionBean.deleteCreditCard(customer.getCustomerId(), creditCardId);
+
+                return Response.status(Response.Status.OK).build();
+            }
+            catch(InvalidLoginCredentialException ex)
+            {
+                return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+            }
+            catch(CreditCardNotFoundException | CustomerNotFoundException  ex)
+            {
+                return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+            }
+        }
+        else
+        {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid Delete Credit Card request").build();
         }
     }
 

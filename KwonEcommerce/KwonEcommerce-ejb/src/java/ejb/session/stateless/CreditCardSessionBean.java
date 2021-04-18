@@ -133,6 +133,17 @@ public class CreditCardSessionBean implements CreditCardSessionBeanLocal
             throw new CreditCardNotFoundException("Credit Card " + ccNumber + " does not exist!");
         }
     }
+    
+    @Override
+    public void deleteCreditCard(Long customerId, Long creditCardId) throws CustomerNotFoundException, CreditCardNotFoundException
+    {
+        CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
+        CreditCardEntity creditCard = retrieveCreditCartById(creditCardId);
+        
+        customer.getCreditCardEntities().remove(creditCard);
+        
+        entityManager.remove(creditCard);
+    }
 
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<CreditCardEntity>> constraintViolations) {
         String msg = "Input data validation error!:";

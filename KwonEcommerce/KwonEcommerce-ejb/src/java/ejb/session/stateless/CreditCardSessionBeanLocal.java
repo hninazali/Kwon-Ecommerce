@@ -25,5 +25,7 @@ public interface CreditCardSessionBeanLocal {
     public CreditCardEntity createCreditCard(Long customerId, CreditCardEntity newCreditCardEntity) throws InputDataValidationException, CreateNewCreditCardException;
 
     public List<CreditCardEntity> retrieveCustomerCreditCard(Long customerId) throws CustomerNotFoundException;
+
+    public void deleteCreditCard(Long customerId, Long creditCardId) throws CustomerNotFoundException, CreditCardNotFoundException;
     
 }

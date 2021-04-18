@@ -162,7 +162,7 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
                 
                 entityManager.persist(newOrderTransaction);
                 newOrderTransaction.setCustomerEntity(customer);
-                newOrderTransaction.setCreditCard(ccard);
+                newOrderTransaction.setCardNumber(ccard.getCardNumber());
                 customer.getOrderTransactionEntities().add(newOrderTransaction);
 
                 //entityManager.persist(newOrderTransaction);
@@ -214,7 +214,7 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
                 
                 entityManager.persist(newOrderTransaction);
                 newOrderTransaction.setCustomerEntity(customer);
-                newOrderTransaction.setCreditCard(ccard);
+                newOrderTransaction.setCardNumber(ccard.getCardNumber());
                 
                 customer.getOrderTransactionEntities().add(newOrderTransaction);
                 System.out.println(cart.getOrderLineItemEntities().size());
