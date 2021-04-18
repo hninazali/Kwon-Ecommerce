@@ -425,6 +425,11 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
         {
             return false;
         }
+        
+        if (orderTransaction.getShippingStatus() == ShippingStatusEnum.DELIVERED)
+        {
+            throw new OrderTransactionAlreadyVoidedRefundedException("Delivered items cannot be refunded !!!");
+        }
         //StaffEntity staff = staffEntitySessionBeanLocal.retrieveStaffByStaffId(staffId);
         Date oldDate = orderTransaction.getTransactionDateTime();
         
