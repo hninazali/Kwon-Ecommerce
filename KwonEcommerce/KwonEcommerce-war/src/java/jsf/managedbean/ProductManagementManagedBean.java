@@ -185,7 +185,7 @@ public class ProductManagementManagedBean implements Serializable {
         }
     }
     
-    public void doUploadFile(ActionEvent event)
+    public void doUpload(ActionEvent event)
     {
         newName = (String) event.getComponent().getAttributes().get("productName");
     }
