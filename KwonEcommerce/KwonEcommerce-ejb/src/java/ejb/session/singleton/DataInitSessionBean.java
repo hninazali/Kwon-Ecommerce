@@ -8,6 +8,7 @@ package ejb.session.singleton;
 import ejb.session.stateless.BrandEntitySessionBeanLocal;
 import ejb.session.stateless.BundleEntitySessionBeanLocal;
 import ejb.session.stateless.CategoryEntitySessionBeanLocal;
+import ejb.session.stateless.CreditCardSessionBeanLocal;
 import ejb.session.stateless.CustomerSessionBeanLocal;
 import ejb.session.stateless.PersonalCartSessionBeanLocal;
 import ejb.session.stateless.ProductEntitySessionBeanLocal;
@@ -20,6 +21,7 @@ import entity.TagEntity;
 import entity.BrandEntity;
 import entity.BundleEntity;
 import entity.BundleLineItemEntity;
+import entity.CreditCardEntity;
 import entity.CustomerEntity;
 import entity.PersonalCartEntity;
 import java.math.BigDecimal;
@@ -37,6 +39,7 @@ import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewBrandException;
 import util.exception.CreateNewBundleException;
 import util.exception.CreateNewCategoryException;
+import util.exception.CreateNewCreditCardException;
 import util.exception.CreateNewPersonalCartException;
 import util.exception.CreateNewProductException;
 import util.exception.CreateNewTagException;
@@ -53,6 +56,9 @@ import util.exception.UnknownPersistenceException;
 @Startup
 
 public class DataInitSessionBean {
+
+    @EJB(name = "CreditCardSessionBeanLocal")
+    private CreditCardSessionBeanLocal creditCardSessionBeanLocal;
 
     @EJB(name = "PersonalCartSessionBeanLocal")
     private PersonalCartSessionBeanLocal personalCartSessionBeanLocal;
@@ -77,6 +83,8 @@ public class DataInitSessionBean {
     
     @EJB
     private BundleEntitySessionBeanLocal bundleEntitySessionBeanLocal;
+    
+    
     
     public DataInitSessionBean() {
     }
@@ -211,6 +219,9 @@ public class DataInitSessionBean {
             customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Two", "CustomerTwo", "customertwo@gmail.com", "password", "NUS Cinnamon #09-344", "138593", pc2, false));
             customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Three", "CustomerThree", "customerthree@gmail.com", "password", "NUS Tembusu #05-233", "138598", pc3, false));
             
+            CreditCardEntity cc1 = new CreditCardEntity("1234567891011121", "Personal DBS Card");
+            creditCardSessionBeanLocal.createNewCreditCard(cc1);
+            
             BundleEntity newBundle = new BundleEntity();
             
             BundleLineItemEntity lineItem = new BundleLineItemEntity();
@@ -335,7 +346,7 @@ public class DataInitSessionBean {
 
             BundleEntity newBundleEntity3 = bundleEntitySessionBeanLocal.createNewBundle(newBundle, tagIdsPopularDiscountNew);
 
-        } catch (StaffUsernameExistException | UnknownPersistenceException | InputDataValidationException| ProductSkuCodeExistException | CreateNewCategoryException | CreateNewTagException | CreateNewProductException | CreateNewBrandException | BrandNotFoundException | CustomerUsernameExistException | CreateNewPersonalCartException | BundleSkuCodeExistException | CreateNewBundleException | ProductNotFoundException | CategoryNotFoundException ex) {
+        } catch (CreateNewCreditCardException | StaffUsernameExistException | UnknownPersistenceException | InputDataValidationException| ProductSkuCodeExistException | CreateNewCategoryException | CreateNewTagException | CreateNewProductException | CreateNewBrandException | BrandNotFoundException | CustomerUsernameExistException | CreateNewPersonalCartException | BundleSkuCodeExistException | CreateNewBundleException | ProductNotFoundException | CategoryNotFoundException ex) {
             ex.printStackTrace();
         }
     }

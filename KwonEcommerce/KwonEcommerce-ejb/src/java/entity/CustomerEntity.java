@@ -69,6 +69,8 @@ public class CustomerEntity implements Serializable {
     @OneToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(nullable = false)
     private PersonalCartEntity personalCartEntity;
+    
+    
 
     @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY)
     private List<OrderLineItemEntity> orderLineItemEntities;
