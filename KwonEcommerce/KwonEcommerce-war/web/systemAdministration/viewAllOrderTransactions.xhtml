@@ -46,8 +46,8 @@
                         <h:outputText value="#{order.shippingStatus}" />
                     </p:column>   
                     
-                    <p:column headerText="Credit Card" sortBy="#{order.creditCard.cardNumber}" filterBy="#{order.creditCard.cardNumber}" filterMatchMode="contains">
-                        <h:outputText value="#{order.creditCard.cardNumber}" />
+                    <p:column headerText="Credit Card Used" sortBy="#{order.cardNumber}" filterBy="#{order.cardNumber}" filterMatchMode="contains">
+                        <h:outputText value="#{order.cardNumber}" />
                     </p:column> 
 
                     <p:column headerText="Action" >
@@ -58,16 +58,17 @@
                     
                     <p:rowExpansion>
                         <p:repeat value="#{order.orderLineItemEntities}" var="lineItem">
-                            <div class="orderDetail" rendered="#{lineItem.bundleEntity == null}">
+                            <div class="orderDetail">
                                 <hr/>
                                 <div>
-                                    <div class="product-name">Product : #{lineItem.productEntity.name}</div>
+                                    <div class="product-name" rendered="#{lineItem.productEntity == null}">Bundle : #{lineItem.bundleEntity.name}</div>
+                                    <div class="product-name" rendered="#{lineItem.bundleEntity == null}">Product : #{lineItem.productEntity.name}</div>
                                     <div class="product-description">Quantity : #{lineItem.quantity}</div>
                                     <div class="product-description">Subtotal : #{lineItem.subTotal}</div>
                                 </div>
                                 <hr/>
                             </div>
-                            
+<!--                            
                             <div class="orderDetail" rendered="#{lineItem.productEntity == null}">
                                 <hr/>
                                 <div>
@@ -76,7 +77,7 @@
                                     <div class="product-description">Subtotal : #{lineItem.subTotal}</div>
                                 </div>
                                 <hr/>
-                            </div>
+                            </div>-->
                         </p:repeat>
                     </p:rowExpansion>
 

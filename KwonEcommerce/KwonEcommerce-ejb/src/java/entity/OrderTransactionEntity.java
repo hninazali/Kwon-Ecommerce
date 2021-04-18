@@ -53,7 +53,7 @@ public class OrderTransactionEntity implements Serializable
     @Column(nullable = false)
     @NotNull
     private Date transactionDateTime;    
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @NotNull
     @Size(min = 16, max = 16)
     private String cardNumber;

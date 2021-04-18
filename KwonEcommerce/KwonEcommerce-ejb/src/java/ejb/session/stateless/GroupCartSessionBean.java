@@ -265,12 +265,15 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
         boolean returnVal = false;
         for (OrderLineItemEntity lineItem : groupCart.getOrderLineItemEntities())
         {
-            if (lineItem.getProductEntity().getName().equals(product.getName()))
+            if(lineItem.getProductEntity() != null) 
             {
-                if (lineItem.getCustomerEntity().getUsername().equals(customer.getUsername()))
+                if (lineItem.getProductEntity().getName().equals(product.getName()))
                 {
-                    returnVal = true;
-                    break;
+                    if (lineItem.getCustomerEntity().getUsername().equals(customer.getUsername()))
+                    {
+                        returnVal = true;
+                        break;
+                    }
                 }
             }
         }
@@ -285,12 +288,15 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
         boolean returnVal = false;
         for (OrderLineItemEntity lineItem : groupCart.getOrderLineItemEntities())
         {
-            if (lineItem.getBundleEntity().getName().equals(bundle.getName()))
-            {
-                if (lineItem.getCustomerEntity().getUsername().equals(customer.getUsername()))
+            if(lineItem.getBundleEntity() != null) 
                 {
-                    returnVal = true;
-                    break;
+                if (lineItem.getBundleEntity().getName().equals(bundle.getName()))
+                {
+                    if (lineItem.getCustomerEntity().getUsername().equals(customer.getUsername()))
+                    {
+                        returnVal = true;
+                        break;
+                    }
                 }
             }
         }

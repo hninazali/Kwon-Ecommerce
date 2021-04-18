@@ -212,9 +212,9 @@ public class OrderTransactionSessionBean implements OrderTransactionSessionBeanL
                 CreditCardEntity ccard = creditCardSessionBeanLocal.retrieveCreditCartById(creditCardId);
                 GroupCartEntity cart = groupCartSessionBeanLocal.retrieveGroupCartById(groupCart.getGroupCartId());
                 
-                entityManager.persist(newOrderTransaction);
                 newOrderTransaction.setCustomerEntity(customer);
                 newOrderTransaction.setCardNumber(ccard.getCardNumber());
+                entityManager.persist(newOrderTransaction);
                 
                 customer.getOrderTransactionEntities().add(newOrderTransaction);
                 System.out.println(cart.getOrderLineItemEntities().size());

@@ -166,7 +166,7 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
         if (customerEntity != null && customerEntity.getCustomerId() != null) {
             Set<ConstraintViolation<CustomerEntity>> constraintViolations = validator.validate(customerEntity);
             
-            CustomerEntity customerTemp = this.retrieveCustomerById(customerEntity.getCustomerId());
+            CustomerEntity customerTemp = this.customerLogin(customerEntity.getUsername(), oldPassword);
             System.out.println(password + "   *******");
             
             if (customerTemp != null)
