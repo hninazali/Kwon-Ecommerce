@@ -184,6 +184,11 @@ public class CustomerResource
             try
             {
                 CustomerEntity customer = customerSessionBean.customerLogin(req.getUsername(), req.getPassword());
+                
+                if (customer.getUsername().equals(req.getUsernameToCheck()))
+                {
+                    return Response.status(Response.Status.OK).entity(0).build();
+                }
 
                 CustomerEntity customerTemp = customerSessionBean.retrieveCustomerByUsername(req.getUsernameToCheck());
                 

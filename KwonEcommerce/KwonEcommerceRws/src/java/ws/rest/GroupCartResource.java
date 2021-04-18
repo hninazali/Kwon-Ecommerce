@@ -435,7 +435,7 @@ public class GroupCartResource
     @Produces(MediaType.APPLICATION_JSON)
     public Response createNewGroupCart(CreateGroupCartReq req)
     {
-        if (req != null)
+        if (req != null && req.getUsernames().size() > 0) 
         {
             try
             {
