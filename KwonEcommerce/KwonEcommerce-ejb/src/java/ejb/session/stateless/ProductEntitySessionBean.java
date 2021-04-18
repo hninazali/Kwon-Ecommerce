@@ -545,6 +545,16 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
     public void deleteProduct(Long productId) throws ProductNotFoundException, DeleteProductException
     {
         ProductEntity productEntityToRemove = retrieveProductByProductId(productId);
+        if (productEntityToRemove != null)
+        {
+        
+        productEntityToRemove.getCategoryEntity().getProductEntities().remove(productEntityToRemove);
+        productEntityToRemove.getBrandEntity().getProductEntities().remove(productEntityToRemove);
+        
+        for (TagEntity tag : productEntityToRemove.getTagEntities())
+        {
+            tag.getProductEntities().remove(productEntityToRemove);
+        }
         
         //to be deleted when salesTransactionLineItem is added 
         entityManager.remove(productEntityToRemove);
@@ -559,11 +569,6 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
 //        {
 //            throw new DeleteProductException("Product ID " + productId + " is associated with existing sale transaction line item(s) and cannot be deleted!");
 //        }
-        List<OrderLineItemEntity> orderLineItemEntities = orderTransactionSessionBeanLocal.retrieveOrderLineItemsByProductId(productId);
-        
-        if(orderLineItemEntities.isEmpty())
-        {
-            entityManager.remove(productEntityToRemove);
         }
         else
         {
