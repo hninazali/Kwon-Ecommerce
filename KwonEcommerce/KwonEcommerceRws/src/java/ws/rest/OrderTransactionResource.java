@@ -7,6 +7,7 @@ package ws.rest;
 
 import ejb.session.stateless.CustomerSessionBeanLocal;
 import ejb.session.stateless.OrderTransactionSessionBeanLocal;
+import entity.BundleLineItemEntity;
 import entity.CustomerEntity;
 import entity.OrderLineItemEntity;
 import entity.OrderTransactionEntity;
@@ -115,6 +116,13 @@ public class OrderTransactionResource
                     {
                         lineItem.getBundleEntity().getCategoryEntities().clear();
                         lineItem.getBundleEntity().getTagEntities().clear();
+                        
+                        for (BundleLineItemEntity bundleLineItem : lineItem.getBundleEntity().getBundleLineItems())
+                        {
+                            bundleLineItem.getProductEntity().setCategoryEntity(null);
+                            bundleLineItem.getProductEntity().setBrandEntity(null);
+                            bundleLineItem.getProductEntity().getTagEntities().clear();
+                        }
                     }
                     else
                     {
