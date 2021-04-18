@@ -39,9 +39,17 @@ import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
+import util.exception.TooMuchQuantityException;
 
 @Stateless
-public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
+public class GroupCartSessionBean implements GroupCartSessionBeanLocal 
+{
+
+    @EJB(name = "ProductEntitySessionBeanLocal")
+    private ProductEntitySessionBeanLocal productEntitySessionBeanLocal;
+
+    @EJB(name = "BundleEntitySessionBeanLocal")
+    private BundleEntitySessionBeanLocal bundleEntitySessionBeanLocal;
 
     @EJB(name = "OrderLineItemSessionBeanLocal")
     private OrderLineItemSessionBeanLocal orderLineItemSessionBeanLocal;
@@ -304,13 +312,18 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
     }
     
     @Override
-    public OrderLineItemEntity addQuantity(Long groupCartId, Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException
+    public OrderLineItemEntity addQuantity(Long groupCartId, Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException, ProductNotFoundException, TooMuchQuantityException
     {
         OrderLineItemEntity returnLineItem = new OrderLineItemEntity();
         CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
         GroupCartEntity groupCart = this.retrieveGroupCartById(groupCartId);
+        ProductEntity productTemp = productEntitySessionBeanLocal.retrieveProductByProductId(product.getProductId());
         for (OrderLineItemEntity lineItem : groupCart.getOrderLineItemEntities())
         {
+            if (productTemp.getQuantityOnHand() < addedQty)
+            {
+                throw new TooMuchQuantityException("Quantity added exceeds the quantity on hand");
+            }
             if (lineItem.getProductEntity().getName().equals(product.getName()))
             {
                 if (lineItem.getCustomerEntity().getUsername().equals(customer.getUsername()))
@@ -326,13 +339,18 @@ public class GroupCartSessionBean implements GroupCartSessionBeanLocal {
     }
     
     @Override
-    public OrderLineItemEntity addQuantityBundle(Long groupCartId, Long customerId, BundleEntity bundle, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException
+    public OrderLineItemEntity addQuantityBundle(Long groupCartId, Long customerId, BundleEntity bundle, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException, BundleNotFoundException, TooMuchQuantityException
     {
         OrderLineItemEntity returnLineItem = new OrderLineItemEntity();
         CustomerEntity customer = customerSessionBeanLocal.retrieveCustomerById(customerId);
         GroupCartEntity groupCart = this.retrieveGroupCartById(groupCartId);
+        BundleEntity bundleTemp = bundleEntitySessionBeanLocal.retrieveBundleByBundleId(bundle.getBundleId());
         for (OrderLineItemEntity lineItem : groupCart.getOrderLineItemEntities())
         {
+            if (bundleTemp.getQuantityOnHand() < addedQty)
+            {
+                throw new TooMuchQuantityException("Quantity added exceeds the quantity on hand");
+            }
             if (lineItem.getBundleEntity().getName().equals(bundle.getName()))
             {
                 if (lineItem.getCustomerEntity().getUsername().equals(customer.getUsername()))
