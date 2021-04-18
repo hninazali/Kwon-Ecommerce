@@ -32,11 +32,11 @@
                         <p:menuitem value="Tag Management" outcome="/systemAdministration/tagManagement.xhtml" icon="pi pi-tags" />
                         <p:menuitem value="Brand Management" outcome="/systemAdministration/brandManagement.xhtml" icon="pi pi-tags" />
                         <p:menuitem value="Customer Management" outcome="/systemAdministration/customerManagement.xhtml" icon="pi pi-user" />
-                        <p:menuitem value="Order Management" outcome="/systemAdministration/viewAllOrderTransactions.xhtml" icon="pi pi-shopping-cart" />
                         <!--<p:menuitem value="Sales Report" outcome="/salesReport/viewSalesReport.xhtml" icon="pi pi-chart-bar" />-->
                     </p:submenu>    
                     
                     <p:submenu label="Sales Operation" rendered="#{sessionScope.isLogin == true}">
+                        <p:menuitem value="Order Management" outcome="/systemAdministration/viewAllOrderTransactions.xhtml" icon="pi pi-shopping-cart" />
                         <p:menuitem value="View Sales Report" outcome="/salesReport/viewSalesReport.xhtml" icon="pi pi-chart-bar" />                        
                     </p:submenu> 
 

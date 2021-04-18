@@ -177,14 +177,14 @@
                                                     </p:column>
                                                 </p:row>-->
 
-                        <p:row>
-                            <div class="card">
+                        <p:row >
+                            <div class="card" rendered="#{productManagementManagedBean.newProductEntity.name != null}" >
                                 <h:form id="formFileUpload" enctype="multipart/form-data">
 <!--                                    <p:messages  redisplay="false">
                                         <p:autoUpdate />
                                     </p:messages>-->
-                                    <p:fileUpload listener="#{fileUploadViewManagedBean.handleFileUpload}" 
-                                                  update="messages" />
+                                    <p:fileUpload listener="#{productManagementManagedBean.handleFileUpload}" 
+                                                  update="@form formAllProducts:dataTableAllProducts messages" />
 
                                     <p:growl id="messages" showDetail="true"/>
                                 </h:form>
@@ -285,6 +285,10 @@
 
                 </p:dialog>
 
+            </h:form>
+            
+            <h:form>
+                
             </h:form>
 
             <ez:ViewProduct id="ccViewProduct" />
