@@ -24,6 +24,7 @@ import util.exception.OrderLineItemNotFoundException;
 import util.exception.PersonalCartNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
+import util.exception.TooMuchQuantityException;
 
 @Local
 public interface PersonalCartSessionBeanLocal {
@@ -50,9 +51,9 @@ public interface PersonalCartSessionBeanLocal {
 
     public boolean isInsideCart(Long customerId, ProductEntity product) throws CustomerNotFoundException;
 
-    public OrderLineItemEntity addQuantity(Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException;
+    public OrderLineItemEntity addQuantity(Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException, ProductNotFoundException, TooMuchQuantityException;
 
     public boolean bundleIsInsideCart(Long customerId, BundleEntity bundle) throws CustomerNotFoundException;
 
-    public OrderLineItemEntity addQuantityBundle(Long customerId, BundleEntity bundle, Integer addedQty) throws CustomerNotFoundException;
+    public OrderLineItemEntity addQuantityBundle(Long customerId, BundleEntity bundle, Integer addedQty) throws CustomerNotFoundException, BundleNotFoundException, TooMuchQuantityException;
 }

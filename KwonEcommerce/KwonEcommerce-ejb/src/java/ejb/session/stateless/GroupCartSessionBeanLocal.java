@@ -26,6 +26,7 @@ import util.exception.InputDataValidationException;
 import util.exception.OrderLineItemNotFoundException;
 import util.exception.ProductInsufficientQuantityOnHandException;
 import util.exception.ProductNotFoundException;
+import util.exception.TooMuchQuantityException;
 
 @Local
 public interface GroupCartSessionBeanLocal {
@@ -54,12 +55,12 @@ public interface GroupCartSessionBeanLocal {
 
     public boolean isInsideCart(Long groupCartId, Long customerId, ProductEntity product) throws CustomerNotFoundException, GroupCartNotFoundException;
 
-    public OrderLineItemEntity addQuantity(Long groupCartId, Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException;
+    public OrderLineItemEntity addQuantity(Long groupCartId, Long customerId, ProductEntity product, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException, ProductNotFoundException, TooMuchQuantityException;
 
     public void leaveGroup(Long groupCartId, Long customerId) throws GroupCartNotFoundException, CustomerNotFoundException, GroupActivityDetectedException;
 
     public boolean bundleIsInsideCart(Long groupCartId, Long customerId, BundleEntity bundle) throws CustomerNotFoundException, GroupCartNotFoundException;
 
-    public OrderLineItemEntity addQuantityBundle(Long groupCartId, Long customerId, BundleEntity bundle, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException;
+    public OrderLineItemEntity addQuantityBundle(Long groupCartId, Long customerId, BundleEntity bundle, Integer addedQty) throws CustomerNotFoundException, GroupCartNotFoundException, BundleNotFoundException, TooMuchQuantityException;
 
 }
