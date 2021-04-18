@@ -18,6 +18,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import util.enumeration.AccessRightEnum;
 import util.exception.DeleteStaffException;
 import util.exception.InputDataValidationException;
@@ -86,7 +88,14 @@ public class StaffManagementManagedBean implements Serializable {
     }
 
     public void deleteStaff(ActionEvent actionEvent) {
+        FacesContext ectx = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) ectx.getExternalContext().getRequest();
+        HttpSession httpSession = request.getSession();
+        StaffEntity currentStaff = (StaffEntity) httpSession.getAttribute("staffEntity");
         staffEntityToDelete = (StaffEntity) actionEvent.getComponent().getAttributes().get("staffEntityToDelete");
+        if(!currentStaff.getAccessRightEnum().equals(AccessRightEnum.MANAGER)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Only MANAGER can delete staff!", null));
+        } else {
         try {
             staffEntitySessionBeanLocal.deleteStaff(staffEntityToDelete.getStaffId());
             staffEntities.remove(staffEntityToDelete);
@@ -96,6 +105,7 @@ public class StaffManagementManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Staff " + staffEntityToDelete.getFirstName() + " " + staffEntityToDelete.getLastName() + " has successfully been deleted.", null));
         } catch (DeleteStaffException | StaffNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while deleting staff: " + ex.getMessage(), null));
+        }
         }
     }
 
