@@ -186,6 +186,7 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
         List<OrderLineItemEntity> lineItems = customer.getOrderLineItemEntities();
         List<ProductEntity> products = new ArrayList<>();
         CategoryEntity tempCategory = new CategoryEntity();
+        ArrayList<CategoryEntity> categories = new ArrayList<>();
         
         for (OrderLineItemEntity tempLineItem : lineItems)
         {
@@ -193,7 +194,11 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
             {
                 tempCategory = tempLineItem.getProductEntity().getCategoryEntity();
                 
-                products.addAll(this.filterProductsByCategory(tempCategory.getCategoryId()));
+                if (! categories.contains(tempCategory))
+                {
+                    categories.add(tempCategory);
+                    products.addAll(this.filterProductsByCategory(tempCategory.getCategoryId()));
+                }
             }
             else
             {
@@ -201,7 +206,11 @@ public class ProductEntitySessionBean implements ProductEntitySessionBeanLocal
                 {
                     tempCategory = category;
                     
-                    products.addAll(this.filterProductsByCategory(tempCategory.getCategoryId()));
+                    if (! categories.contains(tempCategory))
+                    {
+                        categories.add(tempCategory);
+                        products.addAll(this.filterProductsByCategory(tempCategory.getCategoryId()));
+                    }
                 }
             }
         }
