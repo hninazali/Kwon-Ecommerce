@@ -129,7 +129,7 @@ public class DataInitSessionBean {
             BrandEntity moonshot = brandEntitySessionBeanLocal.createNewBrandEntity(new BrandEntity("Moonshot"));
             BrandEntity theSaem = brandEntitySessionBeanLocal.createNewBrandEntity(new BrandEntity("The Saem"));
             BrandEntity skinFood = brandEntitySessionBeanLocal.createNewBrandEntity(new BrandEntity("Skin Food"));
-            BrandEntity drJart = brandEntitySessionBeanLocal.createNewBrandEntity(new BrandEntity("Dr Jart+"));
+            BrandEntity drJart = brandEntitySessionBeanLocal.createNewBrandEntity(new BrandEntity("Dr Jart"));
             BrandEntity vtCosmetics = brandEntitySessionBeanLocal.createNewBrandEntity(new BrandEntity("VT Cosmetics"));
             BrandEntity candyLab = brandEntitySessionBeanLocal.createNewBrandEntity(new BrandEntity("CandyLab"));
             
@@ -170,12 +170,12 @@ public class DataInitSessionBean {
             
             ProductEntity product7 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD007", "Moonshot Shampoo", "Moonshot Shampoo", 100, 10, new BigDecimal("20.00"), 3), shampoo.getCategoryId(), tagIdsEmpty, moonshot.getBrandId());
             ProductEntity product8 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD008", "The Saem Shampoo", "The Saem Shampoo", 100, 10, new BigDecimal("30.50"), 4), shampoo.getCategoryId(), tagIdsEmpty, theSaem.getBrandId());
-            ProductEntity product9 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD010", "Dr Jart+ Bodywash", "Dr Jart+ Bodywash", 100, 10, new BigDecimal("100.00"), 4), bodyWash.getCategoryId(), tagIdsEmpty, drJart.getBrandId());
+            ProductEntity product9 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD010", "Dr Jart Bodywash", "Dr Jart Bodywash", 100, 10, new BigDecimal("100.00"), 4), bodyWash.getCategoryId(), tagIdsEmpty, drJart.getBrandId());
             ProductEntity product10 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD011", "VT Cosmetics Lotion", "VT Cosmetics Lotion", 100, 10, new BigDecimal("95.00"), 3), lotions.getCategoryId(), tagIdsEmpty, vtCosmetics.getBrandId());
             ProductEntity product11 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD012", "CandyLab Lotion", "CandyLab Lotion", 100, 10, new BigDecimal("19.05"), 4), lotions.getCategoryId(), tagIdsEmpty, candyLab.getBrandId());
             
             
-            ProductEntity product13 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD013", "Dr Jart+ Shampoo", "Dr Jart+ Shampoo", 100, 10, new BigDecimal("20.00"), 3), shampoo.getCategoryId(), tagIdsEmpty, drJart.getBrandId());
+            ProductEntity product13 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD013", "Dr Jart Shampoo", "Dr Jart Shampoo", 100, 10, new BigDecimal("20.00"), 3), shampoo.getCategoryId(), tagIdsEmpty, drJart.getBrandId());
             ProductEntity product14 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD014", "CandyLab Shampoo", "CandyLab Shampoo", 100, 10, new BigDecimal("30.50"), 4), shampoo.getCategoryId(), tagIdsEmpty, candyLab.getBrandId());
             ProductEntity product15 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD015", "COSRX Bodywash", "COSRX Bodywash", 100, 10, new BigDecimal("100.00"), 4), bodyWash.getCategoryId(), tagIdsEmpty, cosrx.getBrandId());
             ProductEntity product16 = productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD016", "Moonshot Lotion", "Moonshot Lotion", 100, 10, new BigDecimal("95.00"), 3), lotions.getCategoryId(), tagIdsEmpty, moonshot.getBrandId());
@@ -207,7 +207,7 @@ public class DataInitSessionBean {
 //            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD007", "Moonshot Shampoo", "Moonshot Shampoo", 100, 10, new BigDecimal("20.00"), 3, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fficklebeauty.com%2Fproducts%2Fpyungkang-yul-ato-wash-shampoo-blue-label&psig=AOvVaw3O2eImyqb1TnJDDEhRghyk&ust=1618114903093000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIC5i_Pp8u8CFQAAAAAdAAAAABAJ"), shampoo.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
 //            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD008", "The Saem Shampoo", "The Saem Shampoo", 100, 10, new BigDecimal("30.50"), 4, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbeautyboxkorea.com%2Fproduct%2Fthe-saem-silk-hair-refresh-shampoo-320ml%2F19536%2F&psig=AOvVaw3QmphpCsSVCr2npbmlMhEM&ust=1618114933189000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCLDUqYDq8u8CFQAAAAAdAAAAABAE"), shampoo.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
 //            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD009", "Skin Food Bodywash", "Skin Food Bodywash", 100, 10, new BigDecimal("50.00"), 3, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.carousell.sg%2Fp%2Fskinfood-rose-tea-scented-body-wash-body-milk-335ml-114903087%2F&psig=AOvVaw1_naHXJOn4q73A19PKE173&ust=1618114966661000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKCV5ZTq8u8CFQAAAAAdAAAAABAD"), bodyWash.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
-//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD010", "Dr Jart+ Bodywash", "Dr Jart+ Bodywash", 100, 10, new BigDecimal("100.00"), 4, "https://www.google.com/url?sa=i&url=http%3A%2F%2Fwww.stylekorean.com%2Fshop%2Fdr.jart-ceramidin-body-wash-250ml%2F1525315985%2F&psig=AOvVaw17iI3K7p3VN313-2TvKgcK&ust=1618115004293000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNDlm6Lq8u8CFQAAAAAdAAAAABAQ"), bodyWash.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
+//            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD010", "Dr Jart Bodywash", "Dr Jart Bodywash", 100, 10, new BigDecimal("100.00"), 4, "https://www.google.com/url?sa=i&url=http%3A%2F%2Fwww.stylekorean.com%2Fshop%2Fdr.jart-ceramidin-body-wash-250ml%2F1525315985%2F&psig=AOvVaw17iI3K7p3VN313-2TvKgcK&ust=1618115004293000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNDlm6Lq8u8CFQAAAAAdAAAAABAQ"), bodyWash.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
 //            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD011", "VT Cosmetics Lotion", "VT Cosmetics Lotion", 100, 10, new BigDecimal("95.00"), 3, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fus.drjart.com%2Fproducts%2Fcica-cream&psig=AOvVaw3bxOoWf46Jo-b8ra14NPLU&ust=1618115127116000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNi52dzq8u8CFQAAAAAdAAAAABAG"), lotions.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
 //            productEntitySessionBeanLocal.createNewProduct(new ProductEntity("PROD012", "CandyLab Lotion", "CandyLab Lotion", 100, 10, new BigDecimal("19.05"), 4, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.beautykoreamall.com%2Fproduct%2F%3FSM%3Dview%26prd_code%3D1608625290&psig=AOvVaw0Qa4briN0qUnH4UOotwvVt&ust=1618115158551000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKDx3-3q8u8CFQAAAAAdAAAAABAD"), lotions.getCategoryId(), tagIdsEmpty, innisfree.getBrandId());
 //            
@@ -219,8 +219,32 @@ public class DataInitSessionBean {
             customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Two", "CustomerTwo", "customertwo@gmail.com", "password", "NUS Cinnamon #09-344", "138593", pc2, false));
             customerSessionBeanLocal.createNewCustomer(new CustomerEntity("Customer", "Three", "CustomerThree", "customerthree@gmail.com", "password", "NUS Tembusu #05-233", "138598", pc3, false));
             
-            CreditCardEntity cc1 = new CreditCardEntity("1234567891011121", "Personal DBS Card");
+            CreditCardEntity cc1 = new CreditCardEntity("1000000000000001", "Personal DBS Card");
             creditCardSessionBeanLocal.createNewCreditCard(cc1);
+            //to add credit card to customer...
+            //will need createNewCustomer method to return the customerEntity instead of the ID.This will only affect two files : Data Init SB and Customer Resource in RWS.
+            
+             
+            CreditCardEntity cc2 = new CreditCardEntity("1000000000000002", "Personal DBS Card");
+            creditCardSessionBeanLocal.createNewCreditCard(cc2);
+            
+             
+            CreditCardEntity cc3 = new CreditCardEntity("1000000000000003", "Personal DBS Card");
+            creditCardSessionBeanLocal.createNewCreditCard(cc3);
+            
+             
+            CreditCardEntity cc4 = new CreditCardEntity("1000000000000004", "Personal DBS Card");
+            creditCardSessionBeanLocal.createNewCreditCard(cc4);
+            
+             
+            CreditCardEntity cc5 = new CreditCardEntity("1000000000000005", "Personal DBS Card");
+            creditCardSessionBeanLocal.createNewCreditCard(cc5);
+            
+             
+            CreditCardEntity cc6 = new CreditCardEntity("1000000000000006", "Personal DBS Card");
+            creditCardSessionBeanLocal.createNewCreditCard(cc6);
+            
+            
             
             BundleEntity newBundle = new BundleEntity();
             
