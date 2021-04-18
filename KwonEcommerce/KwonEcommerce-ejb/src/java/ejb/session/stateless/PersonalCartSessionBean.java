@@ -212,10 +212,14 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
         }
         for (OrderLineItemEntity lineItem : personalCart.getOrderLineItemEntities())
         {
-            if (lineItem.getProductEntity().getName().equals(product.getName()))
-            {
-                return true;
+            if(lineItem.getProductEntity()!=null) {
+                if (lineItem.getProductEntity().getName().equals(product.getName()))
+                {
+                    return true;
+                }
+                
             }
+            
         }
         return false;
     }
@@ -227,10 +231,13 @@ public class PersonalCartSessionBean implements PersonalCartSessionBeanLocal {
         PersonalCartEntity personalCart = customer.getPersonalCartEntity();
         for (OrderLineItemEntity lineItem : personalCart.getOrderLineItemEntities())
         {
-            if (lineItem.getBundleEntity().getName().equals(bundle.getName()))
-            {
-                return true;
+            if(lineItem.getBundleEntity()!=null){
+                if (lineItem.getBundleEntity().getName().equals(bundle.getName()))
+                {
+                    return true;
+                }
             }
+            
         }
         return false;
     }
